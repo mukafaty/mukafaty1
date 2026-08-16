@@ -1,5 +1,5 @@
 import { CheckCircle2 } from "lucide-react";
-import sofaAsset from "@/assets/hero-sofa.png.asset.json";
+import sofaAsset from "@/assets/hero-sofa-2.png.asset.json";
 
 const points = [
   "شارك .. واحصل على عمولات مجزية",
