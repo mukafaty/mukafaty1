@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { Link } from "@tanstack/react-router";
 import { Menu, X } from "lucide-react";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 
@@ -33,12 +32,12 @@ export function Header() {
       >
         عن البرنامج
       </button>
-      <Link to="/register" className={linkClass} onClick={() => setOpen(false)}>
+      <a href="/register" className={linkClass} onClick={() => setOpen(false)}>
         انضم الآن
-      </Link>
-      <Link to="/login" className={linkClass} onClick={() => setOpen(false)}>
+      </a>
+      <a href="/login" className={linkClass} onClick={() => setOpen(false)}>
         دخول
-      </Link>
+      </a>
     </>
   );
 
