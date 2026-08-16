@@ -61,27 +61,44 @@
   --color-sidebar-ring: var(--sidebar-ring);
 }
 
+@theme {
+  --font-sans: "Tajawal", ui-sans-serif, system-ui, sans-serif;
+  --color-navy: var(--navy);
+  --color-navy-deep: var(--navy-deep);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-gold: var(--gold);
+}
+
 :root {
-  --radius: 0.625rem;
+  --radius: 1.4rem;
+
+  /* Mukafaty brand palette */
+  --navy: oklch(0.28 0.09 265);
+  --navy-deep: oklch(0.24 0.1 266);
+  --brand: oklch(0.63 0.18 254);
+  --brand-soft: oklch(0.96 0.02 250);
+  --gold: oklch(0.75 0.11 82);
+
   --background: oklch(1 0 0);
-  --foreground: oklch(0.129 0.042 264.695);
+  --foreground: oklch(0.28 0.09 265);
   --card: oklch(1 0 0);
-  --card-foreground: oklch(0.129 0.042 264.695);
+  --card-foreground: oklch(0.28 0.09 265);
   --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.129 0.042 264.695);
-  --primary: oklch(0.208 0.042 265.755);
-  --primary-foreground: oklch(0.984 0.003 247.858);
-  --secondary: oklch(0.968 0.007 247.896);
-  --secondary-foreground: oklch(0.208 0.042 265.755);
-  --muted: oklch(0.968 0.007 247.896);
-  --muted-foreground: oklch(0.554 0.046 257.417);
-  --accent: oklch(0.968 0.007 247.896);
-  --accent-foreground: oklch(0.208 0.042 265.755);
+  --popover-foreground: oklch(0.28 0.09 265);
+  --primary: oklch(0.24 0.1 266);
+  --primary-foreground: oklch(1 0 0);
+  --secondary: oklch(0.96 0.02 250);
+  --secondary-foreground: oklch(0.28 0.09 265);
+  --muted: oklch(0.96 0.02 250);
+  --muted-foreground: oklch(0.52 0.05 260);
+  --accent: oklch(0.63 0.18 254);
+  --accent-foreground: oklch(1 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --destructive-foreground: oklch(0.984 0.003 247.858);
-  --border: oklch(0.929 0.013 255.508);
-  --input: oklch(0.929 0.013 255.508);
-  --ring: oklch(0.704 0.04 256.788);
+  --border: oklch(0.92 0.02 250);
+  --input: oklch(0.92 0.02 250);
+  --ring: oklch(0.63 0.18 254);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
   --chart-3: oklch(0.398 0.07 227.392);
@@ -95,7 +112,17 @@
   --sidebar-accent-foreground: oklch(0.208 0.042 265.755);
   --sidebar-border: oklch(0.929 0.013 255.508);
   --sidebar-ring: oklch(0.704 0.04 256.788);
+
+  --gradient-hero: radial-gradient(
+      1200px 600px at 20% 10%,
+      color-mix(in oklab, var(--brand) 12%, transparent),
+      transparent 60%
+    ),
+    linear-gradient(180deg, #ffffff 0%, color-mix(in oklab, var(--brand) 7%, #ffffff) 100%);
+  --shadow-card: 0 18px 45px -22px color-mix(in oklab, var(--navy) 45%, transparent);
+  --shadow-gold: 0 0 0 1.5px var(--gold), 0 18px 40px -18px color-mix(in oklab, var(--gold) 60%, transparent);
 }
+
 
 .dark {
   --background: oklch(0.129 0.042 264.695);
@@ -140,5 +167,57 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 }
+
+@utility hero-surface {
+  background: var(--gradient-hero);
+}
+
+@utility tech-dots {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--brand) 35%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+}
+
+@utility step-card {
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+
+  &:hover {
+    transform: translateY(-5px) scale(1.03);
+    border-color: var(--gold);
+    box-shadow: var(--shadow-gold);
+  }
+
+  &:hover .step-number {
+    color: var(--gold);
+  }
+
+  &:hover .step-icon {
+    animation: step-float 1.2s ease-in-out infinite;
+    background: color-mix(in oklab, var(--gold) 16%, #fff);
+    color: var(--gold);
+  }
+}
+
+@keyframes step-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.08);
+  }
+}
+
