@@ -53,22 +53,24 @@ export function HeroSection() {
       <div className="tech-dots pointer-events-none absolute inset-0 opacity-[0.18]" aria-hidden />
 
       <div className="relative">
-        <div className="grid">
-          {slides.map((Slide, i) => (
-            <div
-              key={i}
-              role="group"
-              aria-roledescription="slide"
-              aria-hidden={i !== index}
-              className={`col-start-1 row-start-1 transition-all duration-700 ease-out ${
-                i === index
-                  ? "pointer-events-auto translate-x-0 opacity-100"
-                  : "pointer-events-none translate-x-2 opacity-0"
-              }`}
-            >
-              <Slide />
-            </div>
-          ))}
+        <div className="overflow-hidden" style={{ direction: "ltr" }}>
+          <div
+            className="flex w-full transition-transform duration-700 ease-in-out"
+            style={{ transform: `translateX(-${index * 100}%)` }}
+          >
+            {slides.map((Slide, i) => (
+              <div
+                key={i}
+                role="group"
+                aria-roledescription="slide"
+                aria-hidden={i !== index}
+                className="w-full shrink-0"
+                style={{ direction: "rtl" }}
+              >
+                <Slide />
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="pointer-events-none absolute inset-x-2 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-between sm:flex sm:px-2 lg:px-4">
@@ -90,7 +92,7 @@ export function HeroSection() {
           </button>
         </div>
 
-        <div className="flex items-center justify-center gap-3 pb-6 sm:hidden">
+        <div className="flex items-center justify-center gap-3 pt-2 sm:hidden">
           <button
             type="button"
             aria-label="السلايد التالي"
@@ -110,7 +112,7 @@ export function HeroSection() {
         </div>
       </div>
 
-      <div className="absolute inset-x-0 top-4 z-10 flex items-center justify-center gap-2">
+      <div className="relative z-10 flex items-center justify-center gap-2 pb-6 pt-4">
         {slides.map((_, i) => (
           <button
             key={i}
@@ -118,8 +120,8 @@ export function HeroSection() {
             aria-label={`الانتقال إلى السلايد ${i + 1}`}
             aria-current={i === index}
             onClick={() => go(i)}
-            className={`h-2 rounded-full transition-all duration-300 ${
-              i === index ? "w-7 bg-brand" : "w-2 bg-brand/25 hover:bg-brand/40"
+            className={`rounded-full transition-all duration-300 ${
+              i === index ? "h-1.5 w-6 bg-brand" : "h-1.5 w-2 bg-brand/30 hover:bg-brand/50"
             }`}
           />
         ))}
