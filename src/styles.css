@@ -167,5 +167,57 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
   }
 }
+
+@utility hero-surface {
+  background: var(--gradient-hero);
+}
+
+@utility tech-dots {
+  background-image: radial-gradient(
+    color-mix(in oklab, var(--brand) 35%, transparent) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+}
+
+@utility step-card {
+  transition:
+    transform 300ms ease,
+    box-shadow 300ms ease,
+    border-color 300ms ease;
+
+  &:hover {
+    transform: translateY(-5px) scale(1.03);
+    border-color: var(--gold);
+    box-shadow: var(--shadow-gold);
+  }
+
+  &:hover .step-number {
+    color: var(--gold);
+  }
+
+  &:hover .step-icon {
+    animation: step-float 1.2s ease-in-out infinite;
+    background: color-mix(in oklab, var(--gold) 16%, #fff);
+    color: var(--gold);
+  }
+}
+
+@keyframes step-float {
+  0%,
+  100% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    transform: translateY(-4px) scale(1.08);
+  }
+}
+
