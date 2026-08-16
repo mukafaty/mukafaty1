@@ -39,11 +39,13 @@ export function HeroSection() {
         if (e.key === "ArrowLeft") go(index + 1);
       }}
       onTouchStart={(e) => {
-        touchStart.current = e.touches[0].clientX;
+        touchStart.current = e.touches[0]?.clientX ?? null;
       }}
       onTouchEnd={(e) => {
         if (touchStart.current === null) return;
-        const dx = e.changedTouches[0].clientX - touchStart.current;
+        const endX = e.changedTouches[0]?.clientX;
+        if (endX === undefined) return;
+        const dx = endX - touchStart.current;
         if (Math.abs(dx) > 50) go(index + (dx < 0 ? 1 : -1));
         touchStart.current = null;
       }}
