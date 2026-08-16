@@ -7,7 +7,7 @@ export function HeroSection() {
     <section className="hero-surface relative overflow-hidden">
       <div className="tech-dots pointer-events-none absolute inset-0 opacity-[0.18]" aria-hidden />
       <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:gap-6 lg:px-10 lg:py-24">
-        <div className="order-1 flex flex-col items-start gap-6 lg:order-2">
+        <div className="order-1 flex flex-col items-start gap-6 text-right">
           <span className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-background/80 px-5 py-2 text-xs font-medium text-navy shadow-sm sm:text-sm">
             <Sparkles size={16} className="text-brand" />
             برنامج تسويق بالعمولة يحقق لك الأرباح
@@ -40,7 +40,7 @@ export function HeroSection() {
           </ul>
         </div>
 
-        <div className="order-2 lg:order-1">
+        <div className="order-2">
           <img
             src={heroImage}
             width={1200}
