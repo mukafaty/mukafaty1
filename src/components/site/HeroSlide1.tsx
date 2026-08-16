@@ -6,7 +6,7 @@ const heroImage = heroAsset.url;
 
 export function HeroSlide1() {
   return (
-    <div className="relative mx-auto grid max-w-7xl items-center gap-10 px-4 py-14 sm:px-6 md:py-20 lg:grid-cols-2 lg:gap-6 lg:px-10 lg:py-24">
+    <div className="relative mx-auto grid max-w-7xl items-center gap-8 px-4 py-10 sm:px-6 md:py-16 lg:grid-cols-2 lg:gap-6 lg:px-10 lg:py-20">
       <div className="order-1 flex flex-col items-start gap-6 text-right">
         <span className="inline-flex items-center gap-2 rounded-full border border-brand/25 bg-background/80 px-5 py-2 text-xs font-medium text-navy shadow-sm sm:text-sm">
           <Sparkles size={16} className="text-brand" />
