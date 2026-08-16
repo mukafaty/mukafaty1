@@ -77,10 +77,16 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "مكافآتي | Mukafaty" },
-      { name: "description", content: "منصة مكافآتي للتسويق بالعمولة" },
+      { title: "مكافآتي | منصة التسويق بالعمولة" },
+      { name: "description", content: "مكافآتي منصة تسويق بالعمولة سعودية: سجّل مجانًا، شارك رابطك الخاص، وتابع نتائجك واستلم عمولاتك بسهولة." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+      { property: "og:title", content: "مكافآتي | منصة التسويق بالعمولة" },
+      { name: "twitter:title", content: "مكافآتي | منصة التسويق بالعمولة" },
+      { property: "og:description", content: "مكافآتي منصة تسويق بالعمولة سعودية: سجّل مجانًا، شارك رابطك الخاص، وتابع نتائجك واستلم عمولاتك بسهولة." },
+      { name: "twitter:description", content: "مكافآتي منصة تسويق بالعمولة سعودية: سجّل مجانًا، شارك رابطك الخاص، وتابع نتائجك واستلم عمولاتك بسهولة." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/58b73f564e1b9d68c52fd8b80c150af9/id-preview-aa57a722--de63ceaa-cba1-4e3d-8045-8bb7e3ca8152.lovable.app-1786877384404.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/58b73f564e1b9d68c52fd8b80c150af9/id-preview-aa57a722--de63ceaa-cba1-4e3d-8045-8bb7e3ca8152.lovable.app-1786877384404.png" },
     ],
     links: [
       {
