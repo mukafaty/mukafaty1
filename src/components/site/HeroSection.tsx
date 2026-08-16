@@ -17,7 +17,7 @@ export function HeroSection() {
             <span className="block text-3xl font-bold leading-tight sm:text-4xl md:text-5xl">
               حوّل تأثيرك إلى
             </span>
-            <span className="mt-1 block text-6xl font-black leading-[1.05] tracking-tight text-navy-deep drop-shadow-[0_10px_25px_color-mix(in_oklab,var(--brand)_25%,transparent)] sm:text-7xl md:text-8xl">
+            <span className="mt-2 block text-6xl font-black leading-[1.25] tracking-tight text-navy-deep drop-shadow-[0_10px_25px_color-mix(in_oklab,var(--brand)_25%,transparent)] sm:text-7xl md:text-8xl">
               مُكافآت
             </span>
           </h1>
