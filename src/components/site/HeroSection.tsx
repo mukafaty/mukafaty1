@@ -1,6 +1,8 @@
 import { Sparkles, CheckCircle2 } from "lucide-react";
 import { CTAButtons } from "./CTAButtons";
-import heroImage from "@/assets/hero-dashboard.jpg";
+import heroAsset from "@/assets/hero-dashboard.png.asset.json";
+
+const heroImage = heroAsset.url;
 
 export function HeroSection() {
   return (
