@@ -2,17 +2,29 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { HeroSlide1 } from "./HeroSlide1";
 import { HeroSlide2 } from "./HeroSlide2";
+import { HeroSlide3 } from "./HeroSlide3";
 
-const slides = [HeroSlide1, HeroSlide2];
+const slides = [HeroSlide1, HeroSlide2, HeroSlide3];
 const AUTOPLAY_MS = 5000;
 
 const arrowClass =
   "flex h-11 w-11 items-center justify-center rounded-full border border-brand/30 bg-background text-navy shadow-[0_8px_20px_-12px_var(--navy)] transition-all duration-300 hover:bg-brand hover:text-primary-foreground";
 
+/**
+ * Position (in %) of a slide relative to the active one.
+ * Active = 0, upcoming slides wait on the LEFT (-100) and slide in
+ * towards the right, outgoing slide exits to the RIGHT (+100).
+ */
+function offsetFor(i: number, active: number) {
+  const pos = ((i - active) % slides.length + slides.length) % slides.length;
+  return pos === 0 ? 0 : pos <= slides.length / 2 ? -100 : 100;
+}
+
 export function HeroSection() {
   const [index, setIndex] = useState(0);
   const [paused, setPaused] = useState(false);
   const touchStart = useRef<number | null>(null);
+  const prevOffsets = useRef<number[]>(slides.map((_, i) => offsetFor(i, 0)));
 
   const go = useCallback((next: number) => {
     setIndex(((next % slides.length) + slides.length) % slides.length);
@@ -23,6 +35,13 @@ export function HeroSection() {
     const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), AUTOPLAY_MS);
     return () => clearInterval(t);
   }, [paused, index]);
+
+  const offsets = slides.map((_, i) => offsetFor(i, index));
+  const animated = offsets.map((o, i) => Math.abs(o - (prevOffsets.current[i] ?? o)) === 100);
+
+  useEffect(() => {
+    prevOffsets.current = offsets;
+  });
 
   return (
     <section
@@ -53,24 +72,21 @@ export function HeroSection() {
       <div className="tech-dots pointer-events-none absolute inset-0 opacity-[0.18]" aria-hidden />
 
       <div className="relative">
-        <div className="overflow-hidden" style={{ direction: "ltr" }}>
-          <div
-            className="flex w-full transition-transform duration-700 ease-in-out"
-            style={{ transform: `translateX(-${index * 100}%)` }}
-          >
-            {slides.map((Slide, i) => (
-              <div
-                key={i}
-                role="group"
-                aria-roledescription="slide"
-                aria-hidden={i !== index}
-                className="w-full shrink-0"
-                style={{ direction: "rtl" }}
-              >
-                <Slide />
-              </div>
-            ))}
-          </div>
+        <div className="grid overflow-hidden">
+          {slides.map((Slide, i) => (
+            <div
+              key={i}
+              role="group"
+              aria-roledescription="slide"
+              aria-hidden={i !== index}
+              className={`col-start-1 row-start-1 w-full ${
+                i === index ? "pointer-events-auto" : "pointer-events-none"
+              } ${animated[i] ? "transition-transform duration-700 ease-in-out" : ""}`}
+              style={{ transform: `translateX(${offsets[i]}%)` }}
+            >
+              <Slide />
+            </div>
+          ))}
         </div>
 
         <div className="pointer-events-none absolute inset-x-2 top-1/2 z-10 hidden -translate-y-1/2 items-center justify-between sm:flex sm:px-2 lg:px-4">
