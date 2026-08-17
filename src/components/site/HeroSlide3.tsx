@@ -23,7 +23,7 @@ export function HeroSlide3() {
   return (
     <div className="flex h-full w-full items-center" style={{ backgroundColor: "#010930" }}>
       {SLIDE_LINK ? (
-        <a href={SLIDE_LINK} className="block">
+        <a href={SLIDE_LINK} className="block w-full">
           {content}
         </a>
       ) : (
