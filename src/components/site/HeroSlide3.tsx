@@ -10,8 +10,8 @@ export function HeroSlide3() {
       <source media="(min-width: 768px)" srcSet={desktopAsset.url} width={2048} height={877} />
       <img
         src={mobileAsset.url}
-        width={1152}
-        height={2048}
+        width={960}
+        height={1920}
         alt="جاهز لتبدأ رحلة مكافآتك؟ ابدأ التسويق مع مكافآتي"
         fetchPriority="high"
         decoding="async"
