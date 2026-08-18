@@ -1,5 +1,5 @@
 import desktopAsset from "@/assets/hero-slide3-desktop.jpg.asset.json";
-import mobileAsset from "@/assets/hero-slide3-mobile.jpg.asset.json";
+import mobileAsset from "@/assets/hero-slide3-mobile-v2.jpg.asset.json";
 
 // Set to a URL later to make the whole slide clickable.
 const SLIDE_LINK: string | null = null;
@@ -10,8 +10,8 @@ export function HeroSlide3() {
       <source media="(min-width: 768px)" srcSet={desktopAsset.url} width={2048} height={877} />
       <img
         src={mobileAsset.url}
-        width={1152}
-        height={2048}
+        width={960}
+        height={1920}
         alt="جاهز لتبدأ رحلة مكافآتك؟ ابدأ التسويق مع مكافآتي"
         fetchPriority="high"
         decoding="async"
