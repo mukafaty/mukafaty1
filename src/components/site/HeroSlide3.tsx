@@ -1,5 +1,5 @@
 import desktopAsset from "@/assets/hero-slide3-desktop.jpg.asset.json";
-import mobileAsset from "@/assets/hero-slide3-mobile.jpg.asset.json";
+import mobileAsset from "@/assets/hero-slide3-mobile-v2.jpg.asset.json";
 
 // Set to a URL later to make the whole slide clickable.
 const SLIDE_LINK: string | null = null;
