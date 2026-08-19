@@ -47,10 +47,6 @@ export function HeroSection() {
       aria-roledescription="carousel"
       aria-label="عروض مكافآتي"
       tabIndex={0}
-      onMouseEnter={() => setPaused(true)}
-      onMouseLeave={() => setPaused(false)}
-      onFocus={() => setPaused(true)}
-      onBlur={() => setPaused(false)}
       onKeyDown={(e) => {
         if (e.key === "ArrowRight") go(index - 1);
         if (e.key === "ArrowLeft") go(index + 1);
