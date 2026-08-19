@@ -5,7 +5,7 @@ import { HeroSlide2 } from "./HeroSlide2";
 import { HeroSlide3 } from "./HeroSlide3";
 
 const slides = [HeroSlide1, HeroSlide2, HeroSlide3];
-const AUTOPLAY_MS = 5000;
+const AUTOPLAY_MS = 7000;
 
 const arrowClass =
   "flex h-11 w-11 items-center justify-center rounded-full border border-brand/30 bg-background text-navy shadow-[0_8px_20px_-12px_var(--navy)] transition-all duration-300 hover:bg-brand hover:text-primary-foreground";
@@ -22,7 +22,6 @@ function offsetFor(i: number, active: number) {
 
 export function HeroSection() {
   const [index, setIndex] = useState(0);
-  const [paused, setPaused] = useState(false);
   const touchStart = useRef<number | null>(null);
   const prevOffsets = useRef<number[]>(slides.map((_, i) => offsetFor(i, 0)));
 
@@ -31,10 +30,9 @@ export function HeroSection() {
   }, []);
 
   useEffect(() => {
-    if (paused) return;
     const t = setInterval(() => setIndex((i) => (i + 1) % slides.length), AUTOPLAY_MS);
     return () => clearInterval(t);
-  }, [paused, index]);
+  }, [index]);
 
   const offsets = slides.map((_, i) => offsetFor(i, index));
   const animated = offsets.map((o, i) => Math.abs(o - (prevOffsets.current[i] ?? o)) === 100);
