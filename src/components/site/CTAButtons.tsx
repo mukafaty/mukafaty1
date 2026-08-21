@@ -5,7 +5,7 @@ export function CTAButtons() {
   return (
     <div className="flex w-full flex-col gap-4 sm:flex-row sm:items-center">
       <a
-        href="/register"
+        href="/dashboard"
         className={`${base} border border-transparent bg-primary text-primary-foreground shadow-[0_14px_30px_-16px_var(--navy)] hover:border-navy hover:bg-background hover:text-navy`}
       >
         انضم الآن
