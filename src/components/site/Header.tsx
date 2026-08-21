@@ -32,10 +32,10 @@ export function Header() {
       >
         عن البرنامج
       </button>
-      <a href="/register" className={linkClass} onClick={() => setOpen(false)}>
+      <a href="/dashboard" className={linkClass} onClick={() => setOpen(false)}>
         انضم الآن
       </a>
-      <a href="/login" className={linkClass} onClick={() => setOpen(false)}>
+      <a href="/dashboard" className={linkClass} onClick={() => setOpen(false)}>
         دخول
       </a>
     </>

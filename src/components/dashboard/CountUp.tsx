@@ -2,9 +2,9 @@ import { useEffect, useRef, useState } from "react";
 
 type Props = {
   value: number;
-  decimals?: number;
-  duration?: number;
-  className?: string;
+  decimals?: number | undefined;
+  duration?: number | undefined;
+  className?: string | undefined;
 };
 
 export function CountUp({ value, decimals = 0, duration = 1200, className }: Props) {
