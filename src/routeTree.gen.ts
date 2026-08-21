@@ -11,6 +11,13 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as DashboardAboutRouteImport } from './routes/dashboard.about'
+import { Route as DashboardAdsRouteImport } from './routes/dashboard.ads'
+import { Route as DashboardBalanceRouteImport } from './routes/dashboard.balance'
+import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
+import { Route as DashboardContactRouteImport } from './routes/dashboard.contact'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
+import { Route as DashboardTopRouteImport } from './routes/dashboard.top'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -22,31 +29,115 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DashboardAboutRoute = DashboardAboutRouteImport.update({
+  id: '/about',
+  path: '/about',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAdsRoute = DashboardAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBalanceRoute = DashboardBalanceRouteImport.update({
+  id: '/balance',
+  path: '/balance',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardClientsRoute = DashboardClientsRouteImport.update({
+  id: '/clients',
+  path: '/clients',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardContactRoute = DashboardContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardTopRoute = DashboardTopRouteImport.update({
+  id: '/top',
+  path: '/top',
+  getParentRoute: () => DashboardRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/about': typeof DashboardAboutRoute
+  '/dashboard/ads': typeof DashboardAdsRoute
+  '/dashboard/balance': typeof DashboardBalanceRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/top': typeof DashboardTopRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/about': typeof DashboardAboutRoute
+  '/dashboard/ads': typeof DashboardAdsRoute
+  '/dashboard/balance': typeof DashboardBalanceRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/top': typeof DashboardTopRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/dashboard': typeof DashboardRoute
+  '/dashboard': typeof DashboardRouteWithChildren
+  '/dashboard/about': typeof DashboardAboutRoute
+  '/dashboard/ads': typeof DashboardAdsRoute
+  '/dashboard/balance': typeof DashboardBalanceRoute
+  '/dashboard/clients': typeof DashboardClientsRoute
+  '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/top': typeof DashboardTopRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/dashboard'
+  fullPaths:
+    | '/'
+    | '/dashboard'
+    | '/dashboard/about'
+    | '/dashboard/ads'
+    | '/dashboard/balance'
+    | '/dashboard/clients'
+    | '/dashboard/contact'
+    | '/dashboard/settings'
+    | '/dashboard/top'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/dashboard'
-  id: '__root__' | '/' | '/dashboard'
+  to:
+    | '/'
+    | '/dashboard'
+    | '/dashboard/about'
+    | '/dashboard/ads'
+    | '/dashboard/balance'
+    | '/dashboard/clients'
+    | '/dashboard/contact'
+    | '/dashboard/settings'
+    | '/dashboard/top'
+  id:
+    | '__root__'
+    | '/'
+    | '/dashboard'
+    | '/dashboard/about'
+    | '/dashboard/ads'
+    | '/dashboard/balance'
+    | '/dashboard/clients'
+    | '/dashboard/contact'
+    | '/dashboard/settings'
+    | '/dashboard/top'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  DashboardRoute: typeof DashboardRoute
+  DashboardRoute: typeof DashboardRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
@@ -65,12 +156,85 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/dashboard/about': {
+      id: '/dashboard/about'
+      path: '/about'
+      fullPath: '/dashboard/about'
+      preLoaderRoute: typeof DashboardAboutRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/ads': {
+      id: '/dashboard/ads'
+      path: '/ads'
+      fullPath: '/dashboard/ads'
+      preLoaderRoute: typeof DashboardAdsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/balance': {
+      id: '/dashboard/balance'
+      path: '/balance'
+      fullPath: '/dashboard/balance'
+      preLoaderRoute: typeof DashboardBalanceRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/clients': {
+      id: '/dashboard/clients'
+      path: '/clients'
+      fullPath: '/dashboard/clients'
+      preLoaderRoute: typeof DashboardClientsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/contact': {
+      id: '/dashboard/contact'
+      path: '/contact'
+      fullPath: '/dashboard/contact'
+      preLoaderRoute: typeof DashboardContactRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/top': {
+      id: '/dashboard/top'
+      path: '/top'
+      fullPath: '/dashboard/top'
+      preLoaderRoute: typeof DashboardTopRouteImport
+      parentRoute: typeof DashboardRoute
+    }
   }
 }
 
+interface DashboardRouteChildren {
+  DashboardAboutRoute: typeof DashboardAboutRoute
+  DashboardAdsRoute: typeof DashboardAdsRoute
+  DashboardBalanceRoute: typeof DashboardBalanceRoute
+  DashboardClientsRoute: typeof DashboardClientsRoute
+  DashboardContactRoute: typeof DashboardContactRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardTopRoute: typeof DashboardTopRoute
+}
+
+const DashboardRouteChildren: DashboardRouteChildren = {
+  DashboardAboutRoute: DashboardAboutRoute,
+  DashboardAdsRoute: DashboardAdsRoute,
+  DashboardBalanceRoute: DashboardBalanceRoute,
+  DashboardClientsRoute: DashboardClientsRoute,
+  DashboardContactRoute: DashboardContactRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardTopRoute: DashboardTopRoute,
+}
+
+const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
+  DashboardRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  DashboardRoute: DashboardRoute,
+  DashboardRoute: DashboardRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
