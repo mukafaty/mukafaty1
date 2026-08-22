@@ -117,14 +117,14 @@ function DashboardHome() {
   return (
     <div className="space-y-5">
       <section className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
-        <div className="min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-500 sm:order-2">
+        <div className="min-w-0 animate-in fade-in slide-in-from-bottom-2 text-right duration-500 sm:order-1">
           <h1 className="text-xl font-black text-navy sm:text-2xl">مرحباً، أحمد السبيعي 👋</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             تابع أداءك ومكافآتك في كل ما يخص نشاطك التسويقي من مكان واحد.
           </p>
         </div>
 
-        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy transition-colors hover:border-brand sm:order-1">
+        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy transition-colors hover:border-brand sm:order-2">
           <Calendar size={18} className="text-brand" />
           <span>آخر 30 يومًا</span>
           <ChevronDown size={16} className="text-muted-foreground" />
