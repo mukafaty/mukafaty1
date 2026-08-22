@@ -278,7 +278,7 @@ function DashboardHome() {
             backgroundPosition: "left center",
           }}
         >
-          <div className="flex h-full flex-col justify-center gap-3 p-6 pl-[38%] text-right sm:pl-[42%]">
+          <div className="flex h-full flex-col justify-center gap-3 p-6 pl-[46%] text-right">
             <h2 className="text-lg font-black leading-8 text-navy sm:text-xl">
               شارك رابطك واربح المزيد من المكافآت
             </h2>
