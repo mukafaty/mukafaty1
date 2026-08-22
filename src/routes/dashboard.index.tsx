@@ -184,16 +184,16 @@ function DashboardHome() {
           <table className="w-full min-w-[560px] text-right">
             <thead>
               <tr className="text-xs font-bold text-muted-foreground">
-                <th className="pb-3 pr-2 font-bold">الاسم</th>
-                <th className="pb-3 font-bold">البرنامج التدريبي</th>
-                <th className="pb-3 font-bold">تاريخ الإحالة</th>
-                <th className="pb-3 font-bold">الحالة</th>
+                <th className="pb-2 pr-2 font-bold">الاسم</th>
+                <th className="pb-2 font-bold">البرنامج التدريبي</th>
+                <th className="pb-2 font-bold">تاريخ الإحالة</th>
+                <th className="pb-2 font-bold">الحالة</th>
               </tr>
             </thead>
             <tbody>
               {referrals.map((r) => (
                 <tr key={r.name} className="border-t border-border/70 text-sm text-navy">
-                  <td className="py-4 pr-2">
+                  <td className="py-2 pr-2">
                     <span className="flex items-center gap-3">
                       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
                         <User size={16} />
@@ -201,9 +201,9 @@ function DashboardHome() {
                       <span className="font-bold">{r.name}</span>
                     </span>
                   </td>
-                  <td className="py-4 text-muted-foreground">{r.program}</td>
-                  <td className="py-4 text-muted-foreground">{r.date}</td>
-                  <td className="py-4">
+                  <td className="py-2 text-muted-foreground">{r.program}</td>
+                  <td className="py-2 text-muted-foreground">{r.date}</td>
+                  <td className="py-2">
                     <span
                       className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${r.tone}`}
                     >
