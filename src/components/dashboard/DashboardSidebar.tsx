@@ -35,14 +35,19 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
               key={item.to}
               to={item.to}
               onClick={onNavigate}
-              className={`flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-[15px] font-bold transition-colors duration-200 ${
+              className={`group flex items-center justify-between gap-3 rounded-2xl px-4 py-3 text-[15px] font-bold transition-colors duration-200 ${
                 active
-                  ? "bg-brand text-primary-foreground shadow-[0_10px_24px_-12px_var(--brand)]"
-                  : "text-primary-foreground/80 hover:bg-primary-foreground/10"
+                  ? "bg-brand text-primary-foreground"
+                  : "text-primary-foreground/80 hover:bg-white hover:text-destructive"
               }`}
             >
               <span>{item.title}</span>
-              <item.icon size={20} className="shrink-0" />
+              <item.icon
+                size={20}
+                className={`shrink-0 transition-colors duration-200 ${
+                  active ? "" : "group-hover:text-brand"
+                }`}
+              />
             </Link>
           );
         })}
@@ -51,10 +56,10 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
       <Link
         to="/"
         onClick={onNavigate}
-        className="mt-6 flex items-center justify-between gap-3 rounded-2xl border border-primary-foreground/25 px-4 py-3 text-[15px] font-bold text-primary-foreground/90 transition-colors duration-200 hover:bg-primary-foreground/10"
+        className="group mt-6 flex items-center justify-between gap-3 rounded-2xl border border-primary-foreground/25 px-4 py-3 text-[15px] font-bold text-primary-foreground/90 transition-colors duration-200 hover:bg-white hover:text-destructive"
       >
         <span>تسجيل الخروج</span>
-        <LogOut size={20} className="shrink-0" />
+        <LogOut size={20} className="shrink-0 transition-colors duration-200 group-hover:text-brand" />
       </Link>
     </div>
   );
