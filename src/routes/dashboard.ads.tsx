@@ -8,20 +8,20 @@ export const Route = createFileRoute("/dashboard/ads")({
       { title: "تسويق الإعلانات | لوحة تحكم مكافآتي" },
       {
         name: "description",
-        content: "اختر المدينة لعرض البرامج التدريبية المتاحة للتسويق وابدأ تسويق الإعلانات.",
+        content: "اختر نطاق التسويق لعرض البرامج التدريبية المتاحة للتسويق وابدأ تسويق الإعلانات.",
       },
       { property: "og:title", content: "تسويق الإعلانات | لوحة تحكم مكافآتي" },
       {
         property: "og:description",
-        content: "اختر المدينة لعرض البرامج التدريبية المتاحة للتسويق وابدأ تسويق الإعلانات.",
+        content: "اختر نطاق التسويق لعرض البرامج التدريبية المتاحة للتسويق وابدأ تسويق الإعلانات.",
       },
     ],
   }),
   component: AdsPage,
 });
 
-const CITIES = ["جدة", "الرياض", "مكة المكرمة", "ينبع"] as const;
-type City = (typeof CITIES)[number];
+const SCOPES = ["جدة", "الرياض", "مكة المكرمة", "ينبع", "جميع مدن المملكة"] as const;
+type Scope = (typeof SCOPES)[number];
 
 const extra: Array<[string, number]> = [
   ["دبلوم التسويق الرقمي", 8500],
@@ -55,24 +55,45 @@ const tail: Array<[string, number]> = [
   ["دورة استخدام الحاسب الآلي في الأعمال المكتبية", 2500],
 ];
 
-function programsFor(city: City) {
+const remotePrograms: Array<{ name: string; fee: number }> = [
+  { name: "دبلوم إدارة الموارد البشرية - عن بُعد", fee: 9500 },
+  { name: "دورة اللغة الإنجليزية - عن بُعد", fee: 9500 },
+];
+
+function cityProgramsFor(city: Exclude<Scope, "جميع مدن المملكة">) {
   const count = city === "جدة" ? 15 : city === "الرياض" ? 12 : city === "مكة المكرمة" ? 6 : 3;
   const middle = extra.slice(0, count);
   return [...base, ...middle, ...tail].map(([name, fee], i) => ({
     id: i + 1,
     name,
-    city,
+    location: city,
     fee,
   }));
+}
+
+function programsFor(scope: Scope) {
+  const remote = remotePrograms.map((p, i) => ({
+    id: i + 1,
+    name: p.name,
+    location: "عن بُعد" as const,
+    locationSub: "من أي مكان في المملكة",
+    fee: p.fee,
+  }));
+
+  if (scope === "جميع مدن المملكة") {
+    return remote;
+  }
+
+  return [...remote, ...cityProgramsFor(scope)];
 }
 
 const PER_PAGE = 8;
 
 function AdsPage() {
-  const [city, setCity] = useState<City>("جدة");
+  const [scope, setScope] = useState<Scope>("جدة");
   const [page, setPage] = useState(1);
 
-  const rows = useMemo(() => programsFor(city), [city]);
+  const rows = useMemo(() => programsFor(scope), [scope]);
   const totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
   const start = (page - 1) * PER_PAGE;
   const visible = rows.slice(start, start + PER_PAGE);
@@ -82,13 +103,13 @@ function AdsPage() {
       <div className="text-right">
         <h1 className="text-2xl font-black text-navy sm:text-3xl">تسويق الإعلانات</h1>
         <p className="mt-1 text-sm text-muted-foreground">
-          اختر المدينة لعرض البرامج التدريبية المتاحة للتسويق
+          اختر نطاق التسويق لعرض البرامج التدريبية المتاحة للتسويق
         </p>
       </div>
 
       <div className="text-right">
-        <label htmlFor="city" className="block text-sm font-bold text-navy">
-          اختر المدينة
+        <label htmlFor="scope" className="block text-sm font-bold text-navy">
+          نطاق التسويق
         </label>
         <div className="relative mt-2 w-full max-w-md">
           <MapPin
@@ -96,17 +117,17 @@ function AdsPage() {
             className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-brand"
           />
           <select
-            id="city"
-            value={city}
+            id="scope"
+            value={scope}
             onChange={(e) => {
-              setCity(e.target.value as City);
+              setScope(e.target.value as Scope);
               setPage(1);
             }}
             className="h-12 w-full appearance-none rounded-2xl border border-border bg-card pr-11 pl-11 text-right text-[15px] font-bold text-navy outline-none transition-colors focus:border-brand"
           >
-            {CITIES.map((c) => (
-              <option key={c} value={c}>
-                {c}
+            {SCOPES.map((s) => (
+              <option key={s} value={s}>
+                {s}
               </option>
             ))}
           </select>
@@ -124,21 +145,27 @@ function AdsPage() {
               <tr className="bg-navy-deep text-primary-foreground">
                 <th className="px-4 py-3.5 text-sm font-bold">الرقم</th>
                 <th className="px-4 py-3.5 text-sm font-bold">البرنامج التدريبي</th>
-                <th className="px-4 py-3.5 text-sm font-bold">المدينة</th>
+                <th className="px-4 py-3.5 text-sm font-bold">مكان الدراسة</th>
                 <th className="px-4 py-3.5 text-sm font-bold">الحالة</th>
                 <th className="px-4 py-3.5 text-sm font-bold">الرسوم</th>
+                <th className="px-4 py-3.5 text-sm font-bold">العمولة (5%)</th>
                 <th className="px-4 py-3.5 text-sm font-bold">تسويق الإعلان</th>
               </tr>
             </thead>
             <tbody>
               {visible.map((row, i) => (
                 <tr
-                  key={`${city}-${row.id}`}
+                  key={`${scope}-${row.id}`}
                   className={i % 2 === 1 ? "bg-brand-soft/70" : "bg-card"}
                 >
                   <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
                   <td className="px-4 py-3 text-sm font-medium text-navy">{row.name}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{row.city}</td>
+                  <td className="px-4 py-3 text-sm text-muted-foreground">
+                    <span className="block">{row.location}</span>
+                    {"locationSub" in row && row.locationSub && (
+                      <span className="block text-xs text-muted-foreground/70">{row.locationSub}</span>
+                    )}
+                  </td>
                   <td className="px-4 py-3">
                     <span className="inline-flex items-center rounded-lg bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600">
                       التسجيل متاح
@@ -146,6 +173,9 @@ function AdsPage() {
                   </td>
                   <td className="px-4 py-3 text-sm font-bold text-navy">
                     {row.fee.toLocaleString("en-US")} ريال
+                  </td>
+                  <td className="px-4 py-3 text-sm font-bold text-navy">
+                    {Math.round(row.fee * 0.05).toLocaleString("en-US")} ريال
                   </td>
                   <td className="px-4 py-3">
                     <button className="text-sm font-bold text-brand transition-colors hover:text-navy">
