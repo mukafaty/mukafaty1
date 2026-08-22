@@ -20,6 +20,7 @@ import {
   YAxis,
 } from "recharts";
 import { CountUp } from "@/components/dashboard/CountUp";
+import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
 
 export const Route = createFileRoute("/dashboard/")({
   head: () => ({
@@ -269,19 +270,26 @@ function DashboardHome() {
         </div>
 
         <div
-          className="animate-in fade-in slide-in-from-bottom-3 order-1 flex flex-col justify-center gap-4 rounded-3xl border border-brand/20 bg-brand-soft p-6 duration-700 fill-mode-backwards lg:order-2"
-          style={{ animationDelay: "520ms" }}
+          className="animate-in fade-in slide-in-from-bottom-3 relative order-1 overflow-hidden rounded-3xl border border-brand/20 duration-700 fill-mode-backwards lg:order-2"
+          style={{
+            animationDelay: "520ms",
+            backgroundImage: `url(${shareAsset.url})`,
+            backgroundSize: "cover",
+            backgroundPosition: "left center",
+          }}
         >
-          <h2 className="text-xl font-black leading-9 text-navy sm:text-2xl">
-            شارك رابطك واربح المزيد من المكافآت
-          </h2>
-          <p className="text-sm leading-8 text-navy/70">
-            شارك رابط الإحالة الخاص بك مع زملائك وجمهورك واحصل على مكافآت مميزة.
-          </p>
-          <button className="inline-flex h-14 items-center justify-center gap-3 rounded-2xl bg-brand px-8 text-base font-bold text-primary-foreground transition-all duration-200 hover:bg-navy">
-            <Link2 size={20} />
-            شارك الآن
-          </button>
+          <div className="flex h-full flex-col justify-center gap-3 p-6 pl-[38%] text-right sm:pl-[42%]">
+            <h2 className="text-lg font-black leading-8 text-navy sm:text-xl">
+              شارك رابطك واربح المزيد من المكافآت
+            </h2>
+            <p className="text-sm leading-7 text-navy/70">
+              شارك رابط الإحالة الخاص بك مع زملائك وجمهورك واحصل على مكافآت مميزة.
+            </p>
+            <button className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-bold text-primary-foreground transition-colors duration-200 hover:bg-navy">
+              <Link2 size={17} />
+              شارك الآن
+            </button>
+          </div>
         </div>
       </section>
     </div>
