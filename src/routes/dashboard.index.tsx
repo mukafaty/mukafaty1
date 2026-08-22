@@ -20,6 +20,7 @@ import {
   YAxis,
 } from "recharts";
 import { CountUp } from "@/components/dashboard/CountUp";
+import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
 
 export const Route = createFileRoute("/dashboard/")({
   head: () => ({
@@ -89,7 +90,7 @@ type StatProps = {
 function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }: StatProps) {
   return (
     <div
-      className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] duration-500 fill-mode-backwards"
+      className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 duration-500 fill-mode-backwards"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-start justify-between gap-3">
@@ -117,14 +118,14 @@ function DashboardHome() {
   return (
     <div className="space-y-5">
       <section className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
-        <div className="min-w-0 animate-in fade-in slide-in-from-bottom-2 duration-500 sm:order-2">
+        <div className="min-w-0 animate-in fade-in slide-in-from-bottom-2 text-right duration-500 sm:order-1">
           <h1 className="text-xl font-black text-navy sm:text-2xl">مرحباً، أحمد السبيعي 👋</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             تابع أداءك ومكافآتك في كل ما يخص نشاطك التسويقي من مكان واحد.
           </p>
         </div>
 
-        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy shadow-[var(--shadow-card)] transition-colors hover:border-brand sm:order-1">
+        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy transition-colors hover:border-brand sm:order-2">
           <Calendar size={18} className="text-brand" />
           <span>آخر 30 يومًا</span>
           <ChevronDown size={16} className="text-muted-foreground" />
@@ -176,7 +177,7 @@ function DashboardHome() {
       </section>
 
       <section
-        className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] duration-700 fill-mode-backwards"
+        className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 duration-700 fill-mode-backwards"
         style={{ animationDelay: "380ms" }}
       >
         <h2 className="text-lg font-black text-navy">آخر الإحالات</h2>
@@ -184,16 +185,16 @@ function DashboardHome() {
           <table className="w-full min-w-[560px] text-right">
             <thead>
               <tr className="text-xs font-bold text-muted-foreground">
-                <th className="pb-3 pr-2 font-bold">الاسم</th>
-                <th className="pb-3 font-bold">البرنامج التدريبي</th>
-                <th className="pb-3 font-bold">تاريخ الإحالة</th>
-                <th className="pb-3 font-bold">الحالة</th>
+                <th className="pb-2 pr-2 font-bold">الاسم</th>
+                <th className="pb-2 font-bold">البرنامج التدريبي</th>
+                <th className="pb-2 font-bold">تاريخ الإحالة</th>
+                <th className="pb-2 font-bold">الحالة</th>
               </tr>
             </thead>
             <tbody>
               {referrals.map((r) => (
                 <tr key={r.name} className="border-t border-border/70 text-sm text-navy">
-                  <td className="py-4 pr-2">
+                  <td className="py-2 pr-2">
                     <span className="flex items-center gap-3">
                       <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
                         <User size={16} />
@@ -201,9 +202,9 @@ function DashboardHome() {
                       <span className="font-bold">{r.name}</span>
                     </span>
                   </td>
-                  <td className="py-4 text-muted-foreground">{r.program}</td>
-                  <td className="py-4 text-muted-foreground">{r.date}</td>
-                  <td className="py-4">
+                  <td className="py-2 text-muted-foreground">{r.program}</td>
+                  <td className="py-2 text-muted-foreground">{r.date}</td>
+                  <td className="py-2">
                     <span
                       className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${r.tone}`}
                     >
@@ -219,7 +220,7 @@ function DashboardHome() {
 
       <section className="grid gap-4 lg:grid-cols-2">
         <div
-          className="animate-in fade-in slide-in-from-bottom-3 order-2 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] duration-700 fill-mode-backwards lg:order-1"
+          className="animate-in fade-in slide-in-from-bottom-3 order-2 rounded-3xl border border-border bg-card p-5 duration-700 fill-mode-backwards lg:order-1"
           style={{ animationDelay: "460ms" }}
         >
           <h2 className="text-lg font-black text-navy">أداء الإحالات</h2>
@@ -269,19 +270,26 @@ function DashboardHome() {
         </div>
 
         <div
-          className="animate-in fade-in slide-in-from-bottom-3 order-1 flex flex-col justify-center gap-4 rounded-3xl border border-brand/20 bg-brand-soft p-6 shadow-[var(--shadow-card)] duration-700 fill-mode-backwards lg:order-2"
-          style={{ animationDelay: "520ms" }}
+          className="animate-in fade-in slide-in-from-bottom-3 relative order-1 overflow-hidden rounded-3xl border border-brand/20 duration-700 fill-mode-backwards lg:order-2"
+          style={{
+            animationDelay: "520ms",
+            backgroundImage: `url(${shareAsset.url})`,
+            backgroundSize: "cover",
+            backgroundPosition: "left center",
+          }}
         >
-          <h2 className="text-xl font-black leading-9 text-navy sm:text-2xl">
-            شارك رابطك واربح المزيد من المكافآت
-          </h2>
-          <p className="text-sm leading-8 text-navy/70">
-            شارك رابط الإحالة الخاص بك مع زملائك وجمهورك واحصل على مكافآت مميزة.
-          </p>
-          <button className="inline-flex h-14 items-center justify-center gap-3 rounded-2xl bg-brand px-8 text-base font-bold text-primary-foreground transition-all duration-200 hover:bg-navy">
-            <Link2 size={20} />
-            شارك الآن
-          </button>
+          <div className="flex h-full flex-col justify-center gap-3 p-6 pl-[46%] text-right">
+            <h2 className="text-lg font-black leading-8 text-navy sm:text-xl">
+              شارك رابطك واربح المزيد من المكافآت
+            </h2>
+            <p className="text-sm leading-7 text-navy/70">
+              شارك رابط الإحالة الخاص بك مع زملائك وجمهورك واحصل على مكافآت مميزة.
+            </p>
+            <button className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-bold text-primary-foreground transition-colors duration-200 hover:bg-navy">
+              <Link2 size={17} />
+              شارك الآن
+            </button>
+          </div>
         </div>
       </section>
     </div>

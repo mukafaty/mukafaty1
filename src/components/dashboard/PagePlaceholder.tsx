@@ -11,7 +11,7 @@ export function PagePlaceholder({
 }) {
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 duration-500">
-      <div className="rounded-3xl border border-border bg-card p-8 shadow-[var(--shadow-card)]">
+      <div className="rounded-3xl border border-border bg-card p-8">
         <div className="flex items-center gap-4">
           <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
             <Icon size={26} />

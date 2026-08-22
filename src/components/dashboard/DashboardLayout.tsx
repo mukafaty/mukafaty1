@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Bell, ChevronDown, Menu, X } from "lucide-react";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
+import avatarAsset from "@/assets/user-avatar.jpg.asset.json";
 import { DashboardSidebar } from "./DashboardSidebar";
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
@@ -34,9 +35,14 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
             <div className="hidden h-8 w-px bg-border sm:block" />
 
             <button className="flex min-w-0 items-center gap-3">
-              <span className="grid h-10 w-10 shrink-0 place-items-center overflow-hidden rounded-full bg-brand-soft text-sm font-bold text-navy">
-                أ
-              </span>
+              <img
+                src={avatarAsset.url}
+                alt="صورة أحمد السبيعي"
+                width={80}
+                height={80}
+                loading="lazy"
+                className="h-11 w-11 shrink-0 rounded-full border border-border object-cover"
+              />
               <span className="hidden min-w-0 text-right leading-tight sm:block">
                 <span className="block truncate text-sm font-bold text-navy">أحمد السبيعي</span>
                 <span className="block truncate text-xs text-muted-foreground">مسوق خارجي</span>
@@ -77,6 +83,19 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         </aside>
         <main className="min-w-0 flex-1">{children}</main>
       </div>
+
+      <footer className="border-t border-border/60 bg-background">
+        <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:px-6 sm:text-sm lg:px-8">
+          <p>منصة مكافآتي للتسويق بالعمولة | جميع الحقوق محفوظة 2026</p>
+          <a
+            href="https://www.mkafaati.com"
+            dir="ltr"
+            className="font-bold text-navy transition-colors duration-200 hover:text-brand"
+          >
+            www.mkafaati.com
+          </a>
+        </div>
+      </footer>
     </div>
   );
 }
