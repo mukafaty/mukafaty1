@@ -89,7 +89,7 @@ type StatProps = {
 function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }: StatProps) {
   return (
     <div
-      className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] duration-500 fill-mode-backwards"
+      className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 duration-500 fill-mode-backwards"
       style={{ animationDelay: `${delay}ms` }}
     >
       <div className="flex items-start justify-between gap-3">
@@ -124,7 +124,7 @@ function DashboardHome() {
           </p>
         </div>
 
-        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy shadow-[var(--shadow-card)] transition-colors hover:border-brand sm:order-1">
+        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy transition-colors hover:border-brand sm:order-1">
           <Calendar size={18} className="text-brand" />
           <span>آخر 30 يومًا</span>
           <ChevronDown size={16} className="text-muted-foreground" />
@@ -176,7 +176,7 @@ function DashboardHome() {
       </section>
 
       <section
-        className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] duration-700 fill-mode-backwards"
+        className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 duration-700 fill-mode-backwards"
         style={{ animationDelay: "380ms" }}
       >
         <h2 className="text-lg font-black text-navy">آخر الإحالات</h2>
@@ -219,7 +219,7 @@ function DashboardHome() {
 
       <section className="grid gap-4 lg:grid-cols-2">
         <div
-          className="animate-in fade-in slide-in-from-bottom-3 order-2 rounded-3xl border border-border bg-card p-5 shadow-[var(--shadow-card)] duration-700 fill-mode-backwards lg:order-1"
+          className="animate-in fade-in slide-in-from-bottom-3 order-2 rounded-3xl border border-border bg-card p-5 duration-700 fill-mode-backwards lg:order-1"
           style={{ animationDelay: "460ms" }}
         >
           <h2 className="text-lg font-black text-navy">أداء الإحالات</h2>
@@ -269,7 +269,7 @@ function DashboardHome() {
         </div>
 
         <div
-          className="animate-in fade-in slide-in-from-bottom-3 order-1 flex flex-col justify-center gap-4 rounded-3xl border border-brand/20 bg-brand-soft p-6 shadow-[var(--shadow-card)] duration-700 fill-mode-backwards lg:order-2"
+          className="animate-in fade-in slide-in-from-bottom-3 order-1 flex flex-col justify-center gap-4 rounded-3xl border border-brand/20 bg-brand-soft p-6 duration-700 fill-mode-backwards lg:order-2"
           style={{ animationDelay: "520ms" }}
         >
           <h2 className="text-xl font-black leading-9 text-navy sm:text-2xl">
