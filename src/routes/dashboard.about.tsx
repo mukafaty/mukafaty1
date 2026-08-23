@@ -6,9 +6,9 @@ export const Route = createFileRoute("/dashboard/about")({
   head: () => ({
     meta: [
       { title: "عن البرنامج | لوحة تحكم مكافآتي" },
-      { name: "description", content: "تفاصيل برنامج التسويق بالعمولة وشروط المكافآت." },
+      { name: "description", content: "تفاصيل برنامج مكافآتي للتسويق بالعمولة." },
       { property: "og:title", content: "عن البرنامج | لوحة تحكم مكافآتي" },
-      { property: "og:description", content: "تفاصيل برنامج التسويق بالعمولة وشروط المكافآت." },
+      { property: "og:description", content: "تفاصيل برنامج مكافآتي للتسويق بالعمولة." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -27,7 +27,7 @@ function AboutPage() {
         <div className="min-w-0">
           <h1 className="text-xl font-black text-navy sm:text-2xl">عن برنامج مكافأتي</h1>
           <p className="mt-0.5 text-sm text-muted-foreground">
-            تفاصيل برنامج التسويق بالعمولة وشروط المكافآت.
+            تفاصيل برنامج مكافآتي للتسويق بالعمولة.
           </p>
         </div>
       </section>
