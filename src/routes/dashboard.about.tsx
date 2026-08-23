@@ -39,7 +39,7 @@ function AboutPage() {
       >
         <div className="grid items-center gap-6 p-6 sm:p-8 lg:grid-cols-2 lg:gap-10">
           <div className="order-2 min-w-0 text-right lg:order-1">
-            <h2 className="text-2xl font-black text-navy sm:text-3xl">عن برنامج مكافأتي</h2>
+            
             <p className="mt-3 text-lg font-bold text-brand sm:text-xl">
               حوّل علاقاتك ومهاراتك التسويقية إلى دخل إضافي.
             </p>
