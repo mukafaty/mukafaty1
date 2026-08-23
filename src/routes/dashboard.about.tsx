@@ -37,7 +37,7 @@ function AboutPage() {
         className="animate-in fade-in slide-in-from-bottom-3 overflow-hidden rounded-3xl border border-border bg-card duration-700 fill-mode-backwards"
         style={{ animationDelay: "80ms" }}
       >
-        <div className="grid items-center gap-6 p-6 sm:p-8 lg:grid-cols-2 lg:gap-8">
+        <div className="grid items-center gap-6 p-6 sm:p-8 lg:grid-cols-2 lg:gap-10">
           <div className="order-2 min-w-0 text-right lg:order-1">
             <h2 className="text-2xl font-black text-navy sm:text-3xl">عن برنامج مكافأتي</h2>
             <p className="mt-3 text-lg font-bold text-brand sm:text-xl">
@@ -51,7 +51,7 @@ function AboutPage() {
             <img
               src={aboutHeroAsset.url}
               alt="شرح برنامج مكافأتي للتسويق بالعمولة"
-              className="h-auto w-full max-w-md rounded-2xl object-contain lg:max-w-full"
+              className="h-auto w-full max-w-full rounded-2xl object-contain"
             />
           </div>
         </div>
@@ -73,41 +73,41 @@ function AboutPage() {
           {/* Reward explanation */}
           <div className="rounded-2xl border border-border bg-brand-soft/40 p-5 sm:p-6">
             <div className="flex items-start gap-4">
-              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-brand text-primary-foreground shadow-sm">
-                <Percent size={26} />
-              </span>
-              <div className="min-w-0 text-right">
+              <div className="min-w-0 flex-1 text-right">
                 <h3 className="text-lg font-black text-navy">المكافأة التسويقية</h3>
                 <p className="mt-2 leading-7 text-muted-foreground">
                   يحصل المسوق على 5% من قيمة الرسوم للبرنامج التدريبي عند استحقاق المكافأة.
                 </p>
               </div>
+              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-full bg-brand text-primary-foreground shadow-sm">
+                <Percent size={26} />
+              </span>
             </div>
           </div>
 
           {/* Example calculation */}
           <div className="rounded-2xl border border-border bg-card p-5 sm:p-6">
             <div className="mb-4 flex items-center gap-3">
+              <h3 className="text-lg font-black text-navy">مثال توضيحي</h3>
               <span className="grid h-10 w-10 shrink-0 place-items-center rounded-full bg-emerald-100 text-emerald-600">
                 <Wallet size={20} />
               </span>
-              <h3 className="text-lg font-black text-navy">مثال توضيحي</h3>
             </div>
 
-            <div className="flex flex-wrap items-center justify-center gap-3 rounded-2xl bg-brand-soft/40 px-4 py-5 text-navy sm:gap-5 sm:px-6">
-              <div className="text-center">
-                <p className="text-xs font-bold text-muted-foreground">رسوم البرنامج</p>
-                <p className="mt-1 text-xl font-black sm:text-2xl">9,500 ريال</p>
+            <div className="flex flex-nowrap items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-brand-soft/40 px-4 py-5 text-navy sm:gap-4 sm:px-6">
+              <div className="min-w-0 flex-1 text-center">
+                <p className="text-[11px] font-bold text-muted-foreground sm:text-xs">رسوم البرنامج</p>
+                <p className="mt-1 text-base font-black sm:text-lg">9,500 ريال</p>
               </div>
-              <span className="text-2xl font-black text-muted-foreground/60">×</span>
-              <div className="text-center">
-                <p className="text-xs font-bold text-muted-foreground">نسبة العمولة</p>
-                <p className="mt-1 text-xl font-black text-brand sm:text-2xl">5%</p>
+              <span className="shrink-0 text-lg font-black text-muted-foreground/60 sm:text-xl">×</span>
+              <div className="min-w-0 flex-1 text-center">
+                <p className="text-[11px] font-bold text-muted-foreground sm:text-xs">نسبة العمولة</p>
+                <p className="mt-1 text-base font-black text-brand sm:text-lg">5%</p>
               </div>
-              <span className="text-2xl font-black text-muted-foreground/60">=</span>
-              <div className="text-center">
-                <p className="text-xs font-bold text-muted-foreground">مكافأتك</p>
-                <p className="mt-1 text-xl font-black text-emerald-600 sm:text-2xl">475 ريال</p>
+              <span className="shrink-0 text-lg font-black text-muted-foreground/60 sm:text-xl">=</span>
+              <div className="min-w-0 flex-1 text-center">
+                <p className="text-[11px] font-bold text-muted-foreground sm:text-xs">مكافأتك</p>
+                <p className="mt-1 text-base font-black text-emerald-600 sm:text-lg">475 ريال</p>
               </div>
             </div>
           </div>
