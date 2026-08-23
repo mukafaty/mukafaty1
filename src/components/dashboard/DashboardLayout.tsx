@@ -174,7 +174,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               </button>
 
               {notificationsOpen && (
-                <div className="absolute left-0 top-full z-50 mt-3 w-[340px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-background shadow-card animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 top-full z-50 mt-3 w-[340px] max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-background shadow-card animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="flex items-center justify-between border-b border-border/60 px-4 py-3">
                     <h3 className="text-base font-bold text-navy">التنبيهات</h3>
                     <button
@@ -262,7 +262,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               </button>
 
               {accountOpen && (
-                <div className="absolute left-0 top-full z-50 mt-3 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-background shadow-card animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute right-0 top-full z-50 mt-3 w-60 max-w-[calc(100vw-2rem)] overflow-hidden rounded-2xl border border-border bg-background shadow-card animate-in fade-in slide-in-from-top-2 duration-200">
                   <div className="py-2">
                     {accountLinks.map((link, index) => {
                       const Icon = link.icon;
