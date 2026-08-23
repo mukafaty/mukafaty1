@@ -94,20 +94,20 @@ function AboutPage() {
               </span>
             </div>
 
-            <div className="flex flex-nowrap items-center justify-between gap-2 overflow-x-auto rounded-2xl bg-brand-soft/40 px-4 py-5 text-navy sm:gap-4 sm:px-6">
-              <div className="min-w-0 flex-1 text-center">
-                <p className="text-[11px] font-bold text-muted-foreground sm:text-xs">رسوم البرنامج</p>
-                <p className="mt-1 text-base font-black sm:text-lg">9,500 ريال</p>
+            <div className="grid grid-cols-5 items-center gap-1 rounded-2xl bg-brand-soft/40 px-3 py-4 text-navy sm:gap-2 sm:px-4 sm:py-5">
+              <div className="min-w-0 text-center">
+                <p className="text-[10px] font-bold text-muted-foreground sm:text-xs">رسوم البرنامج</p>
+                <p className="mt-0.5 text-sm font-black sm:text-base">9,500 ريال</p>
               </div>
-              <span className="shrink-0 text-lg font-black text-muted-foreground/60 sm:text-xl">×</span>
-              <div className="min-w-0 flex-1 text-center">
-                <p className="text-[11px] font-bold text-muted-foreground sm:text-xs">نسبة العمولة</p>
-                <p className="mt-1 text-base font-black text-brand sm:text-lg">5%</p>
+              <span className="text-center text-base font-black text-muted-foreground/60 sm:text-lg">×</span>
+              <div className="min-w-0 text-center">
+                <p className="text-[10px] font-bold text-muted-foreground sm:text-xs">نسبة العمولة</p>
+                <p className="mt-0.5 text-sm font-black text-brand sm:text-base">5%</p>
               </div>
-              <span className="shrink-0 text-lg font-black text-muted-foreground/60 sm:text-xl">=</span>
-              <div className="min-w-0 flex-1 text-center">
-                <p className="text-[11px] font-bold text-muted-foreground sm:text-xs">مكافأتك</p>
-                <p className="mt-1 text-base font-black text-emerald-600 sm:text-lg">475 ريال</p>
+              <span className="text-center text-base font-black text-muted-foreground/60 sm:text-lg">=</span>
+              <div className="min-w-0 text-center">
+                <p className="text-[10px] font-bold text-muted-foreground sm:text-xs">مكافأتك</p>
+                <p className="mt-0.5 text-sm font-black text-emerald-600 sm:text-base">475 ريال</p>
               </div>
             </div>
           </div>
