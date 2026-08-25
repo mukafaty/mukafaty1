@@ -24,7 +24,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import avatarAsset from "@/assets/user-avatar.jpg.asset.json";
-import { SnapchatIcon, TiktokIcon, XIcon } from "@/components/dashboard/SocialIcons";
+import {
+  InstagramColorIcon,
+  XColorIcon,
+  FacebookColorIcon,
+  SnapchatColorIcon,
+  TiktokColorIcon,
+  YoutubeColorIcon,
+  LinkedinColorIcon,
+  WebsiteColorIcon,
+} from "@/components/dashboard/SocialIcons";
 import {
   fetchBanks,
   fetchCities,
