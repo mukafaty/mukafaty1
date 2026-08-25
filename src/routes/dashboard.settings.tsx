@@ -373,7 +373,7 @@ function SettingsPage() {
                 value={option.value}
                 checked={payoutMethod === option.value}
                 onChange={() => setPayoutMethod(option.value)}
-                className="h-4 w-4 shrink-0 accent-[hsl(var(--brand))]"
+                className="h-4 w-4 shrink-0 accent-[var(--brand)]"
               />
               <span>{option.label}</span>
             </label>
