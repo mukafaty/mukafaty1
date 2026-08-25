@@ -96,16 +96,18 @@ function ContactPage() {
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
-      <div className="text-right">
-        <h1 className="text-2xl font-black text-navy sm:text-3xl">تواصل معنا</h1>
-        <p className="mt-1 text-sm text-muted-foreground">تواصل مع فريق دعم مكافأتي.</p>
+      <div className="flex items-center gap-3 text-right">
+        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand text-primary-foreground">
+          <Mail size={22} />
+        </span>
+        <div>
+          <h1 className="text-2xl font-black text-navy sm:text-3xl">تواصل معنا</h1>
+          <p className="mt-1 text-sm text-muted-foreground">تواصل مع فريق دعم مكافأتي.</p>
+        </div>
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-4 shadow-card sm:p-6 lg:p-8">
         <div className="mb-6 text-right">
-          <div className="mb-2 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-brand-soft text-brand">
-            <Mail size={24} />
-          </div>
           <h2 className="text-xl font-black text-navy sm:text-2xl">أرسل لنا رسالة</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             يرجى تعبئة النموذج وسيتم الرد عليك في أقرب وقت.
