@@ -252,60 +252,62 @@ function ContactPage() {
             />
           </div>
 
-          <div className="space-y-2 text-right">
-            <Label className="text-sm font-bold text-navy">إرفاق ملف <span className="text-muted-foreground font-normal">(اختياري)</span></Label>
-            <div
-              onDrop={onDrop}
-              onDragOver={onDragOver}
-              onDragLeave={onDragLeave}
-              onClick={() => fileInputRef.current?.click()}
-              className={`cursor-pointer rounded-2xl border-2 border-dashed p-6 text-center transition-colors ${
-                isDragging
-                  ? "border-brand bg-brand-soft/50"
-                  : "border-border bg-background hover:border-brand/50 hover:bg-brand-soft/30"
-              }`}
-            >
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept=".pdf,.png,.jpg,.jpeg"
-                onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
-                className="hidden"
-              />
-              <div className="flex flex-col items-center gap-2">
-                <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-soft text-brand">
-                  <Upload size={20} />
-                </span>
-                <p className="text-sm font-bold text-navy">انقر لإرفاق ملف أو اسحب الملف هنا</p>
-                <p className="text-xs text-muted-foreground">
-                  الملفات المسموحة: PDF, PNG, JPG (الحد الأقصى 5MB)
-                </p>
+          <div className="flex flex-col items-stretch justify-between gap-4 lg:flex-row lg:items-end">
+            <div className="flex-1 space-y-2 text-right">
+              <Label className="text-sm font-bold text-navy">إرفاق ملف <span className="text-muted-foreground font-normal">(اختياري)</span></Label>
+              <div
+                onDrop={onDrop}
+                onDragOver={onDragOver}
+                onDragLeave={onDragLeave}
+                onClick={() => fileInputRef.current?.click()}
+                className={`cursor-pointer rounded-2xl border-2 border-dashed p-6 text-center transition-colors ${
+                  isDragging
+                    ? "border-brand bg-brand-soft/50"
+                    : "border-border bg-background hover:border-brand/50 hover:bg-brand-soft/30"
+                }`}
+              >
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  onChange={(e) => handleFileChange(e.target.files?.[0] ?? null)}
+                  className="hidden"
+                />
+                <div className="flex flex-col items-center gap-2">
+                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-brand-soft text-brand">
+                    <Upload size={20} />
+                  </span>
+                  <p className="text-sm font-bold text-navy">انقر لإرفاق ملف أو اسحب الملف هنا</p>
+                  <p className="text-xs text-muted-foreground">
+                    الملفات المسموحة: PDF, PNG, JPG (الحد الأقصى 5MB)
+                  </p>
+                </div>
               </div>
+
+              {form.file && (
+                <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-border bg-brand-soft/30 px-4 py-2.5 animate-in fade-in duration-200">
+                  <span className="min-w-0 truncate text-sm font-bold text-navy">{form.file.name}</span>
+                  <button
+                    type="button"
+                    onClick={removeFile}
+                    className="shrink-0 rounded-lg p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
+                    aria-label="إزالة الملف"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+              )}
             </div>
 
-            {form.file && (
-              <div className="mt-3 flex items-center justify-between gap-3 rounded-xl border border-border bg-brand-soft/30 px-4 py-2.5 animate-in fade-in duration-200">
-                <span className="min-w-0 truncate text-sm font-bold text-navy">{form.file.name}</span>
-                <button
-                  type="button"
-                  onClick={removeFile}
-                  className="shrink-0 rounded-lg p-1 text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
-                  aria-label="إزالة الملف"
-                >
-                  <X size={16} />
-                </button>
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-start pt-2">
-            <Button
-              type="submit"
-              className="h-12 gap-2 rounded-2xl bg-navy-deep px-8 text-sm font-bold text-primary-foreground transition-colors hover:bg-navy"
-            >
-              <Send size={18} />
-              إرسال الرسالة
-            </Button>
+            <div className="flex shrink-0 justify-start lg:justify-end">
+              <Button
+                type="submit"
+                className="h-12 gap-2 rounded-2xl bg-navy-deep px-8 text-sm font-bold text-primary-foreground transition-colors hover:bg-navy"
+              >
+                <Send size={18} />
+                إرسال الرسالة
+              </Button>
+            </div>
           </div>
         </form>
       </div>
