@@ -659,53 +659,59 @@ function SettingsPage() {
             const value = (socials[platform.key] ?? "").trim();
             const fullUrl = value ? `${platform.prefix}${value.replace(/^\/+/, "")}` : "";
             return (
-              <div key={platform.key} className="flex flex-col gap-2 sm:flex-row sm:items-center">
-                <div className="flex w-full items-center gap-2 sm:w-[190px]">
-                  <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-soft text-brand">
-                    <Icon size={18} />
+              <div key={platform.key} className="flex flex-col gap-2 sm:flex-row-reverse sm:items-center">
+                {/* اسم المنصة والأيقونة — أقصى اليمين */}
+                <div className="flex w-full items-center justify-end gap-2 sm:w-[180px]">
+                  <span className="order-2 text-sm font-bold text-navy">{platform.label}</span>
+                  <span className="order-3 inline-flex h-8 w-8 shrink-0 items-center justify-center">
+                    <Icon size={22} />
                   </span>
-                  <span className="text-sm font-bold text-navy">{platform.label}</span>
                 </div>
 
-                <div className="flex min-w-0 flex-1 items-center overflow-hidden rounded-xl border border-input bg-background focus-within:border-brand">
-                  <span dir="ltr" className="shrink-0 border-l border-border/60 px-3 py-2.5 text-xs text-muted-foreground">
+                {/* حقل اسم المستخدم */}
+                <input
+                  dir="rtl"
+                  value={socials[platform.key] ?? ""}
+                  onChange={(e) =>
+                    setSocials((prev) => ({ ...prev, [platform.key]: e.target.value }))
+                  }
+                  placeholder={platform.key === "website" ? "أدخل رابط الموقع" : "أدخل اسم المستخدم"}
+                  aria-label={`اسم المستخدم في ${platform.label}`}
+                  className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-4 text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
+                />
+
+                {/* رابط المنصة الثابت */}
+                <div className="flex h-11 min-w-0 flex-1 items-center rounded-xl border border-input bg-background px-4">
+                  <span dir="ltr" className="truncate text-sm font-semibold text-navy-deep">
                     {platform.prefix}
                   </span>
-                  <input
-                    dir="ltr"
-                    value={socials[platform.key] ?? ""}
-                    onChange={(e) =>
-                      setSocials((prev) => ({ ...prev, [platform.key]: e.target.value }))
-                    }
-                    placeholder={platform.placeholder}
-                    aria-label={`رابط ${platform.label}`}
-                    className="h-11 min-w-0 flex-1 bg-transparent px-3 text-right text-sm text-navy outline-none"
-                  />
                 </div>
 
+                {/* زر فتح الرابط — أقصى اليسار */}
                 {fullUrl ? (
                   <a
                     href={fullUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:border-brand hover:text-brand"
+                    className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl border border-border px-4 text-sm font-bold text-navy transition-colors hover:border-brand hover:text-brand sm:w-[130px]"
                   >
                     <ExternalLink size={16} />
-                    فتح الصفحة
+                    فتح الرابط
                   </a>
                 ) : (
                   <span
                     aria-disabled
-                    className="inline-flex h-11 shrink-0 cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-border px-3 text-sm font-bold text-muted-foreground opacity-60"
+                    className="inline-flex h-11 shrink-0 cursor-not-allowed items-center justify-center gap-2 rounded-xl border border-border px-4 text-sm font-bold text-muted-foreground opacity-60 sm:w-[130px]"
                   >
                     <ExternalLink size={16} />
-                    فتح الصفحة
+                    فتح الرابط
                   </span>
                 )}
               </div>
             );
           })}
         </div>
+
 
         <div className="mt-6">
           <Button type="button" className={saveBtnClass} onClick={saveSocials}>
