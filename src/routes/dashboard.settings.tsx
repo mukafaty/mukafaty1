@@ -73,15 +73,16 @@ function useLookup(loader: () => Promise<LookupItem[]>) {
 }
 
 const socialPlatforms = [
-  { key: "instagram", label: "Instagram", icon: Instagram, prefix: "https://instagram.com/", placeholder: "ahmed_alsobai" },
-  { key: "x", label: "X (Twitter)", icon: XIcon, prefix: "https://x.com/", placeholder: "ahmed_alsobai" },
-  { key: "facebook", label: "Facebook", icon: Facebook, prefix: "https://facebook.com/", placeholder: "ahmed_alsobai" },
-  { key: "snapchat", label: "Snapchat", icon: SnapchatIcon, prefix: "https://snapchat.com/add/", placeholder: "ahmed_alsobai" },
-  { key: "tiktok", label: "TikTok", icon: TiktokIcon, prefix: "https://tiktok.com/@", placeholder: "ahmed_alsobai" },
-  { key: "youtube", label: "YouTube", icon: Youtube, prefix: "https://youtube.com/@", placeholder: "ahmed_alsobai" },
-  { key: "linkedin", label: "LinkedIn", icon: Linkedin, prefix: "https://linkedin.com/in/", placeholder: "ahmed_alsobai" },
-  { key: "website", label: "الموقع الشخصي", icon: Globe, prefix: "https://", placeholder: "ahmedalsobai.com" },
+  { key: "instagram", label: "Instagram", icon: InstagramColorIcon, prefix: "https://instagram.com/" },
+  { key: "x", label: "X (Twitter)", icon: XColorIcon, prefix: "https://x.com/" },
+  { key: "facebook", label: "Facebook", icon: FacebookColorIcon, prefix: "https://facebook.com/" },
+  { key: "snapchat", label: "Snapchat", icon: SnapchatColorIcon, prefix: "https://snapchat.com/" },
+  { key: "tiktok", label: "TikTok", icon: TiktokColorIcon, prefix: "https://tiktok.com/" },
+  { key: "youtube", label: "YouTube", icon: YoutubeColorIcon, prefix: "https://youtube.com/" },
+  { key: "linkedin", label: "LinkedIn", icon: LinkedinColorIcon, prefix: "https://linkedin.com/in/" },
+  { key: "website", label: "الموقع الشخصي (اختياري)", icon: WebsiteColorIcon, prefix: "https://" },
 ] as const;
+
 
 const sectionLinks = [
   { id: "personal-data", label: "البيانات الشخصية" },
