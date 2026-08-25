@@ -664,13 +664,13 @@ function SettingsPage() {
             const value = (socials[platform.key] ?? "").trim();
             const fullUrl = value ? `${platform.prefix}${value.replace(/^\/+/, "")}` : "";
             return (
-              <div key={platform.key} className="flex flex-col gap-2 sm:flex-row-reverse sm:items-center">
-                {/* اسم المنصة والأيقونة — أقصى اليمين */}
-                <div className="flex w-full items-center justify-end gap-2 sm:w-[180px]">
-                  <span className="order-2 text-sm font-bold text-navy">{platform.label}</span>
-                  <span className="order-3 inline-flex h-8 w-8 shrink-0 items-center justify-center">
+              <div key={platform.key} className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                {/* أيقونة واسم المنصة — أقصى اليمين */}
+                <div className="flex w-full items-center gap-2 sm:w-[180px]">
+                  <span className="inline-flex h-8 w-8 shrink-0 items-center justify-center">
                     <Icon size={22} />
                   </span>
+                  <span className="text-sm font-bold text-navy">{platform.label}</span>
                 </div>
 
                 {/* حقل اسم المستخدم */}
