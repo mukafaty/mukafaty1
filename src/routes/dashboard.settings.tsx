@@ -12,11 +12,6 @@ import {
   Mail,
   Eye,
   EyeOff,
-  Instagram,
-  Facebook,
-  Youtube,
-  Linkedin,
-  Globe,
   ExternalLink,
   X as CloseIcon,
 } from "lucide-react";
