@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { toast } from "sonner";
 import {
   Settings,
   User,
@@ -17,6 +18,7 @@ import {
   Linkedin,
   Globe,
   ExternalLink,
+  X as CloseIcon,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -52,6 +54,8 @@ const selectClass =
 const saveBtnClass =
   "gap-2 rounded-xl bg-navy-deep px-5 text-primary-foreground hover:bg-navy";
 
+const STORAGE_KEY = "mukafaty:settings";
+
 /** يستخدم دالة جلب من طبقة الـ lookups (قابلة للاستبدال بقاعدة البيانات). */
 function useLookup(loader: () => Promise<LookupItem[]>) {
   const [items, setItems] = useState<LookupItem[]>([]);
@@ -79,6 +83,59 @@ const socialPlatforms = [
   { key: "website", label: "الموقع الشخصي", icon: Globe, prefix: "https://", placeholder: "ahmedalsobai.com" },
 ] as const;
 
+const sectionLinks = [
+  { id: "personal-data", label: "البيانات الشخصية" },
+  { id: "login-data", label: "بيانات الدخول" },
+  { id: "financial-data", label: "البيانات المالية" },
+  { id: "social-links", label: "الروابط الشخصية" },
+];
+
+type Stored = {
+  personal?: Record<string, string>;
+  avatar?: string;
+  loginEmail?: string;
+  payoutMethod?: "bank" | "cash";
+  financial?: Record<string, string>;
+  socials?: Record<string, string>;
+};
+
+function readStored(): Stored {
+  if (typeof window === "undefined") return {};
+  try {
+    return JSON.parse(window.localStorage.getItem(STORAGE_KEY) ?? "{}") as Stored;
+  } catch {
+    return {};
+  }
+}
+
+function persist(patch: Stored) {
+  if (typeof window === "undefined") return;
+  const next = { ...readStored(), ...patch };
+  window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
+}
+
+function scrollToSection(id: string) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+}
+
+function SectionHeading({
+  icon: Icon,
+  title,
+}: {
+  icon: React.ComponentType<{ size?: number }>;
+  title: string;
+}) {
+  return (
+    <div className="mb-5 flex items-center gap-3">
+      <span className={sectionIconClass}>
+        <Icon size={20} />
+      </span>
+      <h2 className="text-lg font-extrabold text-navy">{title}</h2>
+    </div>
+  );
+}
+
 function SettingsPage() {
   const nationalities = useLookup(fetchNationalities);
   const cities = useLookup(fetchCities);
@@ -97,11 +154,19 @@ function SettingsPage() {
     referralSource: "",
   });
 
+  const [avatar, setAvatar] = useState<string>(avatarAsset.url);
+  const fileRef = useRef<HTMLInputElement>(null);
+
   const [showPassword, setShowPassword] = useState({
     current: false,
     next: false,
     confirm: false,
   });
+  const [passwords, setPasswords] = useState({ current: "", next: "", confirm: "" });
+
+  const [loginEmail, setLoginEmail] = useState("ahmed.alsobai@example.com");
+  const [emailDialogOpen, setEmailDialogOpen] = useState(false);
+  const [emailForm, setEmailForm] = useState({ next: "", confirm: "" });
 
   const [payoutMethod, setPayoutMethod] = useState<"bank" | "cash">("bank");
   const [financial, setFinancial] = useState({
@@ -113,30 +178,148 @@ function SettingsPage() {
 
   const [socials, setSocials] = useState<Record<string, string>>({});
 
+  // استرجاع البيانات المحفوظة محليًا
+  useEffect(() => {
+    const stored = readStored();
+    if (stored.personal) setPersonal((p) => ({ ...p, ...stored.personal }));
+    if (stored.avatar) setAvatar(stored.avatar);
+    if (stored.loginEmail) setLoginEmail(stored.loginEmail);
+    if (stored.payoutMethod) setPayoutMethod(stored.payoutMethod);
+    if (stored.financial) setFinancial((f) => ({ ...f, ...stored.financial }));
+    if (stored.socials) setSocials(stored.socials);
+  }, []);
+
   const setPersonalField = (key: keyof typeof personal, value: string) =>
     setPersonal((prev) => ({ ...prev, [key]: value }));
 
+  const handleAvatarFile = (file: File | undefined) => {
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("الرجاء اختيار ملف صورة صالح.");
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("حجم الصورة يجب أن يكون أقل من 5 ميجابايت.");
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = () => {
+      const url = String(reader.result);
+      setAvatar(url);
+      persist({ avatar: url });
+      toast.success("تم تغيير الصورة الشخصية بنجاح.");
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const savePersonal = () => {
+    if (!personal.firstName.trim() || !personal.lastName.trim()) {
+      toast.error("الاسم الأول واسم العائلة مطلوبان.");
+      return;
+    }
+    if (personal.email && !/^\S+@\S+\.\S+$/.test(personal.email)) {
+      toast.error("صيغة البريد الإلكتروني غير صحيحة.");
+      return;
+    }
+    if (personal.phone && !/^05\d{8}$/.test(personal.phone.replace(/\s/g, ""))) {
+      toast.error("رقم الجوال يجب أن يبدأ بـ 05 ويكون 10 أرقام.");
+      return;
+    }
+    persist({ personal });
+    toast.success("تم حفظ البيانات الشخصية بنجاح.");
+  };
+
+  const confirmEmailChange = () => {
+    if (!/^\S+@\S+\.\S+$/.test(emailForm.next)) {
+      toast.error("صيغة البريد الإلكتروني الجديد غير صحيحة.");
+      return;
+    }
+    if (emailForm.next !== emailForm.confirm) {
+      toast.error("البريد الإلكتروني الجديد وتأكيده غير متطابقين.");
+      return;
+    }
+    setLoginEmail(emailForm.next);
+    persist({ loginEmail: emailForm.next });
+    setEmailForm({ next: "", confirm: "" });
+    setEmailDialogOpen(false);
+    toast.success("تم تغيير البريد الإلكتروني بنجاح.");
+  };
+
+  const changePassword = () => {
+    if (!passwords.current) {
+      toast.error("الرجاء إدخال كلمة المرور الحالية.");
+      return;
+    }
+    if (passwords.next.length < 8) {
+      toast.error("كلمة المرور الجديدة يجب أن تكون 8 أحرف على الأقل.");
+      return;
+    }
+    if (passwords.next !== passwords.confirm) {
+      toast.error("كلمة المرور الجديدة وتأكيدها غير متطابقين.");
+      return;
+    }
+    setPasswords({ current: "", next: "", confirm: "" });
+    toast.success("تم تغيير كلمة المرور بنجاح.");
+  };
+
+  const saveFinancial = () => {
+    if (payoutMethod === "bank") {
+      if (!financial.beneficiary.trim()) {
+        toast.error("الرجاء إدخال اسم المستفيد.");
+        return;
+      }
+      if (!financial.bank) {
+        toast.error("الرجاء اختيار البنك.");
+        return;
+      }
+      const iban = financial.iban.replace(/\s/g, "").toUpperCase();
+      if (!/^SA\d{22}$/.test(iban)) {
+        toast.error("رقم الآيبان غير صحيح (يبدأ بـ SA ويتكون من 24 خانة).");
+        return;
+      }
+      if (iban !== financial.ibanConfirm.replace(/\s/g, "").toUpperCase()) {
+        toast.error("رقم الآيبان وتأكيده غير متطابقين.");
+        return;
+      }
+    }
+    persist({ payoutMethod, financial });
+    toast.success("تم حفظ البيانات المالية بنجاح.");
+  };
+
+  const saveSocials = () => {
+    persist({ socials });
+    toast.success("تم حفظ الروابط الشخصية بنجاح.");
+  };
+
   return (
     <div className="space-y-5">
-      <div className="flex items-center justify-between gap-3">
-        <div>
+      <div>
+        <div className="flex items-center gap-3">
+          <span className={sectionIconClass}>
+            <Settings size={20} />
+          </span>
           <h1 className="text-2xl font-extrabold text-navy sm:text-3xl">إعدادات الحساب</h1>
         </div>
-        <span className={sectionIconClass}>
-          <Settings size={20} />
-        </span>
+        <p className="mt-2 text-sm text-muted-foreground">بيانات حسابك وتفضيلاتك.</p>
+        <nav className="mt-3 flex flex-wrap items-center gap-2">
+          {sectionLinks.map((link) => (
+            <button
+              key={link.id}
+              type="button"
+              onClick={() => scrollToSection(link.id)}
+              className="rounded-xl border border-border px-3 py-1.5 text-sm font-bold text-navy transition-colors hover:border-brand hover:text-brand"
+            >
+              {link.label}
+            </button>
+          ))}
+        </nav>
       </div>
 
       {/* البيانات الشخصية */}
-      <section className={cardClass}>
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-navy">البيانات الشخصية</h2>
-          <span className={sectionIconClass}>
-            <User size={20} />
-          </span>
-        </div>
+      <section id="personal-data" className={cardClass}>
+        <SectionHeading icon={User} title="البيانات الشخصية" />
 
-        <div className="flex flex-col gap-6 lg:flex-row-reverse">
+        <div className="flex flex-col gap-6 lg:flex-row">
           <div className="min-w-0 flex-1 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div>
@@ -260,14 +443,36 @@ function SettingsPage() {
           </div>
 
           <div className="flex shrink-0 flex-col items-center gap-3 lg:w-[190px]">
-            <img
-              src={avatarAsset.url}
-              alt="الصورة الشخصية"
-              width={160}
-              height={160}
-              className="h-32 w-32 rounded-full border border-border object-cover"
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => {
+                handleAvatarFile(e.target.files?.[0]);
+                e.target.value = "";
+              }}
             />
-            <Button type="button" variant="outline" className="gap-2 rounded-xl">
+            <button
+              type="button"
+              onClick={() => fileRef.current?.click()}
+              aria-label="تغيير الصورة الشخصية"
+              className="rounded-full outline-none transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-brand"
+            >
+              <img
+                src={avatar}
+                alt="الصورة الشخصية"
+                width={160}
+                height={160}
+                className="h-32 w-32 cursor-pointer rounded-full border border-border object-cover"
+              />
+            </button>
+            <Button
+              type="button"
+              variant="outline"
+              className="gap-2 rounded-xl"
+              onClick={() => fileRef.current?.click()}
+            >
               <Camera size={16} />
               تغيير الصورة
             </Button>
@@ -275,7 +480,7 @@ function SettingsPage() {
         </div>
 
         <div className="mt-6">
-          <Button type="button" className={saveBtnClass}>
+          <Button type="button" className={saveBtnClass} onClick={savePersonal}>
             <Save size={16} />
             حفظ التغييرات
           </Button>
@@ -283,24 +488,24 @@ function SettingsPage() {
       </section>
 
       {/* بيانات الدخول */}
-      <section className={cardClass}>
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-navy">بيانات الدخول</h2>
-          <span className={sectionIconClass}>
-            <Lock size={20} />
-          </span>
-        </div>
+      <section id="login-data" className={cardClass}>
+        <SectionHeading icon={Lock} title="بيانات الدخول" />
 
         <div className="space-y-2">
           <Label className={labelClass} htmlFor="loginEmail">البريد الإلكتروني لتسجيل الدخول</Label>
-          <div className="flex flex-col gap-3 sm:flex-row-reverse sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
             <Input
               id="loginEmail"
               type="email"
-              defaultValue="ahmed.alsobai@example.com"
+              value={loginEmail}
+              readOnly
               className="h-11 flex-1 rounded-xl"
             />
-            <Button type="button" variant="outline" className="gap-2 rounded-xl">
+            <Button
+              type="button"
+              className={saveBtnClass}
+              onClick={() => setEmailDialogOpen(true)}
+            >
               <Mail size={16} />
               تغيير البريد الإلكتروني
             </Button>
@@ -321,6 +526,10 @@ function SettingsPage() {
                   id={`pwd-${field.key}`}
                   type={showPassword[field.key] ? "text" : "password"}
                   placeholder={field.placeholder}
+                  value={passwords[field.key]}
+                  onChange={(e) =>
+                    setPasswords((prev) => ({ ...prev, [field.key]: e.target.value }))
+                  }
                   className="h-11 rounded-xl pl-10"
                 />
                 <button
@@ -339,7 +548,7 @@ function SettingsPage() {
         </div>
 
         <div className="mt-6">
-          <Button type="button" className={saveBtnClass}>
+          <Button type="button" className={saveBtnClass} onClick={changePassword}>
             <Lock size={16} />
             تغيير كلمة المرور
           </Button>
@@ -347,13 +556,8 @@ function SettingsPage() {
       </section>
 
       {/* البيانات المالية */}
-      <section className={cardClass}>
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-navy">البيانات المالية</h2>
-          <span className={sectionIconClass}>
-            <CreditCard size={20} />
-          </span>
-        </div>
+      <section id="financial-data" className={cardClass}>
+        <SectionHeading icon={CreditCard} title="البيانات المالية" />
 
         <p className={labelClass}>طريقة استلام المكافأة المالية</p>
         <div className="grid gap-3 sm:grid-cols-2">
@@ -432,7 +636,7 @@ function SettingsPage() {
         )}
 
         <div className="mt-6">
-          <Button type="button" className={saveBtnClass}>
+          <Button type="button" className={saveBtnClass} onClick={saveFinancial}>
             <Save size={16} />
             حفظ التغييرات
           </Button>
@@ -440,12 +644,12 @@ function SettingsPage() {
       </section>
 
       {/* الروابط الشخصية */}
-      <section className={cardClass}>
-        <div className="mb-1 flex items-center justify-between gap-3">
-          <h2 className="text-lg font-extrabold text-navy">الروابط الشخصية</h2>
+      <section id="social-links" className={cardClass}>
+        <div className="mb-1 flex items-center gap-3">
           <span className={sectionIconClass}>
             <LinkIcon size={20} />
           </span>
+          <h2 className="text-lg font-extrabold text-navy">الروابط الشخصية</h2>
         </div>
         <p className="mb-5 text-sm text-muted-foreground">أضف روابط حساباتك الشخصية.</p>
 
@@ -504,12 +708,83 @@ function SettingsPage() {
         </div>
 
         <div className="mt-6">
-          <Button type="button" className={saveBtnClass}>
+          <Button type="button" className={saveBtnClass} onClick={saveSocials}>
             <Save size={16} />
             حفظ التغييرات
           </Button>
         </div>
       </section>
+
+      {/* نموذج تغيير البريد الإلكتروني */}
+      {emailDialogOpen && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-navy-deep/50 p-4"
+          role="dialog"
+          aria-modal="true"
+          onClick={() => setEmailDialogOpen(false)}
+        >
+          <div
+            className="w-full max-w-md rounded-3xl border border-border/60 bg-background p-5 sm:p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="mb-4 flex items-center justify-between gap-3">
+              <h3 className="text-lg font-extrabold text-navy">تغيير البريد الإلكتروني</h3>
+              <button
+                type="button"
+                onClick={() => setEmailDialogOpen(false)}
+                aria-label="إغلاق"
+                className="rounded-lg p-1.5 text-muted-foreground transition-colors hover:text-brand"
+              >
+                <CloseIcon size={18} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <Label className={labelClass} htmlFor="currentEmail">البريد الحالي</Label>
+                <Input id="currentEmail" value={loginEmail} readOnly disabled className="h-11 rounded-xl bg-muted" />
+              </div>
+              <div>
+                <Label className={labelClass} htmlFor="newEmail">البريد الإلكتروني الجديد</Label>
+                <Input
+                  id="newEmail"
+                  type="email"
+                  value={emailForm.next}
+                  onChange={(e) => setEmailForm((p) => ({ ...p, next: e.target.value }))}
+                  placeholder="name@example.com"
+                  className="h-11 rounded-xl"
+                />
+              </div>
+              <div>
+                <Label className={labelClass} htmlFor="confirmEmail">تأكيد البريد الإلكتروني الجديد</Label>
+                <Input
+                  id="confirmEmail"
+                  type="email"
+                  value={emailForm.confirm}
+                  onChange={(e) => setEmailForm((p) => ({ ...p, confirm: e.target.value }))}
+                  placeholder="name@example.com"
+                  className="h-11 rounded-xl"
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 flex items-center gap-3">
+              <Button type="button" className={saveBtnClass} onClick={confirmEmailChange}>
+                <Mail size={16} />
+                تأكيد التغيير
+              </Button>
+              <Button
+                type="button"
+                variant="outline"
+                className="rounded-xl"
+                onClick={() => setEmailDialogOpen(false)}
+              >
+                إلغاء
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
