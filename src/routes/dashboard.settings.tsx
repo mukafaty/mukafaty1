@@ -593,17 +593,18 @@ function SettingsPage() {
             { key: "confirm" as const, label: "تأكيد كلمة المرور الجديدة", placeholder: "أعد إدخال كلمة المرور الجديدة" },
           ].map((field) => (
             <div key={field.key}>
-              <Label className={labelClass} htmlFor={`pwd-${field.key}`}>{field.label}</Label>
+              <Label className={labelClass} htmlFor={`pwd-${field.key}`}>{field.label}<Req /></Label>
               <div className="relative">
                 <Input
                   id={`pwd-${field.key}`}
                   type={showPassword[field.key] ? "text" : "password"}
                   placeholder={field.placeholder}
                   value={passwords[field.key]}
-                  onChange={(e) =>
-                    setPasswords((prev) => ({ ...prev, [field.key]: e.target.value }))
-                  }
-                  className="h-11 rounded-xl pl-10"
+                  onChange={(e) => {
+                    clearError(`pwd-${field.key}`);
+                    setPasswords((prev) => ({ ...prev, [field.key]: e.target.value }));
+                  }}
+                  className={`h-11 rounded-xl pl-10 ${err(`pwd-${field.key}`) ? errorRing : ""}`}
                 />
                 <button
                   type="button"
@@ -616,7 +617,9 @@ function SettingsPage() {
                   {showPassword[field.key] ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              <FieldError message={err(`pwd-${field.key}`)} />
             </div>
+
           ))}
         </div>
 
