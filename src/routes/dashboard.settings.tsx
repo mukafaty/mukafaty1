@@ -386,22 +386,24 @@ function SettingsPage() {
           <div className="min-w-0 flex-1 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div>
-                <Label className={labelClass} htmlFor="firstName">الاسم الأول</Label>
+                <Label className={labelClass} htmlFor="firstName">الاسم الأول<Req /></Label>
                 <Input
                   id="firstName"
                   value={personal.firstName}
                   onChange={(e) => setPersonalField("firstName", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${errors.firstName ? errorRing : ""}`}
                 />
+                <FieldError message={errors.firstName} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="lastName">اسم العائلة</Label>
+                <Label className={labelClass} htmlFor="lastName">اسم العائلة<Req /></Label>
                 <Input
                   id="lastName"
                   value={personal.lastName}
                   onChange={(e) => setPersonalField("lastName", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${errors.lastName ? errorRing : ""}`}
                 />
+                <FieldError message={errors.lastName} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="membership">رقم العضوية</Label>
@@ -415,32 +417,34 @@ function SettingsPage() {
               </div>
 
               <div>
-                <Label className={labelClass} htmlFor="gender">الجنس</Label>
+                <Label className={labelClass} htmlFor="gender">الجنس<Req /></Label>
                 <select
                   id="gender"
-                  className={selectClass}
+                  className={`${selectClass} ${errors.gender ? errorRing : ""}`}
                   value={personal.gender}
                   onChange={(e) => setPersonalField("gender", e.target.value)}
                 >
                   <option value="male">ذكر</option>
                   <option value="female">أنثى</option>
                 </select>
+                <FieldError message={errors.gender} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="birthDate">تاريخ الميلاد</Label>
+                <Label className={labelClass} htmlFor="birthDate">تاريخ الميلاد<Req /></Label>
                 <Input
                   id="birthDate"
                   type="date"
                   value={personal.birthDate}
                   onChange={(e) => setPersonalField("birthDate", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${errors.birthDate ? errorRing : ""}`}
                 />
+                <FieldError message={errors.birthDate} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="nationality">الجنسية</Label>
+                <Label className={labelClass} htmlFor="nationality">الجنسية<Req /></Label>
                 <select
                   id="nationality"
-                  className={selectClass}
+                  className={`${selectClass} ${errors.nationality ? errorRing : ""}`}
                   value={personal.nationality}
                   onChange={(e) => setPersonalField("nationality", e.target.value)}
                 >
@@ -449,24 +453,26 @@ function SettingsPage() {
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
                 </select>
+                <FieldError message={errors.nationality} />
               </div>
 
               <div>
-                <Label className={labelClass} htmlFor="phone">رقم الجوال</Label>
+                <Label className={labelClass} htmlFor="phone">رقم الجوال<Req /></Label>
                 <Input
                   id="phone"
                   inputMode="tel"
                   placeholder="05XXXXXXXX"
                   value={personal.phone}
                   onChange={(e) => setPersonalField("phone", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${errors.phone ? errorRing : ""}`}
                 />
+                <FieldError message={errors.phone} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="city">المدينة</Label>
+                <Label className={labelClass} htmlFor="city">المدينة<Req /></Label>
                 <select
                   id="city"
-                  className={selectClass}
+                  className={`${selectClass} ${errors.city ? errorRing : ""}`}
                   value={personal.city}
                   onChange={(e) => setPersonalField("city", e.target.value)}
                 >
@@ -475,18 +481,21 @@ function SettingsPage() {
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
                 </select>
+                <FieldError message={errors.city} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="email">البريد الإلكتروني</Label>
+                <Label className={labelClass} htmlFor="email">البريد الإلكتروني<Req /></Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="ahmed.alsobai@example.com"
                   value={personal.email}
                   onChange={(e) => setPersonalField("email", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${errors.email ? errorRing : ""}`}
                 />
+                <FieldError message={errors.email} />
               </div>
+
             </div>
 
             <div>
