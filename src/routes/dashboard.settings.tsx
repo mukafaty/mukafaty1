@@ -223,8 +223,11 @@ function SettingsPage() {
     if (stored.socials) setSocials(stored.socials);
   }, []);
 
-  const setPersonalField = (key: keyof typeof personal, value: string) =>
+  const setPersonalField = (key: keyof typeof personal, value: string) => {
+    clearError(key);
     setPersonal((prev) => ({ ...prev, [key]: value }));
+  };
+
 
   const handleAvatarFile = (file: File | undefined) => {
     if (!file) return;
