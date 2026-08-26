@@ -247,8 +247,18 @@ function SettingsPage() {
   };
 
   const savePersonal = () => {
-    if (!personal.firstName.trim() || !personal.lastName.trim()) {
-      toast.error("الاسم الأول واسم العائلة مطلوبان.");
+    const found = collectRequired({
+      firstName: personal.firstName,
+      lastName: personal.lastName,
+      gender: personal.gender,
+      birthDate: personal.birthDate,
+      nationality: personal.nationality,
+      phone: personal.phone,
+      city: personal.city,
+      email: personal.email,
+    });
+    if (Object.keys(found).length) {
+      setErrors((prev) => ({ ...prev, ...found }));
       return;
     }
     if (personal.email && !/^\S+@\S+\.\S+$/.test(personal.email)) {
@@ -264,6 +274,14 @@ function SettingsPage() {
   };
 
   const confirmEmailChange = () => {
+    const found = collectRequired({
+      newEmail: emailForm.next,
+      confirmEmail: emailForm.confirm,
+    });
+    if (Object.keys(found).length) {
+      setErrors((prev) => ({ ...prev, ...found }));
+      return;
+    }
     if (!/^\S+@\S+\.\S+$/.test(emailForm.next)) {
       toast.error("صيغة البريد الإلكتروني الجديد غير صحيحة.");
       return;
@@ -280,8 +298,13 @@ function SettingsPage() {
   };
 
   const changePassword = () => {
-    if (!passwords.current) {
-      toast.error("الرجاء إدخال كلمة المرور الحالية.");
+    const found = collectRequired({
+      "pwd-current": passwords.current,
+      "pwd-next": passwords.next,
+      "pwd-confirm": passwords.confirm,
+    });
+    if (Object.keys(found).length) {
+      setErrors((prev) => ({ ...prev, ...found }));
       return;
     }
     if (passwords.next.length < 8) {
@@ -298,12 +321,14 @@ function SettingsPage() {
 
   const saveFinancial = () => {
     if (payoutMethod === "bank") {
-      if (!financial.beneficiary.trim()) {
-        toast.error("الرجاء إدخال اسم المستفيد.");
-        return;
-      }
-      if (!financial.bank) {
-        toast.error("الرجاء اختيار البنك.");
+      const found = collectRequired({
+        beneficiary: financial.beneficiary,
+        bank: financial.bank,
+        iban: financial.iban,
+        ibanConfirm: financial.ibanConfirm,
+      });
+      if (Object.keys(found).length) {
+        setErrors((prev) => ({ ...prev, ...found }));
         return;
       }
       const iban = financial.iban.replace(/\s/g, "").toUpperCase();
@@ -319,6 +344,7 @@ function SettingsPage() {
     persist({ payoutMethod, financial });
     toast.success("تم حفظ البيانات المالية بنجاح.");
   };
+
 
   const saveSocials = () => {
     persist({ socials });
