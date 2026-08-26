@@ -56,7 +56,19 @@ const labelClass = "mb-1.5 block text-sm font-bold text-navy";
 const selectClass =
   "h-11 w-full rounded-xl border border-input bg-background px-3 text-sm text-navy outline-none transition-colors focus:border-brand";
 const saveBtnClass =
-  "gap-2 rounded-xl bg-navy-deep px-5 text-primary-foreground hover:bg-navy";
+  "gap-2 rounded-xl bg-navy-deep px-5 text-primary-foreground hover:bg-[#2789F2]";
+const REQUIRED_MSG = "الرجاء تعبئة هذا الحقل.";
+const errorRing = "border-destructive focus:border-destructive";
+
+function Req() {
+  return <span className="text-destructive"> *</span>;
+}
+
+function FieldError({ message }: { message?: string }) {
+  if (!message) return null;
+  return <p className="mt-1.5 text-xs font-semibold text-destructive">{message}</p>;
+}
+
 
 const STORAGE_KEY = "mukafaty:settings";
 
