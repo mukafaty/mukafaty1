@@ -64,7 +64,7 @@ function Req() {
   return <span className="text-destructive"> *</span>;
 }
 
-function FieldError({ message }: { message?: string }) {
+function FieldError({ message }: { message?: string | undefined }) {
   if (!message) return null;
   return <p className="mt-1.5 text-xs font-semibold text-destructive">{message}</p>;
 }
@@ -196,6 +196,7 @@ function SettingsPage() {
   const [socials, setSocials] = useState<Record<string, string>>({});
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const err = (key: string) => errors[key];
   const clearError = (key: string) =>
     setErrors((prev) => {
       if (!prev[key]) return prev;
@@ -391,9 +392,9 @@ function SettingsPage() {
                   id="firstName"
                   value={personal.firstName}
                   onChange={(e) => setPersonalField("firstName", e.target.value)}
-                  className={`h-11 rounded-xl ${errors.firstName ? errorRing : ""}`}
+                  className={`h-11 rounded-xl ${err("firstName") ? errorRing : ""}`}
                 />
-                <FieldError message={errors.firstName} />
+                <FieldError message={err("firstName")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="lastName">اسم العائلة<Req /></Label>
@@ -401,9 +402,9 @@ function SettingsPage() {
                   id="lastName"
                   value={personal.lastName}
                   onChange={(e) => setPersonalField("lastName", e.target.value)}
-                  className={`h-11 rounded-xl ${errors.lastName ? errorRing : ""}`}
+                  className={`h-11 rounded-xl ${err("lastName") ? errorRing : ""}`}
                 />
-                <FieldError message={errors.lastName} />
+                <FieldError message={err("lastName")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="membership">رقم العضوية</Label>
@@ -420,14 +421,14 @@ function SettingsPage() {
                 <Label className={labelClass} htmlFor="gender">الجنس<Req /></Label>
                 <select
                   id="gender"
-                  className={`${selectClass} ${errors.gender ? errorRing : ""}`}
+                  className={`${selectClass} ${err("gender") ? errorRing : ""}`}
                   value={personal.gender}
                   onChange={(e) => setPersonalField("gender", e.target.value)}
                 >
                   <option value="male">ذكر</option>
                   <option value="female">أنثى</option>
                 </select>
-                <FieldError message={errors.gender} />
+                <FieldError message={err("gender")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="birthDate">تاريخ الميلاد<Req /></Label>
@@ -436,15 +437,15 @@ function SettingsPage() {
                   type="date"
                   value={personal.birthDate}
                   onChange={(e) => setPersonalField("birthDate", e.target.value)}
-                  className={`h-11 rounded-xl ${errors.birthDate ? errorRing : ""}`}
+                  className={`h-11 rounded-xl ${err("birthDate") ? errorRing : ""}`}
                 />
-                <FieldError message={errors.birthDate} />
+                <FieldError message={err("birthDate")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="nationality">الجنسية<Req /></Label>
                 <select
                   id="nationality"
-                  className={`${selectClass} ${errors.nationality ? errorRing : ""}`}
+                  className={`${selectClass} ${err("nationality") ? errorRing : ""}`}
                   value={personal.nationality}
                   onChange={(e) => setPersonalField("nationality", e.target.value)}
                 >
@@ -453,7 +454,7 @@ function SettingsPage() {
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
                 </select>
-                <FieldError message={errors.nationality} />
+                <FieldError message={err("nationality")} />
               </div>
 
               <div>
@@ -464,15 +465,15 @@ function SettingsPage() {
                   placeholder="05XXXXXXXX"
                   value={personal.phone}
                   onChange={(e) => setPersonalField("phone", e.target.value)}
-                  className={`h-11 rounded-xl ${errors.phone ? errorRing : ""}`}
+                  className={`h-11 rounded-xl ${err("phone") ? errorRing : ""}`}
                 />
-                <FieldError message={errors.phone} />
+                <FieldError message={err("phone")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="city">المدينة<Req /></Label>
                 <select
                   id="city"
-                  className={`${selectClass} ${errors.city ? errorRing : ""}`}
+                  className={`${selectClass} ${err("city") ? errorRing : ""}`}
                   value={personal.city}
                   onChange={(e) => setPersonalField("city", e.target.value)}
                 >
@@ -481,7 +482,7 @@ function SettingsPage() {
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
                 </select>
-                <FieldError message={errors.city} />
+                <FieldError message={err("city")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="email">البريد الإلكتروني<Req /></Label>
@@ -491,9 +492,9 @@ function SettingsPage() {
                   placeholder="ahmed.alsobai@example.com"
                   value={personal.email}
                   onChange={(e) => setPersonalField("email", e.target.value)}
-                  className={`h-11 rounded-xl ${errors.email ? errorRing : ""}`}
+                  className={`h-11 rounded-xl ${err("email") ? errorRing : ""}`}
                 />
-                <FieldError message={errors.email} />
+                <FieldError message={err("email")} />
               </div>
 
             </div>
