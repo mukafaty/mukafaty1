@@ -663,51 +663,68 @@ function SettingsPage() {
         {payoutMethod === "bank" && (
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div>
-              <Label className={labelClass} htmlFor="beneficiary">اسم المستفيد الثلاثي</Label>
+              <Label className={labelClass} htmlFor="beneficiary">اسم المستفيد الثلاثي<Req /></Label>
               <Input
                 id="beneficiary"
                 value={financial.beneficiary}
-                onChange={(e) => setFinancial((p) => ({ ...p, beneficiary: e.target.value }))}
+                onChange={(e) => {
+                  clearError("beneficiary");
+                  setFinancial((p) => ({ ...p, beneficiary: e.target.value }));
+                }}
                 placeholder="أحمد بن علي بن محمد السبيعي"
-                className="h-11 rounded-xl"
+                className={`h-11 rounded-xl ${err("beneficiary") ? errorRing : ""}`}
               />
+              <FieldError message={err("beneficiary")} />
             </div>
             <div>
-              <Label className={labelClass} htmlFor="bank">اسم البنك</Label>
+              <Label className={labelClass} htmlFor="bank">اسم البنك<Req /></Label>
               <select
                 id="bank"
-                className={selectClass}
+                className={`${selectClass} ${err("bank") ? errorRing : ""}`}
                 value={financial.bank}
-                onChange={(e) => setFinancial((p) => ({ ...p, bank: e.target.value }))}
+                onChange={(e) => {
+                  clearError("bank");
+                  setFinancial((p) => ({ ...p, bank: e.target.value }));
+                }}
               >
                 <option value="">اختر البنك</option>
                 {banks.map((item) => (
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
               </select>
+              <FieldError message={err("bank")} />
             </div>
             <div>
-              <Label className={labelClass} htmlFor="iban">رقم الآيبان (IBAN)</Label>
+              <Label className={labelClass} htmlFor="iban">رقم الآيبان (IBAN)<Req /></Label>
               <Input
                 id="iban"
                 dir="ltr"
                 placeholder="SA12 8000 0000 6080 1012 3456"
                 value={financial.iban}
-                onChange={(e) => setFinancial((p) => ({ ...p, iban: e.target.value }))}
-                className="h-11 rounded-xl text-right"
+                onChange={(e) => {
+                  clearError("iban");
+                  setFinancial((p) => ({ ...p, iban: e.target.value }));
+                }}
+                className={`h-11 rounded-xl text-right ${err("iban") ? errorRing : ""}`}
               />
+              <FieldError message={err("iban")} />
             </div>
             <div>
-              <Label className={labelClass} htmlFor="ibanConfirm">تأكيد رقم الآيبان (IBAN)</Label>
+              <Label className={labelClass} htmlFor="ibanConfirm">تأكيد رقم الآيبان (IBAN)<Req /></Label>
               <Input
                 id="ibanConfirm"
                 dir="ltr"
                 placeholder="SA12 8000 0000 6080 1012 3456"
                 value={financial.ibanConfirm}
-                onChange={(e) => setFinancial((p) => ({ ...p, ibanConfirm: e.target.value }))}
-                className="h-11 rounded-xl text-right"
+                onChange={(e) => {
+                  clearError("ibanConfirm");
+                  setFinancial((p) => ({ ...p, ibanConfirm: e.target.value }));
+                }}
+                className={`h-11 rounded-xl text-right ${err("ibanConfirm") ? errorRing : ""}`}
               />
+              <FieldError message={err("ibanConfirm")} />
             </div>
+
           </div>
         )}
 
