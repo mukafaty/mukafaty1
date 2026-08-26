@@ -195,6 +195,23 @@ function SettingsPage() {
 
   const [socials, setSocials] = useState<Record<string, string>>({});
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const clearError = (key: string) =>
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  const collectRequired = (fields: Record<string, string>) => {
+    const found: Record<string, string> = {};
+    Object.entries(fields).forEach(([key, value]) => {
+      if (!String(value ?? "").trim()) found[key] = REQUIRED_MSG;
+    });
+    return found;
+  };
+
+
   // استرجاع البيانات المحفوظة محليًا
   useEffect(() => {
     const stored = readStored();
