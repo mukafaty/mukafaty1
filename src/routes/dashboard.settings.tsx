@@ -552,7 +552,7 @@ function SettingsPage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={savePersonal}>
             <Save size={16} />
             حفظ التغييرات
@@ -566,7 +566,7 @@ function SettingsPage() {
 
         <div className="space-y-2">
           <Label className={labelClass} htmlFor="loginEmail">البريد الإلكتروني لتسجيل الدخول</Label>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
             <Input
               id="loginEmail"
               type="email"
@@ -623,7 +623,7 @@ function SettingsPage() {
           ))}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={changePassword}>
             <Lock size={16} />
             تغيير كلمة المرور
@@ -711,7 +711,7 @@ function SettingsPage() {
           </div>
         )}
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={saveFinancial}>
             <Save size={16} />
             حفظ التغييرات
@@ -789,7 +789,7 @@ function SettingsPage() {
         </div>
 
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={saveSocials}>
             <Save size={16} />
             حفظ التغييرات
