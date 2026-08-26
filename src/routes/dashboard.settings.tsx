@@ -56,7 +56,19 @@ const labelClass = "mb-1.5 block text-sm font-bold text-navy";
 const selectClass =
   "h-11 w-full rounded-xl border border-input bg-background px-3 text-sm text-navy outline-none transition-colors focus:border-brand";
 const saveBtnClass =
-  "gap-2 rounded-xl bg-navy-deep px-5 text-primary-foreground hover:bg-navy";
+  "gap-2 rounded-xl bg-navy-deep px-5 text-primary-foreground hover:bg-[#2789F2]";
+const REQUIRED_MSG = "الرجاء تعبئة هذا الحقل.";
+const errorRing = "border-destructive focus:border-destructive";
+
+function Req() {
+  return <span className="text-destructive"> *</span>;
+}
+
+function FieldError({ message }: { message?: string | undefined }) {
+  if (!message) return null;
+  return <p className="mt-1.5 text-xs font-semibold text-destructive">{message}</p>;
+}
+
 
 const STORAGE_KEY = "mukafaty:settings";
 
@@ -183,6 +195,24 @@ function SettingsPage() {
 
   const [socials, setSocials] = useState<Record<string, string>>({});
 
+  const [errors, setErrors] = useState<Record<string, string>>({});
+  const err = (key: string) => errors[key];
+  const clearError = (key: string) =>
+    setErrors((prev) => {
+      if (!prev[key]) return prev;
+      const next = { ...prev };
+      delete next[key];
+      return next;
+    });
+  const collectRequired = (fields: Record<string, string>) => {
+    const found: Record<string, string> = {};
+    Object.entries(fields).forEach(([key, value]) => {
+      if (!String(value ?? "").trim()) found[key] = REQUIRED_MSG;
+    });
+    return found;
+  };
+
+
   // استرجاع البيانات المحفوظة محليًا
   useEffect(() => {
     const stored = readStored();
@@ -194,8 +224,11 @@ function SettingsPage() {
     if (stored.socials) setSocials(stored.socials);
   }, []);
 
-  const setPersonalField = (key: keyof typeof personal, value: string) =>
+  const setPersonalField = (key: keyof typeof personal, value: string) => {
+    clearError(key);
     setPersonal((prev) => ({ ...prev, [key]: value }));
+  };
+
 
   const handleAvatarFile = (file: File | undefined) => {
     if (!file) return;
@@ -218,8 +251,18 @@ function SettingsPage() {
   };
 
   const savePersonal = () => {
-    if (!personal.firstName.trim() || !personal.lastName.trim()) {
-      toast.error("الاسم الأول واسم العائلة مطلوبان.");
+    const found = collectRequired({
+      firstName: personal.firstName,
+      lastName: personal.lastName,
+      gender: personal.gender,
+      birthDate: personal.birthDate,
+      nationality: personal.nationality,
+      phone: personal.phone,
+      city: personal.city,
+      email: personal.email,
+    });
+    if (Object.keys(found).length) {
+      setErrors((prev) => ({ ...prev, ...found }));
       return;
     }
     if (personal.email && !/^\S+@\S+\.\S+$/.test(personal.email)) {
@@ -235,6 +278,14 @@ function SettingsPage() {
   };
 
   const confirmEmailChange = () => {
+    const found = collectRequired({
+      newEmail: emailForm.next,
+      confirmEmail: emailForm.confirm,
+    });
+    if (Object.keys(found).length) {
+      setErrors((prev) => ({ ...prev, ...found }));
+      return;
+    }
     if (!/^\S+@\S+\.\S+$/.test(emailForm.next)) {
       toast.error("صيغة البريد الإلكتروني الجديد غير صحيحة.");
       return;
@@ -251,8 +302,13 @@ function SettingsPage() {
   };
 
   const changePassword = () => {
-    if (!passwords.current) {
-      toast.error("الرجاء إدخال كلمة المرور الحالية.");
+    const found = collectRequired({
+      "pwd-current": passwords.current,
+      "pwd-next": passwords.next,
+      "pwd-confirm": passwords.confirm,
+    });
+    if (Object.keys(found).length) {
+      setErrors((prev) => ({ ...prev, ...found }));
       return;
     }
     if (passwords.next.length < 8) {
@@ -269,12 +325,14 @@ function SettingsPage() {
 
   const saveFinancial = () => {
     if (payoutMethod === "bank") {
-      if (!financial.beneficiary.trim()) {
-        toast.error("الرجاء إدخال اسم المستفيد.");
-        return;
-      }
-      if (!financial.bank) {
-        toast.error("الرجاء اختيار البنك.");
+      const found = collectRequired({
+        beneficiary: financial.beneficiary,
+        bank: financial.bank,
+        iban: financial.iban,
+        ibanConfirm: financial.ibanConfirm,
+      });
+      if (Object.keys(found).length) {
+        setErrors((prev) => ({ ...prev, ...found }));
         return;
       }
       const iban = financial.iban.replace(/\s/g, "").toUpperCase();
@@ -290,6 +348,7 @@ function SettingsPage() {
     persist({ payoutMethod, financial });
     toast.success("تم حفظ البيانات المالية بنجاح.");
   };
+
 
   const saveSocials = () => {
     persist({ socials });
@@ -328,22 +387,24 @@ function SettingsPage() {
           <div className="min-w-0 flex-1 space-y-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div>
-                <Label className={labelClass} htmlFor="firstName">الاسم الأول</Label>
+                <Label className={labelClass} htmlFor="firstName">الاسم الأول<Req /></Label>
                 <Input
                   id="firstName"
                   value={personal.firstName}
                   onChange={(e) => setPersonalField("firstName", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("firstName") ? errorRing : ""}`}
                 />
+                <FieldError message={err("firstName")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="lastName">اسم العائلة</Label>
+                <Label className={labelClass} htmlFor="lastName">اسم العائلة<Req /></Label>
                 <Input
                   id="lastName"
                   value={personal.lastName}
                   onChange={(e) => setPersonalField("lastName", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("lastName") ? errorRing : ""}`}
                 />
+                <FieldError message={err("lastName")} />
               </div>
               <div>
                 <Label className={labelClass} htmlFor="membership">رقم العضوية</Label>
@@ -357,32 +418,34 @@ function SettingsPage() {
               </div>
 
               <div>
-                <Label className={labelClass} htmlFor="gender">الجنس</Label>
+                <Label className={labelClass} htmlFor="gender">الجنس<Req /></Label>
                 <select
                   id="gender"
-                  className={selectClass}
+                  className={`${selectClass} ${err("gender") ? errorRing : ""}`}
                   value={personal.gender}
                   onChange={(e) => setPersonalField("gender", e.target.value)}
                 >
                   <option value="male">ذكر</option>
                   <option value="female">أنثى</option>
                 </select>
+                <FieldError message={err("gender")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="birthDate">تاريخ الميلاد</Label>
+                <Label className={labelClass} htmlFor="birthDate">تاريخ الميلاد<Req /></Label>
                 <Input
                   id="birthDate"
                   type="date"
                   value={personal.birthDate}
                   onChange={(e) => setPersonalField("birthDate", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("birthDate") ? errorRing : ""}`}
                 />
+                <FieldError message={err("birthDate")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="nationality">الجنسية</Label>
+                <Label className={labelClass} htmlFor="nationality">الجنسية<Req /></Label>
                 <select
                   id="nationality"
-                  className={selectClass}
+                  className={`${selectClass} ${err("nationality") ? errorRing : ""}`}
                   value={personal.nationality}
                   onChange={(e) => setPersonalField("nationality", e.target.value)}
                 >
@@ -391,24 +454,26 @@ function SettingsPage() {
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
                 </select>
+                <FieldError message={err("nationality")} />
               </div>
 
               <div>
-                <Label className={labelClass} htmlFor="phone">رقم الجوال</Label>
+                <Label className={labelClass} htmlFor="phone">رقم الجوال<Req /></Label>
                 <Input
                   id="phone"
                   inputMode="tel"
                   placeholder="05XXXXXXXX"
                   value={personal.phone}
                   onChange={(e) => setPersonalField("phone", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("phone") ? errorRing : ""}`}
                 />
+                <FieldError message={err("phone")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="city">المدينة</Label>
+                <Label className={labelClass} htmlFor="city">المدينة<Req /></Label>
                 <select
                   id="city"
-                  className={selectClass}
+                  className={`${selectClass} ${err("city") ? errorRing : ""}`}
                   value={personal.city}
                   onChange={(e) => setPersonalField("city", e.target.value)}
                 >
@@ -417,18 +482,21 @@ function SettingsPage() {
                     <option key={item.id} value={item.id}>{item.name}</option>
                   ))}
                 </select>
+                <FieldError message={err("city")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="email">البريد الإلكتروني</Label>
+                <Label className={labelClass} htmlFor="email">البريد الإلكتروني<Req /></Label>
                 <Input
                   id="email"
                   type="email"
                   placeholder="ahmed.alsobai@example.com"
                   value={personal.email}
                   onChange={(e) => setPersonalField("email", e.target.value)}
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("email") ? errorRing : ""}`}
                 />
+                <FieldError message={err("email")} />
               </div>
+
             </div>
 
             <div>
@@ -484,7 +552,7 @@ function SettingsPage() {
           </div>
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={savePersonal}>
             <Save size={16} />
             حفظ التغييرات
@@ -498,7 +566,7 @@ function SettingsPage() {
 
         <div className="space-y-2">
           <Label className={labelClass} htmlFor="loginEmail">البريد الإلكتروني لتسجيل الدخول</Label>
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-end">
             <Input
               id="loginEmail"
               type="email"
@@ -525,17 +593,18 @@ function SettingsPage() {
             { key: "confirm" as const, label: "تأكيد كلمة المرور الجديدة", placeholder: "أعد إدخال كلمة المرور الجديدة" },
           ].map((field) => (
             <div key={field.key}>
-              <Label className={labelClass} htmlFor={`pwd-${field.key}`}>{field.label}</Label>
+              <Label className={labelClass} htmlFor={`pwd-${field.key}`}>{field.label}<Req /></Label>
               <div className="relative">
                 <Input
                   id={`pwd-${field.key}`}
                   type={showPassword[field.key] ? "text" : "password"}
                   placeholder={field.placeholder}
                   value={passwords[field.key]}
-                  onChange={(e) =>
-                    setPasswords((prev) => ({ ...prev, [field.key]: e.target.value }))
-                  }
-                  className="h-11 rounded-xl pl-10"
+                  onChange={(e) => {
+                    clearError(`pwd-${field.key}`);
+                    setPasswords((prev) => ({ ...prev, [field.key]: e.target.value }));
+                  }}
+                  className={`h-11 rounded-xl pl-10 ${err(`pwd-${field.key}`) ? errorRing : ""}`}
                 />
                 <button
                   type="button"
@@ -548,11 +617,13 @@ function SettingsPage() {
                   {showPassword[field.key] ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
+              <FieldError message={err(`pwd-${field.key}`)} />
             </div>
+
           ))}
         </div>
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={changePassword}>
             <Lock size={16} />
             تغيير كلمة المرور
@@ -592,55 +663,72 @@ function SettingsPage() {
         {payoutMethod === "bank" && (
           <div className="mt-5 grid gap-4 sm:grid-cols-2">
             <div>
-              <Label className={labelClass} htmlFor="beneficiary">اسم المستفيد الثلاثي</Label>
+              <Label className={labelClass} htmlFor="beneficiary">اسم المستفيد الثلاثي<Req /></Label>
               <Input
                 id="beneficiary"
                 value={financial.beneficiary}
-                onChange={(e) => setFinancial((p) => ({ ...p, beneficiary: e.target.value }))}
+                onChange={(e) => {
+                  clearError("beneficiary");
+                  setFinancial((p) => ({ ...p, beneficiary: e.target.value }));
+                }}
                 placeholder="أحمد بن علي بن محمد السبيعي"
-                className="h-11 rounded-xl"
+                className={`h-11 rounded-xl ${err("beneficiary") ? errorRing : ""}`}
               />
+              <FieldError message={err("beneficiary")} />
             </div>
             <div>
-              <Label className={labelClass} htmlFor="bank">اسم البنك</Label>
+              <Label className={labelClass} htmlFor="bank">اسم البنك<Req /></Label>
               <select
                 id="bank"
-                className={selectClass}
+                className={`${selectClass} ${err("bank") ? errorRing : ""}`}
                 value={financial.bank}
-                onChange={(e) => setFinancial((p) => ({ ...p, bank: e.target.value }))}
+                onChange={(e) => {
+                  clearError("bank");
+                  setFinancial((p) => ({ ...p, bank: e.target.value }));
+                }}
               >
                 <option value="">اختر البنك</option>
                 {banks.map((item) => (
                   <option key={item.id} value={item.id}>{item.name}</option>
                 ))}
               </select>
+              <FieldError message={err("bank")} />
             </div>
             <div>
-              <Label className={labelClass} htmlFor="iban">رقم الآيبان (IBAN)</Label>
+              <Label className={labelClass} htmlFor="iban">رقم الآيبان (IBAN)<Req /></Label>
               <Input
                 id="iban"
                 dir="ltr"
                 placeholder="SA12 8000 0000 6080 1012 3456"
                 value={financial.iban}
-                onChange={(e) => setFinancial((p) => ({ ...p, iban: e.target.value }))}
-                className="h-11 rounded-xl text-right"
+                onChange={(e) => {
+                  clearError("iban");
+                  setFinancial((p) => ({ ...p, iban: e.target.value }));
+                }}
+                className={`h-11 rounded-xl text-right ${err("iban") ? errorRing : ""}`}
               />
+              <FieldError message={err("iban")} />
             </div>
             <div>
-              <Label className={labelClass} htmlFor="ibanConfirm">تأكيد رقم الآيبان (IBAN)</Label>
+              <Label className={labelClass} htmlFor="ibanConfirm">تأكيد رقم الآيبان (IBAN)<Req /></Label>
               <Input
                 id="ibanConfirm"
                 dir="ltr"
                 placeholder="SA12 8000 0000 6080 1012 3456"
                 value={financial.ibanConfirm}
-                onChange={(e) => setFinancial((p) => ({ ...p, ibanConfirm: e.target.value }))}
-                className="h-11 rounded-xl text-right"
+                onChange={(e) => {
+                  clearError("ibanConfirm");
+                  setFinancial((p) => ({ ...p, ibanConfirm: e.target.value }));
+                }}
+                className={`h-11 rounded-xl text-right ${err("ibanConfirm") ? errorRing : ""}`}
               />
+              <FieldError message={err("ibanConfirm")} />
             </div>
+
           </div>
         )}
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={saveFinancial}>
             <Save size={16} />
             حفظ التغييرات
@@ -675,14 +763,14 @@ function SettingsPage() {
 
                 {/* حقل اسم المستخدم */}
                 <input
-                  dir="rtl"
+                  dir="ltr"
                   value={socials[platform.key] ?? ""}
                   onChange={(e) =>
                     setSocials((prev) => ({ ...prev, [platform.key]: e.target.value }))
                   }
                   placeholder={platform.key === "website" ? "أدخل رابط الموقع" : "أدخل اسم المستخدم"}
                   aria-label={`اسم المستخدم في ${platform.label}`}
-                  className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-4 text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
+                  className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-4 text-left text-sm text-navy outline-none transition-colors placeholder:text-left placeholder:text-muted-foreground focus:border-brand"
                 />
 
                 {/* رابط المنصة الثابت */}
@@ -718,7 +806,7 @@ function SettingsPage() {
         </div>
 
 
-        <div className="mt-6">
+        <div className="mt-6 flex justify-end">
           <Button type="button" className={saveBtnClass} onClick={saveSocials}>
             <Save size={16} />
             حفظ التغييرات
@@ -756,26 +844,34 @@ function SettingsPage() {
                 <Input id="currentEmail" value={loginEmail} readOnly disabled className="h-11 rounded-xl bg-muted" />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="newEmail">البريد الإلكتروني الجديد</Label>
+                <Label className={labelClass} htmlFor="newEmail">البريد الإلكتروني الجديد<Req /></Label>
                 <Input
                   id="newEmail"
                   type="email"
                   value={emailForm.next}
-                  onChange={(e) => setEmailForm((p) => ({ ...p, next: e.target.value }))}
+                  onChange={(e) => {
+                    clearError("newEmail");
+                    setEmailForm((p) => ({ ...p, next: e.target.value }));
+                  }}
                   placeholder="name@example.com"
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("newEmail") ? errorRing : ""}`}
                 />
+                <FieldError message={err("newEmail")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="confirmEmail">تأكيد البريد الإلكتروني الجديد</Label>
+                <Label className={labelClass} htmlFor="confirmEmail">تأكيد البريد الإلكتروني الجديد<Req /></Label>
                 <Input
                   id="confirmEmail"
                   type="email"
                   value={emailForm.confirm}
-                  onChange={(e) => setEmailForm((p) => ({ ...p, confirm: e.target.value }))}
+                  onChange={(e) => {
+                    clearError("confirmEmail");
+                    setEmailForm((p) => ({ ...p, confirm: e.target.value }));
+                  }}
                   placeholder="name@example.com"
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("confirmEmail") ? errorRing : ""}`}
                 />
+                <FieldError message={err("confirmEmail")} />
               </div>
             </div>
 
