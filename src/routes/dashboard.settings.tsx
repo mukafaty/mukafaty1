@@ -763,14 +763,14 @@ function SettingsPage() {
 
                 {/* حقل اسم المستخدم */}
                 <input
-                  dir="rtl"
+                  dir="ltr"
                   value={socials[platform.key] ?? ""}
                   onChange={(e) =>
                     setSocials((prev) => ({ ...prev, [platform.key]: e.target.value }))
                   }
                   placeholder={platform.key === "website" ? "أدخل رابط الموقع" : "أدخل اسم المستخدم"}
                   aria-label={`اسم المستخدم في ${platform.label}`}
-                  className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-4 text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
+                  className="h-11 min-w-0 flex-1 rounded-xl border border-input bg-background px-4 text-left text-sm text-navy outline-none transition-colors placeholder:text-left placeholder:text-muted-foreground focus:border-brand"
                 />
 
                 {/* رابط المنصة الثابت */}
@@ -844,26 +844,34 @@ function SettingsPage() {
                 <Input id="currentEmail" value={loginEmail} readOnly disabled className="h-11 rounded-xl bg-muted" />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="newEmail">البريد الإلكتروني الجديد</Label>
+                <Label className={labelClass} htmlFor="newEmail">البريد الإلكتروني الجديد<Req /></Label>
                 <Input
                   id="newEmail"
                   type="email"
                   value={emailForm.next}
-                  onChange={(e) => setEmailForm((p) => ({ ...p, next: e.target.value }))}
+                  onChange={(e) => {
+                    clearError("newEmail");
+                    setEmailForm((p) => ({ ...p, next: e.target.value }));
+                  }}
                   placeholder="name@example.com"
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("newEmail") ? errorRing : ""}`}
                 />
+                <FieldError message={err("newEmail")} />
               </div>
               <div>
-                <Label className={labelClass} htmlFor="confirmEmail">تأكيد البريد الإلكتروني الجديد</Label>
+                <Label className={labelClass} htmlFor="confirmEmail">تأكيد البريد الإلكتروني الجديد<Req /></Label>
                 <Input
                   id="confirmEmail"
                   type="email"
                   value={emailForm.confirm}
-                  onChange={(e) => setEmailForm((p) => ({ ...p, confirm: e.target.value }))}
+                  onChange={(e) => {
+                    clearError("confirmEmail");
+                    setEmailForm((p) => ({ ...p, confirm: e.target.value }));
+                  }}
                   placeholder="name@example.com"
-                  className="h-11 rounded-xl"
+                  className={`h-11 rounded-xl ${err("confirmEmail") ? errorRing : ""}`}
                 />
+                <FieldError message={err("confirmEmail")} />
               </div>
             </div>
 
