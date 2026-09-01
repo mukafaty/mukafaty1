@@ -17,6 +17,7 @@ import {
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import avatarAsset from "@/assets/user-avatar.jpg.asset.json";
 import { DashboardSidebar } from "./DashboardSidebar";
+import { signOut } from "@/lib/temp-auth";
 
 interface NotificationItem {
   id: string;
