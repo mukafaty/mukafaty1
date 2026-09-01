@@ -1,6 +1,19 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, MapPin } from "lucide-react";
+import { Megaphone } from "lucide-react";
+import {
+  adsPrograms,
+  adsStats,
+  AUDIENCES,
+  CITIES,
+  commissionOf,
+  KINDS,
+  MODES,
+  SORTS,
+} from "@/data/adsPrograms";
+import { AdsStats } from "@/components/dashboard/ads/AdsStats";
+import { AdsFilters, type FiltersState } from "@/components/dashboard/ads/AdsFilters";
+import { AdsGrid } from "@/components/dashboard/ads/AdsGrid";
 
 export const Route = createFileRoute("/dashboard/ads")({
   head: () => ({
@@ -8,231 +21,77 @@ export const Route = createFileRoute("/dashboard/ads")({
       { title: "تسويق الإعلانات | لوحة تحكم مكافآتي" },
       {
         name: "description",
-        content: "اختر نطاق التسويق لعرض البرامج التدريبية المتاحة للتسويق وابدأ تسويق الإعلانات.",
+        content:
+          "اختر البرنامج التدريبي الذي ترغب في الترويج له من بطاقات الدبلومات والدورات وابدأ بكسب المكافآت.",
       },
       { property: "og:title", content: "تسويق الإعلانات | لوحة تحكم مكافآتي" },
       {
         property: "og:description",
-        content: "اختر نطاق التسويق لعرض البرامج التدريبية المتاحة للتسويق وابدأ تسويق الإعلانات.",
+        content:
+          "اختر البرنامج التدريبي الذي ترغب في الترويج له من بطاقات الدبلومات والدورات وابدأ بكسب المكافآت.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: AdsPage,
 });
 
-const SCOPES = ["جدة", "الرياض", "مكة المكرمة", "ينبع", "جميع مدن المملكة"] as const;
-type Scope = (typeof SCOPES)[number];
-
-const extra: Array<[string, number]> = [
-  ["دبلوم التسويق الرقمي", 8500],
-  ["دبلوم إدارة المشاريع", 9000],
-  ["دبلوم السكرتارية التنفيذية", 5500],
-  ["دبلوم تحليل البيانات", 9500],
-  ["دبلوم الموارد البشرية المتقدم", 7000],
-  ["دورة اللغة الإنجليزية للأعمال", 4500],
-  ["دورة إدارة الوقت والإنتاجية", 2500],
-  ["دورة مهارات البيع والإقناع", 3000],
-  ["دورة خدمة العملاء الاحترافية", 2800],
-  ["دبلوم الشبكات وأمن المعلومات", 8800],
-  ["دبلوم التصميم الجرافيكي", 6800],
-  ["دورة إعداد التقارير المالية", 3800],
-  ["دورة الأمن السيبراني للمبتدئين", 3200],
-  ["دبلوم إدارة سلاسل الإمداد", 7800],
-  ["دورة الحوسبة السحابية", 4200],
-];
-
-const base: Array<[string, number]> = [
-  ["دبلوم إدارة الموارد البشرية", 9500],
-  ["دبلوم إدارة الأعمال", 8000],
-  ["دبلوم الأمن السيبراني", 7500],
-  ["دبلوم المحاسبة المالية", 6500],
-  ["دبلوم الذكاء الاصطناعي", 9500],
-  ["دبلوم البرمجيات", 9500],
-];
-
-const tail: Array<[string, number]> = [
-  ["دورة إدخال البيانات ومعالجة النصوص", 3500],
-  ["دورة استخدام الحاسب الآلي في الأعمال المكتبية", 2500],
-];
-
-const remotePrograms: Array<{ name: string; fee: number }> = [
-  { name: "دبلوم إدارة الموارد البشرية - عن بُعد", fee: 9500 },
-  { name: "دورة اللغة الإنجليزية - عن بُعد", fee: 9500 },
-];
-
-function cityProgramsFor(city: Exclude<Scope, "جميع مدن المملكة">) {
-  const count = city === "جدة" ? 15 : city === "الرياض" ? 12 : city === "مكة المكرمة" ? 6 : 3;
-  const middle = extra.slice(0, count);
-  return [...base, ...middle, ...tail].map(([name, fee], i) => ({
-    id: i + 1,
-    name,
-    location: city,
-    fee,
-  }));
-}
-
-function programsFor(scope: Scope) {
-  const remote = remotePrograms.map((p, i) => ({
-    id: i + 1,
-    name: p.name,
-    location: "عن بُعد" as const,
-    locationSub: "من أي مكان في المملكة",
-    fee: p.fee,
-  }));
-
-  if (scope === "جميع مدن المملكة") {
-    return remote;
-  }
-
-  return [...remote, ...cityProgramsFor(scope)];
-}
-
-const PER_PAGE = 8;
+const INITIAL: FiltersState = { q: "", city: "", kind: "", mode: "", audience: "", sort: "" };
 
 function AdsPage() {
-  const [scope, setScope] = useState<Scope>("جدة");
-  const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<FiltersState>(INITIAL);
 
-  const rows = useMemo(() => programsFor(scope), [scope]);
-  const totalPages = Math.max(1, Math.ceil(rows.length / PER_PAGE));
-  const start = (page - 1) * PER_PAGE;
-  const visible = rows.slice(start, start + PER_PAGE);
+  const programs = useMemo(() => {
+    const q = filters.q.trim();
+    const list = adsPrograms.filter(
+      (p) =>
+        (!q || p.name.includes(q)) &&
+        (!filters.city || p.city === filters.city) &&
+        (!filters.kind || p.kind === filters.kind) &&
+        (!filters.mode || p.mode === filters.mode) &&
+        (!filters.audience || p.audience === filters.audience),
+    );
+
+    if (filters.sort === "جديد") {
+      return [...list].sort((a, b) => Number(b.isNew) - Number(a.isNew));
+    }
+    if (filters.sort === "الأحدث") {
+      return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+    }
+    if (filters.sort === "الأعلى عمولة") {
+      return [...list].sort((a, b) => commissionOf(b.cashFee) - commissionOf(a.cashFee));
+    }
+    return list;
+  }, [filters]);
 
   return (
-    <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
-      <div className="text-right">
-        <h1 className="text-2xl font-black text-navy sm:text-3xl">تسويق الإعلانات</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          اختر نطاق التسويق لعرض البرامج التدريبية المتاحة للتسويق
-        </p>
-      </div>
-
-      <div className="text-right">
-        <label htmlFor="scope" className="block text-sm font-bold text-navy">
-          نطاق التسويق
-        </label>
-        <div className="relative mt-2 w-full max-w-md">
-          <MapPin
-            size={18}
-            className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-brand"
-          />
-          <select
-            id="scope"
-            value={scope}
-            onChange={(e) => {
-              setScope(e.target.value as Scope);
-              setPage(1);
-            }}
-            className="h-12 w-full appearance-none rounded-2xl border border-border bg-card pr-11 pl-11 text-right text-[15px] font-bold text-navy outline-none transition-colors focus:border-brand"
-          >
-            {SCOPES.map((s) => (
-              <option key={s} value={s}>
-                {s}
-              </option>
-            ))}
-          </select>
-          <ChevronDown
-            size={18}
-            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
-          />
-        </div>
-      </div>
-
-      <div className="rounded-3xl border border-border bg-card p-4 sm:p-5">
-        <div className="overflow-x-auto">
-          <table className="w-full min-w-[760px] border-collapse overflow-hidden rounded-2xl text-right">
-            <thead>
-              <tr className="bg-navy-deep text-primary-foreground">
-                <th className="px-4 py-3.5 text-sm font-bold">الرقم</th>
-                <th className="px-4 py-3.5 text-sm font-bold">البرنامج التدريبي</th>
-                <th className="px-4 py-3.5 text-sm font-bold">مكان الدراسة</th>
-                <th className="px-4 py-3.5 text-sm font-bold">الحالة</th>
-                <th className="px-4 py-3.5 text-sm font-bold">الرسوم</th>
-                <th className="px-4 py-3.5 text-sm font-bold">العمولة (5%)</th>
-                <th className="px-4 py-3.5 text-sm font-bold">تسويق الإعلان</th>
-              </tr>
-            </thead>
-            <tbody>
-              {visible.map((row, i) => (
-                <tr
-                  key={`${scope}-${row.id}`}
-                  className={i % 2 === 1 ? "bg-brand-soft/70" : "bg-card"}
-                >
-                  <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
-                  <td className="px-4 py-3 text-sm font-medium text-navy">{row.name}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">
-                    <span className="block">{row.location}</span>
-                    {"locationSub" in row && row.locationSub && (
-                      <span className="block text-xs text-muted-foreground/70">{row.locationSub}</span>
-                    )}
-                  </td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center rounded-lg bg-emerald-50 px-3 py-1 text-xs font-bold text-emerald-600">
-                      التسجيل متاح
-                    </span>
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {row.fee.toLocaleString("en-US")} ريال
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {Math.round(row.fee * 0.05).toLocaleString("en-US")} ريال
-                  </td>
-                  <td className="px-4 py-3">
-                    <button className="text-sm font-bold text-brand transition-colors hover:text-navy">
-                      ابدأ التسويق
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className="mt-4 flex flex-col-reverse items-center justify-between gap-3 sm:flex-row">
-          <p className="text-xs text-muted-foreground sm:text-sm">
-            عرض {rows.length === 0 ? 0 : start + 1} إلى {Math.min(start + PER_PAGE, rows.length)} من{" "}
-            {rows.length} دورة
+    <section className="animate-in fade-in slide-in-from-bottom-2 space-y-6 duration-500">
+      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-row-reverse sm:justify-end">
+        <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
+          <Megaphone size={24} />
+        </span>
+        <div className="min-w-0 text-right">
+          <h1 className="truncate text-2xl font-black text-navy sm:text-3xl">تسويق الإعلانات</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            اختر البرنامج التدريبي الذي ترغب في الترويج له وابدأ بكسب المكافآت.
           </p>
-
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setPage((p) => Math.max(1, p - 1))}
-              disabled={page === 1}
-              className="h-9 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:bg-brand-soft disabled:opacity-40"
-            >
-              السابق
-            </button>
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
-              <button
-                key={p}
-                onClick={() => setPage(p)}
-                className={`h-9 w-9 rounded-xl text-sm font-bold transition-colors ${
-                  p === page
-                    ? "bg-brand text-primary-foreground"
-                    : "border border-border text-navy hover:bg-brand-soft"
-                }`}
-              >
-                {p}
-              </button>
-            ))}
-            <button
-              onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-              disabled={page === totalPages}
-              className="h-9 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:bg-brand-soft disabled:opacity-40"
-            >
-              التالي
-            </button>
-          </div>
-
-          <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
-            <span>عرض</span>
-            <span className="inline-flex h-9 items-center rounded-xl border border-border px-3 font-bold text-navy">
-              8
-            </span>
-            <span>من كل صفحة</span>
-          </div>
         </div>
-      </div>
+      </header>
+
+      <AdsStats stats={adsStats} />
+
+      <AdsFilters
+        value={filters}
+        onChange={setFilters}
+        cities={CITIES}
+        kinds={KINDS}
+        modes={MODES}
+        audiences={AUDIENCES}
+        sorts={SORTS}
+      />
+
+      <AdsGrid programs={programs} />
     </section>
   );
 }
