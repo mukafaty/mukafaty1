@@ -286,16 +286,20 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
 
                     <div className="my-2 border-t border-border/60" />
 
-                    <Link
-                      to="/"
-                      onClick={() => setAccountOpen(false)}
-                      className="flex items-center justify-between gap-3 px-4 py-2.5 text-right transition-colors hover:bg-destructive/5"
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setAccountOpen(false);
+                        signOut();
+                        navigate({ to: "/login", replace: true });
+                      }}
+                      className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-right transition-colors hover:bg-destructive/5"
                     >
                       <span className="text-sm font-bold text-destructive">
                         تسجيل الخروج
                       </span>
                       <LogOut size={18} className="shrink-0 text-destructive" />
-                    </Link>
+                    </button>
                   </div>
                 </div>
               )}
