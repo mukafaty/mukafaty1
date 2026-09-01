@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as LoginRouteImport } from './routes/login'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardAboutRouteImport } from './routes/dashboard.about'
 import { Route as DashboardAdsRouteImport } from './routes/dashboard.ads'
@@ -28,6 +29,11 @@ const IndexRoute = IndexRouteImport.update({
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
@@ -74,6 +80,7 @@ const DashboardTopRoute = DashboardTopRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/login': typeof LoginRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -85,6 +92,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -98,6 +106,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
+  '/login': typeof LoginRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -112,6 +121,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
+    | '/login'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -123,6 +133,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/login'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -135,6 +146,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
+    | '/login'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -148,6 +160,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -164,6 +177,13 @@ declare module '@tanstack/react-router' {
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/dashboard/': {
@@ -254,6 +274,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

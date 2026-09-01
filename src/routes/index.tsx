@@ -3,6 +3,7 @@ import { Header } from "@/components/site/Header";
 import { HeroSection } from "@/components/site/HeroSection";
 import { StepsSection } from "@/components/site/StepsSection";
 import { Footer } from "@/components/site/Footer";
+import { RequireAuth } from "@/lib/temp-auth";
 
 export const Route = createFileRoute("/")({
   head: () => ({
