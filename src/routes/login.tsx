@@ -1,8 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Lock, User } from "lucide-react";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
-import { isAuthenticated, signIn, verifyCredentials } from "@/lib/temp-auth";
+import { signIn, verifyCredentials } from "@/lib/temp-auth";
+
 
 export const Route = createFileRoute("/login")({
   head: () => ({
