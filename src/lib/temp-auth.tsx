@@ -9,8 +9,8 @@ import { useNavigate } from "@tanstack/react-router";
 const STORAGE_KEY = "mukafaty:temp-auth";
 const EVENT = "mukafaty:temp-auth-change";
 
-const EXPECTED_USER = "357";
-const EXPECTED_PASS = "357";
+const EXPECTED_USER = "333";
+const EXPECTED_PASS = "333";
 
 export function verifyCredentials(username: string, password: string) {
   return username.trim() === EXPECTED_USER && password === EXPECTED_PASS;
