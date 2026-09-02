@@ -23,19 +23,16 @@ function LoginPage() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
 
-  useEffect(() => {
-    if (isAuthenticated()) navigate({ to: "/", replace: true });
-  }, [navigate]);
-
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     if (verifyCredentials(username, password)) {
       signIn();
-      navigate({ to: "/", replace: true });
+      navigate({ to: "/dashboard", replace: true });
     } else {
       setError(true);
     }
   }
+
 
   return (
     <div
