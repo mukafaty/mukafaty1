@@ -2,10 +2,17 @@ import { useMemo, useState } from "react";
 import { ChevronDown, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Program } from "@/data/adsPrograms";
 import { SquareProgramCard } from "./SquareProgramCard";
+import emptySearchImg from "@/assets/empty-search.png";
 
 const ROW_OPTIONS = [1, 2, 3, 4];
 
-export function AdsGrid({ programs }: { programs: Program[] }) {
+export function AdsGrid({
+  programs,
+  onReset,
+}: {
+  programs: Program[];
+  onReset: () => void;
+}) {
   const [rows, setRows] = useState(2);
   const [page, setPage] = useState(1);
 
