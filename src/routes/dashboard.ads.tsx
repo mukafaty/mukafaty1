@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   adsPrograms,
   AUDIENCES,
@@ -12,6 +13,8 @@ import {
 } from "@/data/adsPrograms";
 import { AdsFilters, type FiltersState } from "@/components/dashboard/ads/AdsFilters";
 import { AdsGrid } from "@/components/dashboard/ads/AdsGrid";
+
+const PAGE_SIZE = 2;
 
 export const Route = createFileRoute("/dashboard/ads")({
   head: () => ({
