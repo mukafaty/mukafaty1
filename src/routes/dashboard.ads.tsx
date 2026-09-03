@@ -63,6 +63,16 @@ function AdsPage() {
     return list;
   }, [filters]);
 
+  const cityOptions = ["جميع المدن", ...CITIES];
+  const displayFilters = { ...filters, city: filters.city || "جميع المدن" };
+
+  const handleFiltersChange = (next: FiltersState) => {
+    setFilters({
+      ...next,
+      city: next.city === "جميع المدن" ? "" : next.city,
+    });
+  };
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
       <header className="flex items-center gap-4">
@@ -78,9 +88,9 @@ function AdsPage() {
       </header>
 
       <AdsFilters
-        value={filters}
-        onChange={setFilters}
-        cities={CITIES}
+        value={displayFilters}
+        onChange={handleFiltersChange}
+        cities={cityOptions}
         kinds={KINDS}
         modes={MODES}
         audiences={AUDIENCES}
