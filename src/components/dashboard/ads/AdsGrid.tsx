@@ -91,6 +91,31 @@ export function AdsGrid({
             <ChevronLeft size={16} />
           </button>
         </nav>
+
+        {/* عرض عدد الأسطر — يسار */}
+        <label className="inline-flex items-center gap-2 text-sm font-bold text-navy">
+          <span>عرض عدد الأسطر</span>
+          <span className="relative inline-flex">
+            <select
+              value={rows}
+              onChange={(e) => {
+                setRows(Number(e.target.value));
+                setPage(1);
+              }}
+              className="h-10 appearance-none rounded-xl border border-border bg-card pl-9 pr-4 text-sm font-bold text-navy outline-none focus:border-brand"
+            >
+              {ROW_OPTIONS.map((r) => (
+                <option key={r} value={r}>
+                  {r}
+                </option>
+              ))}
+            </select>
+            <ChevronDown
+              size={16}
+              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            />
+          </span>
+        </label>
       </div>
     </div>
   );
