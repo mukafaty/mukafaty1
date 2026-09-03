@@ -3,8 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
 import {
   adsPrograms,
+  ALL_CITIES,
   AUDIENCES,
-  CITIES,
+  CITY_OPTIONS,
   commissionOf,
   KINDS,
   MODES,
@@ -45,14 +46,14 @@ function AdsPage() {
     const list = adsPrograms.filter(
       (p) =>
         (!q || p.programName.includes(q)) &&
-        (!filters.city || p.city === filters.city) &&
+        (!filters.city || filters.city === ALL_CITIES || p.city === filters.city) &&
         (!filters.kind || p.programType === filters.kind) &&
         (!filters.mode || p.mode === filters.mode) &&
         (!filters.audience || p.targetAudience === filters.audience),
     );
 
     if (filters.sort === "جديد") {
-      return [...list].sort((a, b) => Number(b.isNew) - Number(a.isNew));
+      return list.filter((p) => p.isNew);
     }
     if (filters.sort === "الأحدث") {
       return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
@@ -80,14 +81,14 @@ function AdsPage() {
       <AdsFilters
         value={filters}
         onChange={setFilters}
-        cities={CITIES}
+        cities={CITY_OPTIONS}
         kinds={KINDS}
         modes={MODES}
         audiences={AUDIENCES}
         sorts={SORTS}
       />
 
-      <AdsGrid programs={programs} />
+      <AdsGrid programs={programs} onReset={() => setFilters(INITIAL)} />
     </section>
   );
 }

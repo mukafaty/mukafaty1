@@ -33,7 +33,9 @@ export const COMMISSION_RATE = 0.05;
 
 export const commissionOf = (fee: number) => Math.round(fee * COMMISSION_RATE);
 
-export const CITIES: City[] = ["جدة", "الرياض", "مكة المكرمة", "ينبع"];
+export const CITIES: City[] = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
+export const ALL_CITIES = "جميع المدن";
+export const CITY_OPTIONS: string[] = [...CITIES, ALL_CITIES];
 export const KINDS: ProgramType[] = ["دبلوم", "دورة"];
 export const MODES: TrainingMode[] = ["عن بُعد", "حضوري", "مدمج"];
 export const AUDIENCES: Audience[] = ["رجال", "نساء", "الرجال والنساء"];
