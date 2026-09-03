@@ -22,7 +22,7 @@ export function SquareProgramCard({ program }: { program: Program }) {
   return (
     <article className="flex h-full flex-col overflow-hidden rounded-3xl border border-border bg-card shadow-sm transition-shadow hover:shadow-md">
       {/* صورة البطاقة */}
-      <div className="relative aspect-square w-full overflow-hidden">
+      <div className="relative aspect-[3/2] w-full overflow-hidden">
         <img
           src={program.image}
           alt={program.programName}
@@ -38,19 +38,21 @@ export function SquareProgramCard({ program }: { program: Program }) {
           {program.city}
         </span>
 
-        {/* جديد / خصم — أعلى يسار */}
-        <span className="absolute left-3 top-3 flex flex-col items-start gap-2">
-          {program.isNew && (
-            <span className="rounded-full bg-destructive px-3 py-1.5 text-xs font-black text-primary-foreground shadow-sm">
+        {/* جديد — شارة زاوية أعلى يسار الصورة */}
+        {program.isNew && (
+          <span className="pointer-events-none absolute left-0 top-0 z-10 block h-24 w-24 overflow-hidden">
+            <span className="absolute left-[-34px] top-[20px] block w-32 -rotate-45 bg-destructive py-1 text-center text-xs font-black text-primary-foreground shadow-sm">
               جديد
             </span>
-          )}
-          {program.discount && (
-            <span className="rounded-full bg-destructive px-3 py-1.5 text-xs font-black text-primary-foreground shadow-sm">
-              خصم {program.discount}%
-            </span>
-          )}
-        </span>
+          </span>
+        )}
+
+        {/* خصم — أعلى يسار */}
+        {program.discount && (
+          <span className="absolute left-3 top-3 rounded-full bg-destructive px-3 py-1.5 text-xs font-black text-primary-foreground shadow-sm">
+            خصم {program.discount}%
+          </span>
+        )}
 
         {/* نوع البرنامج — أسفل يمين */}
         <span
