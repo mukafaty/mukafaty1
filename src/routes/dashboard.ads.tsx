@@ -42,6 +42,7 @@ const INITIAL: FiltersState = { q: "", city: "", kind: "", mode: "", audience: "
 
 function AdsPage() {
   const [filters, setFilters] = useState<FiltersState>(INITIAL);
+  const [page, setPage] = useState(1);
 
   const programs = useMemo(() => {
     const q = filters.q.trim();
@@ -66,6 +67,13 @@ function AdsPage() {
     return list;
   }, [filters]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
+
+  const totalPages = Math.ceil(programs.length / PAGE_SIZE);
+  const paginatedPrograms = programs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   const cityOptions = ["جميع المدن", ...CITIES];
   const displayFilters = { ...filters, city: filters.city || "جميع المدن" };
 
@@ -75,6 +83,9 @@ function AdsPage() {
       city: next.city === "جميع المدن" ? "" : next.city,
     });
   };
+
+  const pageButtonClass =
+    "min-w-[2.5rem] h-10 px-3 rounded-xl text-sm font-bold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed";
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
