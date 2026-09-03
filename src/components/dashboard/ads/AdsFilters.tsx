@@ -1,4 +1,4 @@
-import { ChevronDown, MapPin, LayoutGrid, User, Users, ArrowUpDown, Search } from "lucide-react";
+import { ChevronDown, MapPin, LayoutGrid, User, Users, ArrowUpDown, Search, X } from "lucide-react";
 import type { LucideIcon } from "lucide-react";
 
 export type FiltersState = {
