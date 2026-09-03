@@ -111,7 +111,55 @@ function AdsPage() {
         sorts={SORTS}
       />
 
-      <AdsGrid programs={programs} />
+      <AdsGrid programs={paginatedPrograms} />
+
+      {totalPages > 1 && (
+        <nav
+          aria-label="ترقيم الصفحات"
+          className="flex flex-wrap items-center justify-center gap-2 pt-2"
+        >
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className={cn(
+              pageButtonClass,
+              "bg-card text-navy hover:bg-[#FF0000] hover:text-white border border-border",
+            )}
+          >
+            السابق
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setPage(n)}
+              className={cn(
+                pageButtonClass,
+                page === n
+                  ? "bg-[#006BFE] text-white"
+                  : "bg-card text-navy hover:bg-[#FF0000] hover:text-white border border-border",
+              )}
+              aria-current={page === n ? "page" : undefined}
+            >
+              {n}
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className={cn(
+              pageButtonClass,
+              "bg-card text-navy hover:bg-[#FF0000] hover:text-white border border-border",
+            )}
+          >
+            التالي
+          </button>
+        </nav>
+      )}
     </section>
   );
 }
