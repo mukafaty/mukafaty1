@@ -1,6 +1,7 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
+import { cn } from "@/lib/utils";
 import {
   adsPrograms,
   AUDIENCES,
@@ -12,6 +13,8 @@ import {
 } from "@/data/adsPrograms";
 import { AdsFilters, type FiltersState } from "@/components/dashboard/ads/AdsFilters";
 import { AdsGrid } from "@/components/dashboard/ads/AdsGrid";
+
+const PAGE_SIZE = 2;
 
 export const Route = createFileRoute("/dashboard/ads")({
   head: () => ({
@@ -39,6 +42,7 @@ const INITIAL: FiltersState = { q: "", city: "", kind: "", mode: "", audience: "
 
 function AdsPage() {
   const [filters, setFilters] = useState<FiltersState>(INITIAL);
+  const [page, setPage] = useState(1);
 
   const programs = useMemo(() => {
     const q = filters.q.trim();
@@ -63,6 +67,13 @@ function AdsPage() {
     return list;
   }, [filters]);
 
+  useEffect(() => {
+    setPage(1);
+  }, [filters]);
+
+  const totalPages = Math.ceil(programs.length / PAGE_SIZE);
+  const paginatedPrograms = programs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+
   const cityOptions = ["جميع المدن", ...CITIES];
   const displayFilters = { ...filters, city: filters.city || "جميع المدن" };
 
@@ -72,6 +83,9 @@ function AdsPage() {
       city: next.city === "جميع المدن" ? "" : next.city,
     });
   };
+
+  const pageButtonClass =
+    "min-w-[2.5rem] h-10 px-3 rounded-xl text-sm font-bold transition-colors duration-200 disabled:opacity-40 disabled:cursor-not-allowed";
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
@@ -97,7 +111,55 @@ function AdsPage() {
         sorts={SORTS}
       />
 
-      <AdsGrid programs={programs} />
+      <AdsGrid programs={paginatedPrograms} />
+
+      {totalPages > 1 && (
+        <nav
+          aria-label="ترقيم الصفحات"
+          className="flex flex-wrap items-center justify-center gap-2 pt-2"
+        >
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={page === 1}
+            className={cn(
+              pageButtonClass,
+              "bg-card text-navy hover:bg-[#FF0000] hover:text-white border border-border",
+            )}
+          >
+            السابق
+          </button>
+
+          {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
+            <button
+              key={n}
+              type="button"
+              onClick={() => setPage(n)}
+              className={cn(
+                pageButtonClass,
+                page === n
+                  ? "bg-[#006BFE] text-white"
+                  : "bg-card text-navy hover:bg-[#FF0000] hover:text-white border border-border",
+              )}
+              aria-current={page === n ? "page" : undefined}
+            >
+              {n}
+            </button>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={page === totalPages}
+            className={cn(
+              pageButtonClass,
+              "bg-card text-navy hover:bg-[#FF0000] hover:text-white border border-border",
+            )}
+          >
+            التالي
+          </button>
+        </nav>
+      )}
     </section>
   );
 }
