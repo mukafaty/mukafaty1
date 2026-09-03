@@ -44,11 +44,11 @@ function AdsPage() {
     const q = filters.q.trim();
     const list = adsPrograms.filter(
       (p) =>
-        (!q || p.name.includes(q)) &&
+        (!q || p.programName.includes(q)) &&
         (!filters.city || p.city === filters.city) &&
-        (!filters.kind || p.kind === filters.kind) &&
+        (!filters.kind || p.programType === filters.kind) &&
         (!filters.mode || p.mode === filters.mode) &&
-        (!filters.audience || p.audience === filters.audience),
+        (!filters.audience || p.targetAudience === filters.audience),
     );
 
     if (filters.sort === "جديد") {
