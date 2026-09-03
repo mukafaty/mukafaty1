@@ -93,7 +93,9 @@ function AdsPage() {
 
       <AdsFilters
         value={filters}
-        onChange={setFilters}
+        onChange={handleFiltersChange}
+        onClear={handleClear}
+        hasActiveFilters={hasActiveFilters}
         cities={CITY_OPTIONS}
         kinds={KINDS}
         modes={MODES}
@@ -101,7 +103,7 @@ function AdsPage() {
         sorts={SORTS}
       />
 
-      <AdsGrid programs={programs} onReset={() => setFilters(INITIAL)} />
+      <AdsGrid programs={programs} page={page} onPageChange={setPage} onReset={handleClear} />
     </section>
   );
 }
