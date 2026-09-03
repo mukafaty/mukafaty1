@@ -13,6 +13,8 @@ export type FiltersState = {
 type Props = {
   value: FiltersState;
   onChange: (next: FiltersState) => void;
+  onClear: () => void;
+  hasActiveFilters: boolean;
   cities: string[];
   kinds: string[];
   modes: string[];
