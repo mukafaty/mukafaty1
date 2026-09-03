@@ -40,6 +40,19 @@ const INITIAL: FiltersState = { q: "", city: "", kind: "", mode: "", audience: "
 
 function AdsPage() {
   const [filters, setFilters] = useState<FiltersState>(INITIAL);
+  const [page, setPage] = useState(1);
+
+  const hasActiveFilters = Object.values(filters).some((v) => v !== "");
+
+  const handleFiltersChange = (next: FiltersState) => {
+    setFilters(next);
+    setPage(1);
+  };
+
+  const handleClear = () => {
+    setFilters(INITIAL);
+    setPage(1);
+  };
 
   const programs = useMemo(() => {
     const q = filters.q.trim();
@@ -80,7 +93,9 @@ function AdsPage() {
 
       <AdsFilters
         value={filters}
-        onChange={setFilters}
+        onChange={handleFiltersChange}
+        onClear={handleClear}
+        hasActiveFilters={hasActiveFilters}
         cities={CITY_OPTIONS}
         kinds={KINDS}
         modes={MODES}
@@ -88,7 +103,7 @@ function AdsPage() {
         sorts={SORTS}
       />
 
-      <AdsGrid programs={programs} onReset={() => setFilters(INITIAL)} />
+      <AdsGrid programs={programs} page={page} onPageChange={setPage} onReset={handleClear} />
     </section>
   );
 }
