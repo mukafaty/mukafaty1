@@ -8,8 +8,8 @@ export function HorizontalProgramCard({ program }: { program: Program }) {
       <div className="flex flex-1 flex-col gap-4 p-5 text-center">
         <h3 className="text-lg font-black text-navy sm:text-xl">{program.name}</h3>
         <div className="grid gap-3 sm:grid-cols-2">
-          <WidePricePill label="الرسوم أقساط" fee={program.installmentFee} />
           <WidePricePill label="الرسوم كاش" fee={program.cashFee} />
+          <WidePricePill label="الرسوم أقساط" fee={program.installmentFee} />
         </div>
         <p className="text-sm font-bold text-navy">{program.note}</p>
         <p className="text-xs text-muted-foreground">{program.tagline}</p>
