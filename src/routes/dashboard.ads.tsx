@@ -3,8 +3,9 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
 import {
   adsPrograms,
+  ALL_CITIES,
   AUDIENCES,
-  CITIES,
+  CITY_OPTIONS,
   commissionOf,
   KINDS,
   MODES,
