@@ -8,13 +8,16 @@ const ROW_OPTIONS = [1, 2, 3, 4];
 
 export function AdsGrid({
   programs,
+  page,
+  onPageChange,
   onReset,
 }: {
   programs: Program[];
+  page: number;
+  onPageChange: (page: number) => void;
   onReset: () => void;
 }) {
   const [rows, setRows] = useState(2);
-  const [page, setPage] = useState(1);
 
   const perPage = rows * 3;
   const pageCount = Math.max(1, Math.ceil(programs.length / perPage));
