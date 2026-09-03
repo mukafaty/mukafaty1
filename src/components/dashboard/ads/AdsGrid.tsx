@@ -63,33 +63,33 @@ export function AdsGrid({
       <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
         {/* ترقيم الصفحات — يمين */}
         <nav className="flex items-center gap-2" aria-label="ترقيم الصفحات">
+        <button
+          onClick={() => onPageChange(Math.max(1, currentPage - 1))}
+          disabled={currentPage === 1}
+          className="inline-flex h-10 items-center gap-1 rounded-xl border border-border bg-card px-4 text-sm font-bold text-navy transition-colors hover:border-brand disabled:opacity-40"
+        >
+          <ChevronRight size={16} />
+          السابق
+        </button>
+        {pages.map((p) => (
           <button
-            onClick={() => setPage((p) => Math.max(1, p - 1))}
-            disabled={currentPage === 1}
-            className="inline-flex h-10 items-center gap-1 rounded-xl border border-border bg-card px-4 text-sm font-bold text-navy transition-colors hover:border-brand disabled:opacity-40"
+            key={p}
+            onClick={() => onPageChange(p)}
+            aria-current={p === currentPage ? "page" : undefined}
+            className={`grid size-10 place-items-center rounded-xl border text-sm font-black transition-colors ${
+              p === currentPage
+                ? "border-brand bg-brand text-primary-foreground"
+                : "border-border bg-card text-navy hover:border-brand"
+            }`}
           >
-            <ChevronRight size={16} />
-            السابق
+            {p}
           </button>
-          {pages.map((p) => (
-            <button
-              key={p}
-              onClick={() => setPage(p)}
-              aria-current={p === currentPage ? "page" : undefined}
-              className={`grid size-10 place-items-center rounded-xl border text-sm font-black transition-colors ${
-                p === currentPage
-                  ? "border-brand bg-brand text-primary-foreground"
-                  : "border-border bg-card text-navy hover:border-brand"
-              }`}
-            >
-              {p}
-            </button>
-          ))}
-          <button
-            onClick={() => setPage((p) => Math.min(pageCount, p + 1))}
-            disabled={currentPage === pageCount}
-            className="inline-flex h-10 items-center gap-1 rounded-xl border border-border bg-card px-4 text-sm font-bold text-navy transition-colors hover:border-brand disabled:opacity-40"
-          >
+        ))}
+        <button
+          onClick={() => onPageChange(Math.min(pageCount, currentPage + 1))}
+          disabled={currentPage === pageCount}
+          className="inline-flex h-10 items-center gap-1 rounded-xl border border-border bg-card px-4 text-sm font-bold text-navy transition-colors hover:border-brand disabled:opacity-40"
+        >
             التالي
             <ChevronLeft size={16} />
           </button>
