@@ -103,7 +103,7 @@ export function AdsGrid({
               value={rows}
               onChange={(e) => {
                 setRows(Number(e.target.value));
-                setPage(1);
+                onPageChange(1);
               }}
               className="h-10 appearance-none rounded-xl border border-border bg-card pl-9 pr-4 text-sm font-bold text-navy outline-none focus:border-brand"
             >
