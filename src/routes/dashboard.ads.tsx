@@ -3,7 +3,6 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
 import {
   adsPrograms,
-  adsStats,
   AUDIENCES,
   CITIES,
   commissionOf,
@@ -11,7 +10,6 @@ import {
   MODES,
   SORTS,
 } from "@/data/adsPrograms";
-import { AdsStats } from "@/components/dashboard/ads/AdsStats";
 import { AdsFilters, type FiltersState } from "@/components/dashboard/ads/AdsFilters";
 import { AdsGrid } from "@/components/dashboard/ads/AdsGrid";
 
@@ -66,8 +64,8 @@ function AdsPage() {
   }, [filters]);
 
   return (
-    <section className="animate-in fade-in slide-in-from-bottom-2 space-y-6 duration-500">
-      <header className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 sm:flex sm:flex-row-reverse sm:justify-end">
+    <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
+      <header className="flex items-center gap-4">
         <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
           <Megaphone size={24} />
         </span>
@@ -78,8 +76,6 @@ function AdsPage() {
           </p>
         </div>
       </header>
-
-      <AdsStats stats={adsStats} />
 
       <AdsFilters
         value={filters}
