@@ -27,8 +27,22 @@ export function AdsGrid({
 
   if (!programs.length) {
     return (
-      <div className="rounded-3xl border border-dashed border-border bg-card p-10 text-center text-sm font-bold text-muted-foreground">
-        لا توجد برامج مطابقة لخيارات البحث.
+      <div className="flex flex-col items-center gap-4 rounded-3xl border border-dashed border-border bg-card px-6 py-12 text-center">
+        <img
+          src={emptySearchImg}
+          alt="لا توجد نتائج بحث"
+          loading="lazy"
+          width={1024}
+          height={1024}
+          className="h-40 w-40 object-contain"
+        />
+        <p className="text-base font-black text-navy">لا توجد نتائج مطابقة للبحث</p>
+        <button
+          onClick={onReset}
+          className="inline-flex h-11 items-center justify-center rounded-2xl bg-[#006BFE] px-8 text-sm font-black text-white transition-colors hover:bg-[#FF0000]"
+        >
+          عرض جميع البرامج
+        </button>
       </div>
     );
   }
@@ -43,33 +57,8 @@ export function AdsGrid({
         ))}
       </div>
 
-      <div className="flex flex-col-reverse items-center justify-between gap-4 sm:flex-row">
-        {/* عرض عدد الأسطر */}
-        <label className="inline-flex items-center gap-2 text-sm font-bold text-navy">
-          <span>عرض عدد الأسطر</span>
-          <span className="relative inline-flex">
-            <select
-              value={rows}
-              onChange={(e) => {
-                setRows(Number(e.target.value));
-                setPage(1);
-              }}
-              className="h-10 appearance-none rounded-xl border border-border bg-card pl-9 pr-4 text-sm font-bold text-navy outline-none focus:border-brand"
-            >
-              {ROW_OPTIONS.map((r) => (
-                <option key={r} value={r}>
-                  {r}
-                </option>
-              ))}
-            </select>
-            <ChevronDown
-              size={16}
-              className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-            />
-          </span>
-        </label>
-
-        {/* ترقيم الصفحات */}
+      <div className="flex flex-col items-center justify-between gap-4 sm:flex-row">
+        {/* ترقيم الصفحات — يمين */}
         <nav className="flex items-center gap-2" aria-label="ترقيم الصفحات">
           <button
             onClick={() => setPage((p) => Math.max(1, p - 1))}
