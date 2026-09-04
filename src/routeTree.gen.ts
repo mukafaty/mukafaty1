@@ -18,6 +18,7 @@ import { Route as DashboardAdsRouteImport } from './routes/dashboard.ads'
 import { Route as DashboardBalanceRouteImport } from './routes/dashboard.balance'
 import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
 import { Route as DashboardContactRouteImport } from './routes/dashboard.contact'
+import { Route as DashboardQuickShareRouteImport } from './routes/dashboard.quick-share'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardTopRouteImport } from './routes/dashboard.top'
 
@@ -66,6 +67,11 @@ const DashboardContactRoute = DashboardContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardQuickShareRoute = DashboardQuickShareRouteImport.update({
+  id: '/quick-share',
+  path: '/quick-share',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -86,6 +92,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/balance': typeof DashboardBalanceRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -98,6 +105,7 @@ export interface FileRoutesByTo {
   '/dashboard/balance': typeof DashboardBalanceRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -112,6 +120,7 @@ export interface FileRoutesById {
   '/dashboard/balance': typeof DashboardBalanceRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -127,6 +136,7 @@ export interface FileRouteTypes {
     | '/dashboard/balance'
     | '/dashboard/clients'
     | '/dashboard/contact'
+    | '/dashboard/quick-share'
     | '/dashboard/settings'
     | '/dashboard/top'
     | '/dashboard/'
@@ -139,6 +149,7 @@ export interface FileRouteTypes {
     | '/dashboard/balance'
     | '/dashboard/clients'
     | '/dashboard/contact'
+    | '/dashboard/quick-share'
     | '/dashboard/settings'
     | '/dashboard/top'
     | '/dashboard'
@@ -152,6 +163,7 @@ export interface FileRouteTypes {
     | '/dashboard/balance'
     | '/dashboard/clients'
     | '/dashboard/contact'
+    | '/dashboard/quick-share'
     | '/dashboard/settings'
     | '/dashboard/top'
     | '/dashboard/'
@@ -228,6 +240,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardContactRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/quick-share': {
+      id: '/dashboard/quick-share'
+      path: '/quick-share'
+      fullPath: '/dashboard/quick-share'
+      preLoaderRoute: typeof DashboardQuickShareRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
@@ -251,6 +270,7 @@ interface DashboardRouteChildren {
   DashboardBalanceRoute: typeof DashboardBalanceRoute
   DashboardClientsRoute: typeof DashboardClientsRoute
   DashboardContactRoute: typeof DashboardContactRoute
+  DashboardQuickShareRoute: typeof DashboardQuickShareRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
   DashboardTopRoute: typeof DashboardTopRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
@@ -262,6 +282,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardBalanceRoute: DashboardBalanceRoute,
   DashboardClientsRoute: DashboardClientsRoute,
   DashboardContactRoute: DashboardContactRoute,
+  DashboardQuickShareRoute: DashboardQuickShareRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
   DashboardTopRoute: DashboardTopRoute,
   DashboardIndexRoute: DashboardIndexRoute,
