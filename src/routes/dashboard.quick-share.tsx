@@ -157,7 +157,7 @@ function QuickSharePage() {
 
       {/* بطاقة الإعلان */}
       <div className="overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-card">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-[140px,1fr]">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[140px_1fr]">
           {/* عمود المشاركة */}
           <div className="order-2 md:order-1">
             <h3 className="mb-4 text-center text-base font-black text-navy md:text-right">
