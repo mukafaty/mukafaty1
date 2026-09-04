@@ -11,7 +11,7 @@ function FeeRow({ label, fee, commission }: { label: string; fee: number; commis
         <span className="text-sm font-black text-brand">{fmt(fee)} ريال</span>
       </div>
       <div className="flex flex-1 items-center justify-between gap-2 rounded-xl bg-[#FDF9F0] px-3 py-2">
-        <span className="text-xs font-bold text-muted-foreground">عمولتك</span>
+        <span className="text-xs font-bold text-muted-foreground">عمولتك لكل تسجيل</span>
         <span className="text-sm font-black text-destructive">{fmt(commission)} ريال</span>
       </div>
     </div>
