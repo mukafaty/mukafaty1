@@ -3,6 +3,7 @@ import {
   Home,
   Info,
   Megaphone,
+  Share2,
   Users,
   Wallet,
   Trophy,
