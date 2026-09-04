@@ -157,13 +157,13 @@ function QuickSharePage() {
 
       {/* بطاقة الإعلان */}
       <div className="overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-card">
-        <div className="grid grid-cols-1 gap-6 lg:grid-cols-[140px,1fr]">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-[140px_1fr]">
           {/* عمود المشاركة */}
-          <div className="order-2 lg:order-1">
-            <h3 className="mb-4 text-center text-base font-black text-navy lg:text-right">
+          <div className="order-2 md:order-1">
+            <h3 className="mb-4 text-center text-base font-black text-navy md:text-right">
               شارك الإعلان
             </h3>
-            <div className="flex flex-row flex-wrap justify-center gap-4 lg:flex-col lg:items-center lg:gap-5">
+            <div className="flex flex-row flex-wrap justify-center gap-4 md:flex-col md:items-center md:gap-5">
               {platforms.map((platform) => {
                 const Icon = platform.icon;
                 return (
@@ -191,13 +191,14 @@ function QuickSharePage() {
           </div>
 
           {/* صورة الإعلان */}
-          <div className="order-1 flex items-center justify-center rounded-2xl bg-muted/30 p-2 lg:order-2">
+          <div className="order-1 flex items-center justify-center rounded-2xl bg-muted/30 p-2 md:order-2">
             <img
               src={adAsset.url}
               alt="إعلان دبلوم إدارة الموارد البشرية عن بُعد"
-              width={1536}
-              height={1436}
-              className="max-h-[520px] w-auto max-w-full rounded-xl object-contain"
+              width={619}
+              height={1100}
+              className="h-auto max-h-[520px] w-auto max-w-full rounded-xl object-contain"
+              style={{ aspectRatio: "619 / 1100" }}
             />
           </div>
         </div>
