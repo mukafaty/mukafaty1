@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Share2,
@@ -96,6 +97,35 @@ function CopyField({ value, label }: { value: string; label: string }) {
 }
 
 function QuickSharePage() {
+  const [sharing, setSharing] = useState<SharePlatform | null>(null);
+
+  const handleShare = async (platform: PlatformItem) => {
+    setSharing(platform.id);
+    const toastId = toast.loading(`جاري تجهيز الإعلان للمشاركة عبر ${platform.label}`);
+    try {
+      const result = await shareAd(platform.id, ad);
+      switch (result.kind) {
+        case "native":
+        case "opened":
+          toast.success(`تم تجهيز الإعلان للمشاركة عبر ${platform.label}`, { id: toastId });
+          break;
+        case "manual":
+          toast.success(
+            `تم تجهيز الإعلان: تم نسخ النص وتنزيل الصورة، أكمل النشر داخل ${platform.label}`,
+            { id: toastId },
+          );
+          break;
+        case "cancelled":
+          toast.dismiss(toastId);
+          break;
+        default:
+          toast.error(result.message || "تعذر تجهيز الإعلان للمشاركة", { id: toastId });
+      }
+    } finally {
+      setSharing(null);
+    }
+  };
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
       {/* العنوان والوصف */}
