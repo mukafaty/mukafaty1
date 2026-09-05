@@ -10,7 +10,8 @@ import {
   Gift,
 } from "lucide-react";
 import { toast } from "sonner";
-import adAsset from "@/assets/quick-share-ad.jpg.asset.json";
+import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
+import { shareAd } from "@/lib/shareAd";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
 import telegramIcon from "@/assets/social/telegram.jpg.asset.json";
 import xIcon from "@/assets/social/x.jpg.asset.json";
