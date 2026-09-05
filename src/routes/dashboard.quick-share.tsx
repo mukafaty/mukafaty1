@@ -43,25 +43,25 @@ export const Route = createFileRoute("/dashboard/quick-share")({
   component: QuickSharePage,
 });
 
-type Platform = {
+type PlatformItem = {
+  id: SharePlatform;
   label: string;
   image?: string;
   icon?: typeof TiktokColorIcon;
 };
 
-const platforms: Platform[] = [
-  { label: "واتساب", image: whatsappIcon.url },
-  { label: "تيليجرام", image: telegramIcon.url },
-  { label: "منصة X", image: xIcon.url },
-  { label: "إنستغرام", image: instagramIcon.url },
-  { label: "فيسبوك", image: facebookIcon.url },
-  { label: "تيك توك", icon: TiktokColorIcon },
-  { label: "سناب شات", image: snapchatIcon.url },
-  { label: "البريد الإلكتروني", image: emailIcon.url },
+const platforms: PlatformItem[] = [
+  { id: "whatsapp", label: "واتساب", image: whatsappIcon.url },
+  { id: "telegram", label: "تيليجرام", image: telegramIcon.url },
+  { id: "x", label: "منصة X", image: xIcon.url },
+  { id: "instagram", label: "إنستغرام", image: instagramIcon.url },
+  { id: "facebook", label: "فيسبوك", image: facebookIcon.url },
+  { id: "tiktok", label: "تيك توك", icon: TiktokColorIcon },
+  { id: "snapchat", label: "سناب شات", image: snapchatIcon.url },
+  { id: "email", label: "البريد الإلكتروني", image: emailIcon.url },
 ];
 
-const REFERRAL_URL = "https://mukafaty.com/ref/ahmed2487";
-const DISCOUNT_CODE = "AHMED15";
+const ad = quickShareAd;
 
 function CopyField({ value, label }: { value: string; label: string }) {
   const handleCopy = async () => {
