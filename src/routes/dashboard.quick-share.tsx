@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Share2,
@@ -10,7 +11,8 @@ import {
   Gift,
 } from "lucide-react";
 import { toast } from "sonner";
-import adAsset from "@/assets/quick-share-ad.jpg.asset.json";
+import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
+import { shareAd } from "@/lib/shareAd";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
 import telegramIcon from "@/assets/social/telegram.jpg.asset.json";
 import xIcon from "@/assets/social/x.jpg.asset.json";
@@ -42,25 +44,25 @@ export const Route = createFileRoute("/dashboard/quick-share")({
   component: QuickSharePage,
 });
 
-type Platform = {
+type PlatformItem = {
+  id: SharePlatform;
   label: string;
   image?: string;
   icon?: typeof TiktokColorIcon;
 };
 
-const platforms: Platform[] = [
-  { label: "واتساب", image: whatsappIcon.url },
-  { label: "تيليجرام", image: telegramIcon.url },
-  { label: "منصة X", image: xIcon.url },
-  { label: "إنستغرام", image: instagramIcon.url },
-  { label: "فيسبوك", image: facebookIcon.url },
-  { label: "تيك توك", icon: TiktokColorIcon },
-  { label: "سناب شات", image: snapchatIcon.url },
-  { label: "البريد الإلكتروني", image: emailIcon.url },
+const platforms: PlatformItem[] = [
+  { id: "whatsapp", label: "واتساب", image: whatsappIcon.url },
+  { id: "telegram", label: "تيليجرام", image: telegramIcon.url },
+  { id: "x", label: "منصة X", image: xIcon.url },
+  { id: "instagram", label: "إنستغرام", image: instagramIcon.url },
+  { id: "facebook", label: "فيسبوك", image: facebookIcon.url },
+  { id: "tiktok", label: "تيك توك", icon: TiktokColorIcon },
+  { id: "snapchat", label: "سناب شات", image: snapchatIcon.url },
+  { id: "email", label: "البريد الإلكتروني", image: emailIcon.url },
 ];
 
-const REFERRAL_URL = "https://mukafaty.com/ref/ahmed2487";
-const DISCOUNT_CODE = "AHMED15";
+const ad = quickShareAd;
 
 function CopyField({ value, label }: { value: string; label: string }) {
   const handleCopy = async () => {
@@ -95,6 +97,35 @@ function CopyField({ value, label }: { value: string; label: string }) {
 }
 
 function QuickSharePage() {
+  const [sharing, setSharing] = useState<SharePlatform | null>(null);
+
+  const handleShare = async (platform: PlatformItem) => {
+    setSharing(platform.id);
+    const toastId = toast.loading(`جاري تجهيز الإعلان للمشاركة عبر ${platform.label}`);
+    try {
+      const result = await shareAd(platform.id, ad);
+      switch (result.kind) {
+        case "native":
+        case "opened":
+          toast.success(`تم تجهيز الإعلان للمشاركة عبر ${platform.label}`, { id: toastId });
+          break;
+        case "manual":
+          toast.success(
+            `تم تجهيز الإعلان: تم نسخ النص وتنزيل الصورة، أكمل النشر داخل ${platform.label}`,
+            { id: toastId },
+          );
+          break;
+        case "cancelled":
+          toast.dismiss(toastId);
+          break;
+        default:
+          toast.error(result.message || "تعذر تجهيز الإعلان للمشاركة", { id: toastId });
+      }
+    } finally {
+      setSharing(null);
+    }
+  };
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
       {/* العنوان والوصف */}
@@ -169,8 +200,8 @@ function QuickSharePage() {
           {/* العمود الثاني — صورة الإعلان (وسط) */}
           <div className="order-1 flex items-center justify-center lg:order-2">
             <img
-              src={adAsset.url}
-              alt="إعلان دبلوم إدارة الموارد البشرية عن بُعد"
+              src={ad.imagePortraitUrl}
+              alt={`إعلان ${ad.title}`}
               width={619}
               height={1100}
               className="h-auto max-h-[520px] w-auto max-w-full rounded-xl object-contain sm:max-h-[640px] lg:max-h-[560px]"
@@ -190,7 +221,8 @@ function QuickSharePage() {
                   <button
                     key={platform.label}
                     type="button"
-                    onClick={() => toast.info(`مشاركة عبر ${platform.label}`)}
+                    disabled={sharing !== null}
+                    onClick={() => handleShare(platform)}
                     className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border p-2 transition-all duration-200 hover:border-brand/40 hover:bg-muted/40 lg:flex-row lg:rounded-full lg:p-1.5"
                   >
                     {platform.image ? (
@@ -217,8 +249,8 @@ function QuickSharePage() {
 
       {/* رابط الإحالة وكود الخصم */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <CopyField value={REFERRAL_URL} label="رابط الإحالة" />
-        <CopyField value={DISCOUNT_CODE} label="كود الخصم" />
+        <CopyField value={ad.baseReferralLink} label="رابط الإحالة" />
+        <CopyField value={ad.discountCode} label="كود الخصم" />
       </div>
     </section>
   );
