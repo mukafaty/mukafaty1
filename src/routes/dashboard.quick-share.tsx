@@ -6,6 +6,8 @@ import {
   User,
   Users,
   Copy,
+  Banknote,
+  Gift,
 } from "lucide-react";
 import { toast } from "sonner";
 import adAsset from "@/assets/quick-share-ad.jpg.asset.json";
@@ -110,44 +112,78 @@ function QuickSharePage() {
         </div>
       </header>
 
-      {/* معلومات البرنامج */}
-      <div className="space-y-3 rounded-3xl border border-border bg-card p-5 shadow-sm">
-        <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-black text-emerald-700">
-          <CheckCircle2 size={18} />
-          متاح للنشر
-        </div>
+      {/* البطاقة الكبيرة الرئيسية — 3 أعمدة */}
+      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5">
+        <div className="grid grid-cols-1 gap-5 lg:grid-cols-[260px_1fr_200px] lg:gap-4 xl:grid-cols-[280px_1fr_220px]">
+          {/* العمود الأول — معلومات البرنامج (يمين في RTL) */}
+          <div className="order-2 flex flex-col justify-between gap-5 lg:order-1 lg:border-l lg:border-border lg:pl-4">
+            <div className="space-y-4">
+              <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-black text-emerald-700">
+                <CheckCircle2 size={18} />
+                متاح للنشر
+              </div>
 
-        <h2 className="text-lg font-black text-navy">
-          دبلوم إدارة الموارد البشرية عن بُعد
-        </h2>
+              <h2 className="text-lg font-black leading-snug text-navy">
+                دبلوم إدارة الموارد البشرية عن بُعد
+              </h2>
 
-        <div className="flex flex-wrap items-center gap-y-2 text-sm font-bold text-navy">
-          <span className="inline-flex items-center gap-2">
-            <Globe size={18} className="text-brand" />
-            عن بُعد - جميع مدن المملكة
-          </span>
-          <span className="mx-3 hidden h-4 w-px bg-border sm:block" />
-          <span className="inline-flex items-center gap-2">
-            <User size={18} className="text-brand" />
-            الفئة المستهدفة رجال
-          </span>
-          <span className="mx-3 hidden h-4 w-px bg-border sm:block" />
-          <span className="inline-flex items-center gap-2">
-            <Users size={18} className="text-brand" />
-            الفئة العمرية 18 إلى 40 عام
-          </span>
-        </div>
-      </div>
+              <div className="space-y-3 text-sm font-bold text-navy">
+                <span className="flex items-center gap-2">
+                  <Globe size={18} className="shrink-0 text-brand" />
+                  عن بُعد - جميع أرجاء المملكة
+                </span>
+                <span className="flex items-center gap-2">
+                  <User size={18} className="shrink-0 text-brand" />
+                  الفئة المستهدفة رجال
+                </span>
+                <span className="flex items-center gap-2">
+                  <Users size={18} className="shrink-0 text-brand" />
+                  الفئة العمرية 18 إلى 40 عام
+                </span>
+              </div>
+            </div>
 
-      {/* بطاقة الإعلان */}
-      <div className="w-fit max-w-full overflow-hidden rounded-3xl border border-border bg-card p-5 shadow-card">
-        <div className="grid grid-cols-1 items-center gap-6 md:grid-cols-[1fr_auto] md:gap-8">
-          {/* قسم مشاركة الإعلان (يسار في RTL بعد الصورة) */}
-          <div className="order-2 md:order-2">
-            <h3 className="mb-4 text-center text-base font-black text-navy md:text-right">
+            {/* بطاقات الأسعار */}
+            <div className="grid grid-cols-2 gap-3">
+              <div className="rounded-2xl border border-border bg-muted/40 p-3 text-center">
+                <div className="mb-1 flex items-center justify-center gap-1.5 text-xs font-bold text-muted-foreground">
+                  <Banknote size={14} className="text-brand" />
+                  الرسوم كاش
+                </div>
+                <p className="text-base font-black text-navy sm:text-lg">
+                  9,500 ريال
+                </p>
+              </div>
+              <div className="rounded-2xl border border-border bg-muted/40 p-3 text-center">
+                <div className="mb-1 flex items-center justify-center gap-1.5 text-xs font-bold text-muted-foreground">
+                  <Gift size={14} className="text-brand" />
+                  المكافأة لكل تسجيل
+                </div>
+                <p className="text-base font-black text-red-600 sm:text-lg">
+                  475 ريال
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* العمود الثاني — صورة الإعلان (وسط) */}
+          <div className="order-1 flex items-center justify-center lg:order-2">
+            <img
+              src={adAsset.url}
+              alt="إعلان دبلوم إدارة الموارد البشرية عن بُعد"
+              width={619}
+              height={1100}
+              className="h-auto max-h-[520px] w-auto max-w-full rounded-xl object-contain sm:max-h-[640px] lg:max-h-[560px]"
+              style={{ aspectRatio: "619 / 1100" }}
+            />
+          </div>
+
+          {/* العمود الثالث — مشاركة الإعلان (يسار في RTL) */}
+          <div className="order-3 lg:border-r lg:border-border lg:pr-4">
+            <h3 className="mb-4 text-center text-base font-black text-navy lg:text-right">
               شارك الإعلان
             </h3>
-            <div className="grid grid-cols-4 gap-3 md:flex md:flex-col md:gap-2.5">
+            <div className="grid grid-cols-4 gap-3 sm:grid-cols-8 lg:flex lg:flex-col lg:gap-2.5">
               {platforms.map((platform) => {
                 const Icon = platform.icon;
                 return (
@@ -155,7 +191,7 @@ function QuickSharePage() {
                     key={platform.label}
                     type="button"
                     onClick={() => toast.info(`مشاركة عبر ${platform.label}`)}
-                    className="group flex items-center gap-3 rounded-full border border-border px-2 py-1.5 transition-all duration-200 hover:border-brand/40 hover:bg-muted/40 md:px-2.5 md:py-1.5 flex-col md:flex-row max-md:rounded-2xl max-md:justify-center max-md:gap-1.5"
+                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border p-2 transition-all duration-200 hover:border-brand/40 hover:bg-muted/40 lg:flex-row lg:rounded-full lg:p-1.5"
                   >
                     {platform.image ? (
                       <img
@@ -168,25 +204,13 @@ function QuickSharePage() {
                         <Icon size={38} />
                       </span>
                     ) : null}
-                    <span className="text-xs font-bold text-navy md:text-sm">
+                    <span className="text-center text-xs font-bold text-navy lg:text-right">
                       {platform.label}
                     </span>
                   </button>
                 );
               })}
             </div>
-          </div>
-
-          {/* صورة الإعلان (يمين في RTL) */}
-          <div className="order-1 flex items-center justify-center md:order-1">
-            <img
-              src={adAsset.url}
-              alt="إعلان دبلوم إدارة الموارد البشرية عن بُعد"
-              width={619}
-              height={1100}
-              className="h-auto max-h-[640px] w-auto max-w-full rounded-xl object-contain"
-              style={{ aspectRatio: "619 / 1100" }}
-            />
           </div>
         </div>
       </div>
