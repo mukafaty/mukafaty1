@@ -170,8 +170,8 @@ function QuickSharePage() {
           {/* العمود الثاني — صورة الإعلان (وسط) */}
           <div className="order-1 flex items-center justify-center lg:order-2">
             <img
-              src={adAsset.url}
-              alt="إعلان دبلوم إدارة الموارد البشرية عن بُعد"
+              src={ad.imagePortraitUrl}
+              alt={`إعلان ${ad.title}`}
               width={619}
               height={1100}
               className="h-auto max-h-[520px] w-auto max-w-full rounded-xl object-contain sm:max-h-[640px] lg:max-h-[560px]"
@@ -191,7 +191,8 @@ function QuickSharePage() {
                   <button
                     key={platform.label}
                     type="button"
-                    onClick={() => toast.info(`مشاركة عبر ${platform.label}`)}
+                    disabled={sharing !== null}
+                    onClick={() => handleShare(platform)}
                     className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border p-2 transition-all duration-200 hover:border-brand/40 hover:bg-muted/40 lg:flex-row lg:rounded-full lg:p-1.5"
                   >
                     {platform.image ? (
@@ -218,8 +219,8 @@ function QuickSharePage() {
 
       {/* رابط الإحالة وكود الخصم */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-        <CopyField value={REFERRAL_URL} label="رابط الإحالة" />
-        <CopyField value={DISCOUNT_CODE} label="كود الخصم" />
+        <CopyField value={ad.baseReferralLink} label="رابط الإحالة" />
+        <CopyField value={ad.discountCode} label="كود الخصم" />
       </div>
     </section>
   );
