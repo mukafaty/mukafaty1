@@ -260,6 +260,47 @@ function AdLandingPage() {
                   <input className={inputClass} type="email" dir="ltr" placeholder="example@domain.com" />
                 </div>
 
+                {!refMarketer ? (
+                  <div>
+                    <FieldLabel>لديك كود إحالة أو خصم؟</FieldLabel>
+                    <div className="flex gap-2">
+                      <input
+                        className={inputClass}
+                        type="text"
+                        value={codeInput}
+                        onChange={(event) => setCodeInput(event.target.value)}
+                        placeholder="أدخل الكود"
+                      />
+                      <Button
+                        type="button"
+                        onClick={applyCode}
+                        className="h-11 shrink-0 rounded-md bg-navy px-4 text-sm font-bold hover:bg-brand"
+                      >
+                        تطبيق
+                      </Button>
+                    </div>
+                    {codeError ? (
+                      <p className="mt-2 text-xs font-bold text-destructive">{codeError}</p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {discountPercentage != null && finalPrice != null ? (
+                  <div className="rounded-lg bg-emerald-50 px-4 py-3 text-center">
+                    <p className="text-sm font-black text-emerald-700">
+                      🎁 تم تطبيق خصم {discountPercentage}%
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-navy">
+                      <span className="text-muted-foreground line-through">
+                        {formatPrice(program.cashFee)} ريال
+                      </span>
+                      <span className="mr-2">{formatPrice(finalPrice)} ريال</span>
+                    </p>
+                  </div>
+                ) : null}
+
+
+
                 <Button type="submit" className="h-12 w-full rounded-lg bg-brand text-base font-black hover:bg-navy">
                   إرسال
                   <ArrowLeft size={19} aria-hidden="true" />
