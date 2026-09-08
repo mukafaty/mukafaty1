@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
   Award,
@@ -14,8 +14,21 @@ import {
 import bannerAsset from "@/assets/landing/banner.jpg.asset.json";
 import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
 import { Button } from "@/components/ui/button";
+import {
+  calculateFinalPrice,
+  findActiveDiscountForMarketer,
+  findDiscountCode,
+  findMarketerByReferralCode,
+  getAdProgram,
+  isDiscountValid,
+  type AttributionState,
+} from "@/data/adReferral";
 
 export const Route = createFileRoute("/ad/$slug")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ref: typeof search["ref"] === "string" ? (search["ref"] as string) : undefined,
+    platform: typeof search["platform"] === "string" ? (search["platform"] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "دبلوم إدارة الموارد البشرية عن بُعد" },
@@ -34,6 +47,7 @@ export const Route = createFileRoute("/ad/$slug")({
   }),
   component: AdLandingPage,
 });
+
 
 const features = [
   {
