@@ -80,7 +80,86 @@ function FieldLabel({ children, required = false }: { children: ReactNode; requi
 }
 
 function AdLandingPage() {
+  const { slug } = Route.useParams();
+  const { ref, platform } = Route.useSearch();
+
+  const program = useMemo(() => getAdProgram(slug), [slug]);
+  const refMarketer = useMemo(() => findMarketerByReferralCode(ref), [ref]);
+
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [manualAttribution, setManualAttribution] = useState<AttributionState | null>(null);
+
+  const attribution: AttributionState = useMemo(() => {
+    if (refMarketer) {
+      const autoDiscount = findActiveDiscountForMarketer(refMarketer.id, program.slug);
+      return {
+        marketerId: refMarketer.id,
+        referralCode: refMarketer.referralCode,
+        discountCode: autoDiscount?.code ?? null,
+        discountPercentage: autoDiscount?.discountPercentage ?? null,
+        campaignName: autoDiscount?.campaignName ?? null,
+        platform: platform ?? null,
+      };
+    }
+    if (manualAttribution) return { ...manualAttribution, platform: platform ?? null };
+    return {
+      marketerId: null,
+      referralCode: null,
+      discountCode: null,
+      discountPercentage: null,
+      campaignName: null,
+      platform: platform ?? null,
+    };
+  }, [refMarketer, manualAttribution, platform, program.slug]);
+
+  const discountPercentage = attribution.discountPercentage;
+  const finalPrice =
+    discountPercentage != null ? calculateFinalPrice(program.cashFee, discountPercentage) : null;
+  const formatPrice = (value: number) => new Intl.NumberFormat("en-US").format(value);
+
+  const applyCode = () => {
+    const value = codeInput.trim();
+    if (!value) {
+      setCodeError("كود الإحالة أو الخصم غير صحيح.");
+      setManualAttribution(null);
+      return;
+    }
+
+    const discount = findDiscountCode(value);
+    if (discount && isDiscountValid(discount, program.slug)) {
+      setCodeError(null);
+      setManualAttribution({
+        marketerId: discount.marketerId,
+        referralCode: null,
+        discountCode: discount.code,
+        discountPercentage: discount.discountPercentage,
+        campaignName: discount.campaignName,
+        platform: platform ?? null,
+      });
+      return;
+    }
+
+    const marketer = findMarketerByReferralCode(value);
+    if (marketer) {
+      setCodeError(null);
+      setManualAttribution({
+        marketerId: marketer.id,
+        referralCode: marketer.referralCode,
+        discountCode: null,
+        discountPercentage: null,
+        campaignName: null,
+        platform: platform ?? null,
+      });
+      return;
+    }
+
+    setManualAttribution(null);
+    setCodeError("كود الإحالة أو الخصم غير صحيح.");
+  };
+
   return (
+
     <div dir="rtl" className="min-h-screen overflow-x-hidden bg-brand-soft/35 text-foreground">
       <header className="border-b border-border/70 bg-brand-soft/55">
         <div className="mx-auto flex h-14 max-w-7xl items-center px-5 sm:h-16 sm:px-8 lg:px-12">
