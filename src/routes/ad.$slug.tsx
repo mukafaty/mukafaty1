@@ -120,7 +120,7 @@ function AdLandingPage() {
                 alt="إعلان دبلوم إدارة الموارد البشرية بنمط التدريب عن بُعد"
                 width={619}
                 height={1100}
-                className="mx-auto block h-auto w-full max-w-[619px] border border-navy/30 object-contain"
+                className="mx-auto block h-auto w-full max-w-[619px] border border-navy/30 object-contain lg:max-h-[800px] lg:w-auto"
               />
             </div>
 
