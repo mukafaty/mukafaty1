@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import type { ReactNode } from "react";
 import {
   ArrowLeft,
   Award,
@@ -55,7 +56,7 @@ const features = [
 const inputClass =
   "h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand focus:ring-2 focus:ring-brand/15";
 
-function FieldLabel({ children, required = false }: { children: React.ReactNode; required?: boolean }) {
+function FieldLabel({ children, required = false }: { children: ReactNode; required?: boolean }) {
   return (
     <label className="mb-2 block text-xs font-bold text-navy">
       {children}
