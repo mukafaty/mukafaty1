@@ -83,7 +83,7 @@ function AdLandingPage() {
             alt="شعارات الجهات والمعاهد المعتمدة لبرنامج الدبلوم"
             width={1920}
             height={480}
-            className="mx-auto block h-auto w-full max-w-[2000px] object-contain"
+            className="mx-auto block h-auto w-full max-w-[1500px] object-contain"
           />
         </section>
 
