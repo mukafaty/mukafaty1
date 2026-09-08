@@ -83,7 +83,7 @@ function AdLandingPage() {
             alt="شعارات الجهات والمعاهد المعتمدة لبرنامج الدبلوم"
             width={1920}
             height={480}
-            className="mx-auto block h-auto w-full max-w-[1920px] object-contain"
+            className="mx-auto block h-auto w-full max-w-[2000px] object-contain"
           />
         </section>
 
@@ -141,16 +141,6 @@ function AdLandingPage() {
                 </p>
               </div>
 
-              <dl className="mt-5 grid grid-cols-2 gap-2 rounded-lg bg-brand-soft/65 p-3 text-center text-xs sm:text-sm">
-                <div>
-                  <dt className="text-muted-foreground">الفئة المستهدفة</dt>
-                  <dd className="mt-1 font-black text-navy">رجال</dd>
-                </div>
-                <div className="border-r border-border">
-                  <dt className="text-muted-foreground">الرسوم كاش</dt>
-                  <dd className="mt-1 font-black text-navy">9,500 ريال</dd>
-                </div>
-              </dl>
 
               <form className="mt-6 space-y-5" onSubmit={(event) => event.preventDefault()}>
                 <div>
