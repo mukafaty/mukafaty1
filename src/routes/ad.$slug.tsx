@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import type { ReactNode } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import {
   ArrowLeft,
   Award,
@@ -14,8 +14,21 @@ import {
 import bannerAsset from "@/assets/landing/banner.jpg.asset.json";
 import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
 import { Button } from "@/components/ui/button";
+import {
+  calculateFinalPrice,
+  findActiveDiscountForMarketer,
+  findDiscountCode,
+  findMarketerByReferralCode,
+  getAdProgram,
+  isDiscountValid,
+  type AttributionState,
+} from "@/data/adReferral";
 
 export const Route = createFileRoute("/ad/$slug")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    ref: typeof search["ref"] === "string" ? (search["ref"] as string) : undefined,
+    platform: typeof search["platform"] === "string" ? (search["platform"] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "دبلوم إدارة الموارد البشرية عن بُعد" },
@@ -34,6 +47,7 @@ export const Route = createFileRoute("/ad/$slug")({
   }),
   component: AdLandingPage,
 });
+
 
 const features = [
   {
@@ -66,7 +80,86 @@ function FieldLabel({ children, required = false }: { children: ReactNode; requi
 }
 
 function AdLandingPage() {
+  const { slug } = Route.useParams();
+  const { ref, platform } = Route.useSearch();
+
+  const program = useMemo(() => getAdProgram(slug), [slug]);
+  const refMarketer = useMemo(() => findMarketerByReferralCode(ref), [ref]);
+
+  const [codeInput, setCodeInput] = useState("");
+  const [codeError, setCodeError] = useState<string | null>(null);
+  const [manualAttribution, setManualAttribution] = useState<AttributionState | null>(null);
+
+  const attribution: AttributionState = useMemo(() => {
+    if (refMarketer) {
+      const autoDiscount = findActiveDiscountForMarketer(refMarketer.id, program.slug);
+      return {
+        marketerId: refMarketer.id,
+        referralCode: refMarketer.referralCode,
+        discountCode: autoDiscount?.code ?? null,
+        discountPercentage: autoDiscount?.discountPercentage ?? null,
+        campaignName: autoDiscount?.campaignName ?? null,
+        platform: platform ?? null,
+      };
+    }
+    if (manualAttribution) return { ...manualAttribution, platform: platform ?? null };
+    return {
+      marketerId: null,
+      referralCode: null,
+      discountCode: null,
+      discountPercentage: null,
+      campaignName: null,
+      platform: platform ?? null,
+    };
+  }, [refMarketer, manualAttribution, platform, program.slug]);
+
+  const discountPercentage = attribution.discountPercentage;
+  const finalPrice =
+    discountPercentage != null ? calculateFinalPrice(program.cashFee, discountPercentage) : null;
+  const formatPrice = (value: number) => new Intl.NumberFormat("en-US").format(value);
+
+  const applyCode = () => {
+    const value = codeInput.trim();
+    if (!value) {
+      setCodeError("كود الإحالة أو الخصم غير صحيح.");
+      setManualAttribution(null);
+      return;
+    }
+
+    const discount = findDiscountCode(value);
+    if (discount && isDiscountValid(discount, program.slug)) {
+      setCodeError(null);
+      setManualAttribution({
+        marketerId: discount.marketerId,
+        referralCode: null,
+        discountCode: discount.code,
+        discountPercentage: discount.discountPercentage,
+        campaignName: discount.campaignName,
+        platform: platform ?? null,
+      });
+      return;
+    }
+
+    const marketer = findMarketerByReferralCode(value);
+    if (marketer) {
+      setCodeError(null);
+      setManualAttribution({
+        marketerId: marketer.id,
+        referralCode: marketer.referralCode,
+        discountCode: null,
+        discountPercentage: null,
+        campaignName: null,
+        platform: platform ?? null,
+      });
+      return;
+    }
+
+    setManualAttribution(null);
+    setCodeError("كود الإحالة أو الخصم غير صحيح.");
+  };
+
   return (
+
     <div dir="rtl" className="min-h-screen overflow-x-hidden bg-brand-soft/35 text-foreground">
       <header className="border-b border-border/70 bg-brand-soft/55">
         <div className="mx-auto flex h-14 max-w-7xl items-center px-5 sm:h-16 sm:px-8 lg:px-12">
@@ -166,6 +259,47 @@ function AdLandingPage() {
                   <FieldLabel>البريد الإلكتروني</FieldLabel>
                   <input className={inputClass} type="email" dir="ltr" placeholder="example@domain.com" />
                 </div>
+
+                {!refMarketer ? (
+                  <div>
+                    <FieldLabel>لديك كود إحالة أو خصم؟</FieldLabel>
+                    <div className="flex gap-2">
+                      <input
+                        className={inputClass}
+                        type="text"
+                        value={codeInput}
+                        onChange={(event) => setCodeInput(event.target.value)}
+                        placeholder="أدخل الكود"
+                      />
+                      <Button
+                        type="button"
+                        onClick={applyCode}
+                        className="h-11 shrink-0 rounded-md bg-navy px-4 text-sm font-bold hover:bg-brand"
+                      >
+                        تطبيق
+                      </Button>
+                    </div>
+                    {codeError ? (
+                      <p className="mt-2 text-xs font-bold text-destructive">{codeError}</p>
+                    ) : null}
+                  </div>
+                ) : null}
+
+                {discountPercentage != null && finalPrice != null ? (
+                  <div className="rounded-lg bg-emerald-50 px-4 py-3 text-center">
+                    <p className="text-sm font-black text-emerald-700">
+                      🎁 تم تطبيق خصم {discountPercentage}%
+                    </p>
+                    <p className="mt-1 text-xs font-bold text-navy">
+                      <span className="text-muted-foreground line-through">
+                        {formatPrice(program.cashFee)} ريال
+                      </span>
+                      <span className="mr-2">{formatPrice(finalPrice)} ريال</span>
+                    </p>
+                  </div>
+                ) : null}
+
+
 
                 <Button type="submit" className="h-12 w-full rounded-lg bg-brand text-base font-black hover:bg-navy">
                   إرسال
