@@ -77,13 +77,13 @@ function AdLandingPage() {
       </header>
 
       <main>
-        <section aria-label="الجهات المعتمدة" className="bg-background">
+        <section aria-label="الجهات المعتمدة" className="bg-[#f6fbfe]">
           <img
             src={bannerAsset.url}
             alt="شعارات الجهات والمعاهد المعتمدة لبرنامج الدبلوم"
             width={1920}
             height={480}
-            className="mx-auto block h-auto w-full max-w-[1500px] object-contain"
+            className="mx-auto block h-auto w-full max-w-[1200px] object-contain"
           />
         </section>
 
@@ -120,7 +120,7 @@ function AdLandingPage() {
                 alt="إعلان دبلوم إدارة الموارد البشرية بنمط التدريب عن بُعد"
                 width={619}
                 height={1100}
-                className="mx-auto block h-auto w-full max-w-[619px] border border-navy/30 object-contain"
+                className="mx-auto block h-auto w-full max-w-[619px] border border-navy/30 object-contain lg:max-h-[800px] lg:w-auto"
               />
             </div>
 
