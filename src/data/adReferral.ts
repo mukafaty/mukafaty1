@@ -77,7 +77,14 @@ export const discountCodes: DiscountCode[] = [
 ];
 
 export const adPrograms: AdProgram[] = [
-  { slug: "hr-diploma", title: "دبلوم إدارة الموارد البشرية - عن بُعد", cashFee: 9500 },
+  {
+    slug: "hr-diploma",
+    title: "دبلوم إدارة الموارد البشرية - عن بُعد",
+    cashFee: 9500,
+    ogTitle: "دبلوم إدارة الموارد البشرية - عن بُعد",
+    ogDescription: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز",
+    ogImage: diplomaAdAsset.url,
+  },
 ];
 
 const normalize = (value: string) => value.trim().toUpperCase();
