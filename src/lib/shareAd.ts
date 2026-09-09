@@ -126,8 +126,10 @@ export async function shareAd(
           const native = await tryNativeShare(ad, platform, true);
           if (native && native.kind !== "error") return native;
         }
-        // الكمبيوتر: فتح WhatsApp Web عبر رابط المشاركة مع النص + رابط الإعلان
-        openWindow(`https://wa.me/?text=${encodeURIComponent(text)}`);
+        // الكمبيوتر: فتح WhatsApp Web مباشرة (وليس wa.me) —
+        // wa.me قد يحوّل إلى تطبيق سطح المكتب عبر whatsapp://
+        // وهو ما يكسر ترميز UTF-8 للإيموجي والنص العربي على ويندوز
+        openWindow(`https://web.whatsapp.com/send?text=${encodeURIComponent(text)}`);
         return { kind: "opened" };
       }
 
