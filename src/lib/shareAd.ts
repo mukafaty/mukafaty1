@@ -29,6 +29,16 @@ export type ShareOutcome =
   | { kind: "cancelled" }
   | { kind: "error"; message: string };
 
+/** يكشف ما إذا كان المستخدم على جهاز جوال/لوحي أم كمبيوتر */
+export function isMobileDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  if (/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)) return true;
+  // أجهزة لوحية تعمل باللمس بنظام iPadOS تظهر كـ Mac
+  return navigator.maxTouchPoints > 1 && /Mac/i.test(ua);
+}
+
+
 async function fetchImageFile(url: string, name: string): Promise<File | null> {
   try {
     const res = await fetch(url);
@@ -111,15 +121,23 @@ export async function shareAd(
   try {
     switch (platform) {
       case "whatsapp": {
-        const native = await tryNativeShare(ad, platform, true);
-        if (native && native.kind !== "error") return native;
+        // الجوال: الطريقة الحالية الناجحة (مشاركة الجهاز مع الصورة ثم wa.me)
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+        // الكمبيوتر: فتح WhatsApp Web عبر رابط المشاركة مع النص + رابط الإعلان
         openWindow(`https://wa.me/?text=${encodeURIComponent(text)}`);
         return { kind: "opened" };
       }
 
       case "telegram": {
-        const native = await tryNativeShare(ad, platform, true);
-        if (native && native.kind !== "error") return native;
+        // الجوال: الطريقة الحالية الناجحة (مشاركة الجهاز مع الصورة ثم t.me)
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+        // الكمبيوتر: فتح Telegram Web عبر رابط المشاركة مع النص + رابط الإعلان
         openWindow(
           `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(ad.marketingText)}`,
         );
