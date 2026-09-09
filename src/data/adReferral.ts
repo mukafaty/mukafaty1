@@ -32,7 +32,7 @@ export interface AdProgram {
 }
 
 /** النطاق العام المستخدم لبناء الروابط المطلقة في Open Graph */
-export const SITE_ORIGIN = "https://www.mukafaty.com";
+export const SITE_ORIGIN = "https://mukafaty.com";
 
 export const toAbsoluteUrl = (path: string) =>
   path.startsWith("http") ? path : `${SITE_ORIGIN}${path}`;
