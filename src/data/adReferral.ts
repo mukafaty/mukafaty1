@@ -1,4 +1,5 @@
 /** بيانات تجريبية (Mock) لمنطق الإحالة وأكواد الخصم — بدون قاعدة بيانات */
+import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
 
 export interface Marketer {
   id: string;
@@ -23,7 +24,18 @@ export interface AdProgram {
   slug: string;
   title: string;
   cashFee: number;
+  /** بيانات Open Graph الخاصة بكل إعلان */
+  ogTitle: string;
+  ogDescription: string;
+  /** مسار الصورة (نسبي) — يتحول إلى رابط مطلق عند البناء */
+  ogImage: string;
 }
+
+/** النطاق العام المستخدم لبناء الروابط المطلقة في Open Graph */
+export const SITE_ORIGIN = "https://mukafaty.com";
+
+export const toAbsoluteUrl = (path: string) =>
+  path.startsWith("http") ? path : `${SITE_ORIGIN}${path}`;
 
 export const marketers: Marketer[] = [
   { id: "demo-ahmed", name: "أحمد", referralCode: "AHMED2487" },
@@ -66,7 +78,14 @@ export const discountCodes: DiscountCode[] = [
 ];
 
 export const adPrograms: AdProgram[] = [
-  { slug: "hr-diploma", title: "دبلوم إدارة الموارد البشرية - عن بُعد", cashFee: 9500 },
+  {
+    slug: "hr-diploma",
+    title: "دبلوم إدارة الموارد البشرية - عن بُعد",
+    cashFee: 9500,
+    ogTitle: "دبلوم إدارة الموارد البشرية - عن بُعد",
+    ogDescription: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز",
+    ogImage: diplomaAdAsset.url,
+  },
 ];
 
 const normalize = (value: string) => value.trim().toUpperCase();
