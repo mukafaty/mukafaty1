@@ -29,6 +29,16 @@ export type ShareOutcome =
   | { kind: "cancelled" }
   | { kind: "error"; message: string };
 
+/** يكشف ما إذا كان المستخدم على جهاز جوال/لوحي أم كمبيوتر */
+export function isMobileDevice(): boolean {
+  if (typeof navigator === "undefined") return false;
+  const ua = navigator.userAgent || "";
+  if (/Android|iPhone|iPad|iPod|Mobile|Windows Phone/i.test(ua)) return true;
+  // أجهزة لوحية تعمل باللمس بنظام iPadOS تظهر كـ Mac
+  return navigator.maxTouchPoints > 1 && /Mac/i.test(ua);
+}
+
+
 async function fetchImageFile(url: string, name: string): Promise<File | null> {
   try {
     const res = await fetch(url);
