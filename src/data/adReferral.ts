@@ -1,4 +1,5 @@
 /** بيانات تجريبية (Mock) لمنطق الإحالة وأكواد الخصم — بدون قاعدة بيانات */
+import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
 
 export interface Marketer {
   id: string;
