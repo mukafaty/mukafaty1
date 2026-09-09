@@ -121,15 +121,23 @@ export async function shareAd(
   try {
     switch (platform) {
       case "whatsapp": {
-        const native = await tryNativeShare(ad, platform, true);
-        if (native && native.kind !== "error") return native;
+        // الجوال: الطريقة الحالية الناجحة (مشاركة الجهاز مع الصورة ثم wa.me)
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+        // الكمبيوتر: فتح WhatsApp Web عبر رابط المشاركة مع النص + رابط الإعلان
         openWindow(`https://wa.me/?text=${encodeURIComponent(text)}`);
         return { kind: "opened" };
       }
 
       case "telegram": {
-        const native = await tryNativeShare(ad, platform, true);
-        if (native && native.kind !== "error") return native;
+        // الجوال: الطريقة الحالية الناجحة (مشاركة الجهاز مع الصورة ثم t.me)
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+        // الكمبيوتر: فتح Telegram Web عبر رابط المشاركة مع النص + رابط الإعلان
         openWindow(
           `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(ad.marketingText)}`,
         );
