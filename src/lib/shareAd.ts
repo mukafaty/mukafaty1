@@ -147,8 +147,20 @@ export async function shareAd(
       }
 
       case "x": {
+        // نص قصير مخصص لمنصة X — لا نستخدم النص التسويقي الطويل
+        const baseText = `دبلوم إدارة الموارد البشرية - عن بُعد 🎓
+طوّر مهاراتك الإدارية واستعد لسوق العمل.
+سجّل الآن واستفد من الفرص المتاحة.`;
+        // X تحتسب أي رابط بـ 23 حرفًا بغض النظر عن طوله الفعلي
+        const X_LIMIT = 280;
+        const urlWeightedLength = 23;
+        const allowedTextLength = X_LIMIT - urlWeightedLength;
+        const xText =
+          baseText.length > allowedTextLength
+            ? `${baseText.slice(0, allowedTextLength - 1).trimEnd()}…`
+            : baseText;
         openWindow(
-          `https://twitter.com/intent/tweet?text=${encodeURIComponent(ad.marketingText)}&url=${encodeURIComponent(link)}`,
+          `https://twitter.com/intent/tweet?text=${encodeURIComponent(xText)}&url=${encodeURIComponent(link)}`,
         );
         return { kind: "opened" };
       }
@@ -167,12 +179,16 @@ export async function shareAd(
       }
 
       // منصات لا تسمح بالنشر المباشر من متصفح الويب:
-      // نستخدم مشاركة الجهاز إن توفرت، وإلا نجهّز الصورة والنص وننقل المستخدم للمنصة
+      // الجوال: نستخدم مشاركة الجهاز الأصلية إن توفرت.
+      // الكمبيوتر: لا نستخدم مشاركة النظام (مثل Windows Share) —
+      // نجهّز الصورة والنص وننقل المستخدم للمنصة ليكمل النشر بنفسه.
       case "instagram":
       case "tiktok":
       case "snapchat": {
-        const native = await tryNativeShare(ad, platform, true);
-        if (native && native.kind !== "error") return native;
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
 
         await copyText(text);
         downloadImage(imageUrl, `${ad.programId}-${platform}.jpg`);
