@@ -23,7 +23,18 @@ export interface AdProgram {
   slug: string;
   title: string;
   cashFee: number;
+  /** بيانات Open Graph الخاصة بكل إعلان */
+  ogTitle: string;
+  ogDescription: string;
+  /** مسار الصورة (نسبي) — يتحول إلى رابط مطلق عند البناء */
+  ogImage: string;
 }
+
+/** النطاق العام المستخدم لبناء الروابط المطلقة في Open Graph */
+export const SITE_ORIGIN = "https://www.mukafaty.com";
+
+export const toAbsoluteUrl = (path: string) =>
+  path.startsWith("http") ? path : `${SITE_ORIGIN}${path}`;
 
 export const marketers: Marketer[] = [
   { id: "demo-ahmed", name: "أحمد", referralCode: "AHMED2487" },
