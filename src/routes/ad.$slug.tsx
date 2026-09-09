@@ -5,10 +5,12 @@ import {
   Award,
   BookOpen,
   Building2,
+  CheckCircle2,
   Clock3,
   CreditCard,
   GraduationCap,
   Laptop,
+  Loader2,
   TrendingUp,
 } from "lucide-react";
 import bannerAsset from "@/assets/landing/banner.jpg.asset.json";
@@ -36,12 +38,14 @@ export const Route = createFileRoute("/ad/$slug")({
         name: "description",
         content: "سجّل اهتمامك بدبلوم إدارة الموارد البشرية عن بُعد، برنامج معتمد لمدة عامين ونصف.",
       },
-      { property: "og:title", content: "دبلوم إدارة الموارد البشرية عن بُعد" },
+      { property: "og:title", content: "دبلوم إدارة الموارد البشرية - عن بُعد" },
       {
         property: "og:description",
         content: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز.",
       },
       { property: "og:type", content: "website" },
+      { property: "og:image", content: `https://www.mukafaty.com${diplomaAdAsset.url}` },
+      { property: "og:url", content: "https://www.mukafaty.com/ad/hr-diploma" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
@@ -70,6 +74,8 @@ const features = [
 const inputClass =
   "h-11 w-full rounded-md border border-input bg-background px-3 text-sm text-foreground outline-none transition-colors placeholder:text-muted-foreground focus:border-brand focus:ring-2 focus:ring-brand/15";
 
+const inputErrorClass = "border-destructive focus:border-destructive focus:ring-destructive/15";
+
 function FieldLabel({ children, required = false }: { children: ReactNode; required?: boolean }) {
   return (
     <label className="mb-2 block text-xs font-bold text-navy">
@@ -77,6 +83,16 @@ function FieldLabel({ children, required = false }: { children: ReactNode; requi
       {required ? <span className="mr-1 text-destructive">*</span> : null}
     </label>
   );
+}
+
+const PHONE_REGEX = /^(\+?\d[\d\s-]{7,14})$/;
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+interface FormErrors {
+  fullName?: string;
+  city?: string;
+  phone?: string;
+  email?: string;
 }
 
 function AdLandingPage() {
@@ -89,6 +105,14 @@ function AdLandingPage() {
   const [codeInput, setCodeInput] = useState("");
   const [codeError, setCodeError] = useState<string | null>(null);
   const [manualAttribution, setManualAttribution] = useState<AttributionState | null>(null);
+
+  const [fullName, setFullName] = useState("");
+  const [city, setCity] = useState("");
+  const [phone, setPhone] = useState("");
+  const [email, setEmail] = useState("");
+  const [errors, setErrors] = useState<FormErrors>({});
+  const [submitting, setSubmitting] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
 
   const attribution: AttributionState = useMemo(() => {
     if (refMarketer) {
@@ -121,7 +145,7 @@ function AdLandingPage() {
   const applyCode = () => {
     const value = codeInput.trim();
     if (!value) {
-      setCodeError("كود الإحالة أو الخصم غير صحيح.");
+      setCodeError(null);
       setManualAttribution(null);
       return;
     }
@@ -156,6 +180,54 @@ function AdLandingPage() {
 
     setManualAttribution(null);
     setCodeError("كود الإحالة أو الخصم غير صحيح.");
+  };
+
+  const validate = (): FormErrors => {
+    const next: FormErrors = {};
+    if (!fullName.trim()) next.fullName = "الرجاء تعبئة هذا الحقل.";
+    if (!city.trim()) next.city = "الرجاء تعبئة هذا الحقل.";
+    if (!phone.trim()) next.phone = "الرجاء تعبئة هذا الحقل.";
+    else if (!PHONE_REGEX.test(phone.trim())) next.phone = "يرجى إدخال رقم جوال صحيح.";
+    if (email.trim() && !EMAIL_REGEX.test(email.trim()))
+      next.email = "يرجى إدخال بريد إلكتروني صحيح.";
+    return next;
+  };
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (codeError) return;
+
+    const nextErrors = validate();
+    setErrors(nextErrors);
+    if (Object.keys(nextErrors).length > 0) return;
+
+    setSubmitting(true);
+    const payload = {
+      adSlug: program.slug,
+      marketerId: attribution.marketerId,
+      referralCode: attribution.referralCode,
+      discountCode: attribution.discountCode,
+      discountPercentage: attribution.discountPercentage ?? 0,
+      campaignName: attribution.campaignName,
+      platform: attribution.platform,
+      customerData: {
+        fullName: fullName.trim(),
+        city: city.trim(),
+        phone: phone.trim(),
+        email: email.trim(),
+      },
+    };
+    // Mock Submit — سيتم الربط بقاعدة البيانات لاحقًا
+    console.log("Mock submit payload:", payload);
+
+    window.setTimeout(() => {
+      setSubmitting(false);
+      setSubmitted(true);
+    }, 800);
+  };
+
+  const clearError = (field: keyof FormErrors) => {
+    setErrors((prev) => (prev[field] ? { ...prev, [field]: undefined } : prev));
   };
 
   return (
@@ -222,90 +294,175 @@ function AdLandingPage() {
               className="min-w-0 rounded-3xl border border-brand/35 bg-card px-5 py-7 shadow-sm sm:px-8 sm:py-9 lg:col-start-2"
               dir="rtl"
             >
-              <div className="text-center sm:text-right">
-                <span className="mx-auto mb-3 grid size-12 place-items-center rounded-full bg-brand-soft text-brand sm:mx-0">
-                  <Award size={25} aria-hidden="true" />
-                </span>
-                <h2 id="registration-title" className="text-2xl font-black text-navy sm:text-3xl">
-                  سجّل الآن
-                </h2>
-                <p className="mt-2 text-sm font-medium leading-6 text-muted-foreground">
-                  أدخل بياناتك وسوف يتم التواصل معك لاستكمال إجراءات التسجيل.
-                </p>
-              </div>
+              {submitted ? (
+                <div className="flex min-h-72 flex-col items-center justify-center py-6 text-center">
+                  <span className="grid size-16 place-items-center rounded-full bg-emerald-100 text-emerald-600">
+                    <CheckCircle2 size={38} aria-hidden="true" />
+                  </span>
+                  <h2 className="mt-5 text-xl font-black text-navy sm:text-2xl">
+                    تم إرسال طلب التسجيل بنجاح 🎉
+                  </h2>
+                  <p className="mt-3 max-w-sm text-sm font-medium leading-7 text-muted-foreground">
+                    شكرًا لاهتمامك بالبرنامج. تم استلام بياناتك بنجاح وسيتم التواصل معك لاستكمال إجراءات التسجيل.
+                  </p>
+                </div>
+              ) : (
+                <>
+                  <div className="text-center sm:text-right">
+                    <span className="mx-auto mb-3 grid size-12 place-items-center rounded-full bg-brand-soft text-brand sm:mx-0">
+                      <Award size={25} aria-hidden="true" />
+                    </span>
+                    <h2 id="registration-title" className="text-2xl font-black text-navy sm:text-3xl">
+                      سجّل الآن
+                    </h2>
+                    <p className="mt-2 text-sm font-medium leading-6 text-muted-foreground">
+                      أدخل بياناتك وسوف يتم التواصل معك لاستكمال إجراءات التسجيل.
+                    </p>
+                  </div>
 
 
-              <form className="mt-6 space-y-5" onSubmit={(event) => event.preventDefault()}>
-                <div>
-                  <FieldLabel required>الاسم الكامل</FieldLabel>
-                  <input className={inputClass} type="text" placeholder="أدخل اسمك الكامل" />
-                </div>
-                <div>
-                  <FieldLabel required>المدينة</FieldLabel>
-                  <select className={inputClass} defaultValue="">
-                    <option value="" disabled>اختر المدينة</option>
-                    <option>الرياض</option>
-                    <option>جدة</option>
-                    <option>مكة المكرمة</option>
-                    <option>المدينة المنورة</option>
-                    <option>مدينة أخرى</option>
-                  </select>
-                </div>
-                <div>
-                  <FieldLabel required>رقم الجوال</FieldLabel>
-                  <input className={inputClass} type="tel" inputMode="tel" dir="ltr" placeholder="05xxxxxxxx" />
-                </div>
-                <div>
-                  <FieldLabel>البريد الإلكتروني</FieldLabel>
-                  <input className={inputClass} type="email" dir="ltr" placeholder="example@domain.com" />
-                </div>
-
-                {!refMarketer ? (
-                  <div>
-                    <FieldLabel>لديك كود إحالة أو خصم؟</FieldLabel>
-                    <div className="flex gap-2">
+                  <form className="mt-6 space-y-5" noValidate onSubmit={handleSubmit}>
+                    <div>
+                      <FieldLabel required>الاسم الكامل</FieldLabel>
                       <input
-                        className={inputClass}
+                        className={`${inputClass} ${errors.fullName ? inputErrorClass : ""}`}
                         type="text"
-                        value={codeInput}
-                        onChange={(event) => setCodeInput(event.target.value)}
-                        placeholder="أدخل الكود"
+                        placeholder="أدخل اسمك الكامل"
+                        value={fullName}
+                        onChange={(event) => {
+                          setFullName(event.target.value);
+                          if (event.target.value.trim()) clearError("fullName");
+                        }}
                       />
-                      <Button
-                        type="button"
-                        onClick={applyCode}
-                        className="h-11 shrink-0 rounded-md bg-navy px-4 text-sm font-bold hover:bg-brand"
-                      >
-                        تطبيق
-                      </Button>
+                      {errors.fullName ? (
+                        <p className="mt-2 text-xs font-bold text-destructive">{errors.fullName}</p>
+                      ) : null}
                     </div>
-                    {codeError ? (
-                      <p className="mt-2 text-xs font-bold text-destructive">{codeError}</p>
+                    <div>
+                      <FieldLabel required>المدينة</FieldLabel>
+                      <select
+                        className={`${inputClass} ${errors.city ? inputErrorClass : ""}`}
+                        value={city}
+                        onChange={(event) => {
+                          setCity(event.target.value);
+                          if (event.target.value) clearError("city");
+                        }}
+                      >
+                        <option value="" disabled>اختر المدينة</option>
+                        <option>الرياض</option>
+                        <option>جدة</option>
+                        <option>مكة المكرمة</option>
+                        <option>المدينة المنورة</option>
+                        <option>مدينة أخرى</option>
+                      </select>
+                      {errors.city ? (
+                        <p className="mt-2 text-xs font-bold text-destructive">{errors.city}</p>
+                      ) : null}
+                    </div>
+                    <div>
+                      <FieldLabel required>رقم الجوال</FieldLabel>
+                      <input
+                        className={`${inputClass} ${errors.phone ? inputErrorClass : ""}`}
+                        type="tel"
+                        inputMode="tel"
+                        dir="ltr"
+                        placeholder="05xxxxxxxx"
+                        value={phone}
+                        onChange={(event) => {
+                          setPhone(event.target.value);
+                          if (PHONE_REGEX.test(event.target.value.trim())) clearError("phone");
+                        }}
+                      />
+                      {errors.phone ? (
+                        <p className="mt-2 text-xs font-bold text-destructive">{errors.phone}</p>
+                      ) : null}
+                    </div>
+                    <div>
+                      <FieldLabel>البريد الإلكتروني</FieldLabel>
+                      <input
+                        className={`${inputClass} ${errors.email ? inputErrorClass : ""}`}
+                        type="email"
+                        dir="ltr"
+                        placeholder="example@domain.com"
+                        value={email}
+                        onChange={(event) => {
+                          setEmail(event.target.value);
+                          const value = event.target.value.trim();
+                          if (!value || EMAIL_REGEX.test(value)) clearError("email");
+                        }}
+                      />
+                      {errors.email ? (
+                        <p className="mt-2 text-xs font-bold text-destructive">{errors.email}</p>
+                      ) : null}
+                    </div>
+
+                    {!refMarketer ? (
+                      <div>
+                        <FieldLabel>لديك كود إحالة أو خصم؟</FieldLabel>
+                        <div className="flex gap-2">
+                          <input
+                            className={inputClass}
+                            type="text"
+                            value={codeInput}
+                            onChange={(event) => {
+                              setCodeInput(event.target.value);
+                              if (!event.target.value.trim()) {
+                                setCodeError(null);
+                                setManualAttribution(null);
+                              }
+                            }}
+                            placeholder="أدخل الكود"
+                          />
+                          <Button
+                            type="button"
+                            onClick={applyCode}
+                            className="h-11 shrink-0 rounded-md bg-navy px-4 text-sm font-bold hover:bg-brand"
+                          >
+                            تطبيق
+                          </Button>
+                        </div>
+                        {codeError ? (
+                          <p className="mt-2 text-xs font-bold text-destructive">{codeError}</p>
+                        ) : null}
+                      </div>
                     ) : null}
-                  </div>
-                ) : null}
 
-                {discountPercentage != null && finalPrice != null ? (
-                  <div className="rounded-lg bg-emerald-50 px-4 py-3 text-center">
-                    <p className="text-sm font-black text-emerald-700">
-                      🎁 تم تطبيق خصم {discountPercentage}%
-                    </p>
-                    <p className="mt-1 text-xs font-bold text-navy">
-                      <span className="text-muted-foreground line-through">
-                        {formatPrice(program.cashFee)} ريال
-                      </span>
-                      <span className="mr-2">{formatPrice(finalPrice)} ريال</span>
-                    </p>
-                  </div>
-                ) : null}
+                    {discountPercentage != null && finalPrice != null ? (
+                      <div className="rounded-lg bg-emerald-50 px-4 py-3 text-center">
+                        <p className="text-sm font-black text-emerald-700">
+                          🎁 تم تطبيق خصم {discountPercentage}%
+                        </p>
+                        <p className="mt-1 text-xs font-bold text-navy">
+                          <span className="text-muted-foreground line-through">
+                            {formatPrice(program.cashFee)} ريال
+                          </span>
+                          <span className="mr-2">{formatPrice(finalPrice)} ريال</span>
+                        </p>
+                      </div>
+                    ) : null}
 
 
 
-                <Button type="submit" className="h-12 w-full rounded-lg bg-brand text-base font-black hover:bg-navy">
-                  إرسال
-                  <ArrowLeft size={19} aria-hidden="true" />
-                </Button>
-              </form>
+                    <Button
+                      type="submit"
+                      disabled={submitting}
+                      className="h-12 w-full rounded-lg bg-brand text-base font-black hover:bg-navy disabled:opacity-70"
+                    >
+                      {submitting ? (
+                        <>
+                          جاري الإرسال...
+                          <Loader2 size={19} className="animate-spin" aria-hidden="true" />
+                        </>
+                      ) : (
+                        <>
+                          إرسال
+                          <ArrowLeft size={19} aria-hidden="true" />
+                        </>
+                      )}
+                    </Button>
+                  </form>
+                </>
+              )}
 
               <a href="#privacy" className="mt-4 block text-center text-xs font-bold text-navy underline underline-offset-4 hover:text-brand">
                 للاطلاع على سياسة الخصوصية - اضغط هنا
