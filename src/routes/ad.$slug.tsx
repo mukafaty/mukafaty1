@@ -31,24 +31,48 @@ export const Route = createFileRoute("/ad/$slug")({
     ref: typeof search["ref"] === "string" ? (search["ref"] as string) : undefined,
     platform: typeof search["platform"] === "string" ? (search["platform"] as string) : undefined,
   }),
-  head: () => ({
-    meta: [
-      { title: "دبلوم إدارة الموارد البشرية عن بُعد" },
-      {
-        name: "description",
-        content: "سجّل اهتمامك بدبلوم إدارة الموارد البشرية عن بُعد، برنامج معتمد لمدة عامين ونصف.",
-      },
-      { property: "og:title", content: "دبلوم إدارة الموارد البشرية - عن بُعد" },
-      {
-        property: "og:description",
-        content: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز.",
-      },
-      { property: "og:type", content: "website" },
-      { property: "og:image", content: `https://www.mukafaty.com${diplomaAdAsset.url}` },
-      { property: "og:url", content: "https://www.mukafaty.com/ad/hr-diploma" },
-      { name: "twitter:card", content: "summary_large_image" },
-    ],
-  }),
+  loaderDeps: ({ search }) => ({ ref: search.ref, platform: search.platform }),
+  loader: ({ params, deps }) => {
+    const ad = getAdProgram(params.slug);
+    const query = new URLSearchParams();
+    if (deps.ref) query.set("ref", deps.ref);
+    if (deps.platform) query.set("platform", deps.platform);
+    const qs = query.toString();
+    return {
+      ogTitle: ad.ogTitle,
+      ogDescription: ad.ogDescription,
+      ogImage: toAbsoluteUrl(ad.ogImage),
+      ogUrl: `${SITE_ORIGIN}/ad/${ad.slug}${qs ? `?${qs}` : ""}`,
+      canonical: `${SITE_ORIGIN}/ad/${ad.slug}`,
+    };
+  },
+  head: ({ loaderData }) => {
+    const data = loaderData ?? {
+      ogTitle: "دبلوم إدارة الموارد البشرية - عن بُعد",
+      ogDescription: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز",
+      ogImage: toAbsoluteUrl(diplomaAdAsset.url),
+      ogUrl: `${SITE_ORIGIN}/ad/hr-diploma`,
+      canonical: `${SITE_ORIGIN}/ad/hr-diploma`,
+    };
+    return {
+      meta: [
+        { title: data.ogTitle },
+        { name: "description", content: data.ogDescription },
+        { property: "og:site_name", content: "مكافآتي" },
+        { property: "og:type", content: "website" },
+        { property: "og:title", content: data.ogTitle },
+        { property: "og:description", content: data.ogDescription },
+        { property: "og:image", content: data.ogImage },
+        { property: "og:image:secure_url", content: data.ogImage },
+        { property: "og:url", content: data.ogUrl },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: data.ogTitle },
+        { name: "twitter:description", content: data.ogDescription },
+        { name: "twitter:image", content: data.ogImage },
+      ],
+      links: [{ rel: "canonical", href: data.canonical }],
+    };
+  },
   component: AdLandingPage,
 });
 
