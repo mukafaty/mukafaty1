@@ -31,7 +31,7 @@ export const Route = createFileRoute("/ad/$slug")({
     ref: typeof search["ref"] === "string" ? (search["ref"] as string) : undefined,
     platform: typeof search["platform"] === "string" ? (search["platform"] as string) : undefined,
   }),
-  head: ({ location }) => ({
+  head: () => ({
     meta: [
       { title: "دبلوم إدارة الموارد البشرية عن بُعد" },
       {
@@ -44,8 +44,8 @@ export const Route = createFileRoute("/ad/$slug")({
         content: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز.",
       },
       { property: "og:type", content: "website" },
-      { property: "og:image", content: diplomaAdAsset.url },
-      { property: "og:url", content: location.href },
+      { property: "og:image", content: `https://www.mukafaty.com${diplomaAdAsset.url}` },
+      { property: "og:url", content: "https://www.mukafaty.com/ad/hr-diploma" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
