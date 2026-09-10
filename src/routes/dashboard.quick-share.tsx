@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Share2,
@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
-import { shareAd } from "@/lib/shareAd";
+import { shareAd, isMobileDevice } from "@/lib/shareAd";
+import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
 import telegramIcon from "@/assets/social/telegram.jpg.asset.json";
 import xIcon from "@/assets/social/x.jpg.asset.json";
@@ -59,8 +60,12 @@ const platforms: PlatformItem[] = [
   { id: "facebook", label: "فيسبوك", image: facebookIcon.url },
   { id: "tiktok", label: "تيك توك", icon: TiktokColorIcon },
   { id: "snapchat", label: "سناب شات", image: snapchatIcon.url },
+  { id: "linkedin", label: "لينكد إن", image: linkedinIcon.url },
   { id: "email", label: "البريد الإلكتروني", image: emailIcon.url },
 ];
+
+/** منصات تُخفى في نسخة الكمبيوتر فقط */
+const mobileOnlyPlatforms: SharePlatform[] = ["instagram", "tiktok", "snapchat"];
 
 const ad = quickShareAd;
 
@@ -98,6 +103,15 @@ function CopyField({ value, label }: { value: string; label: string }) {
 
 function QuickSharePage() {
   const [sharing, setSharing] = useState<SharePlatform | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+
+  const visiblePlatforms = isMobile
+    ? platforms
+    : platforms.filter((p) => !mobileOnlyPlatforms.includes(p.id));
 
   const handleShare = async (platform: PlatformItem) => {
     setSharing(platform.id);
@@ -216,7 +230,7 @@ function QuickSharePage() {
               شارك الإعلان
             </h3>
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-8 lg:flex lg:flex-col lg:gap-2.5">
-              {platforms.map((platform) => {
+              {visiblePlatforms.map((platform) => {
                 const Icon = platform.icon;
                 return (
                   <button

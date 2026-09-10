@@ -12,7 +12,7 @@ export function buildPlatformReferralLink(
 
 /** اختيار الصورة الأنسب لكل منصة — مركزي وقابل للتعديل */
 export function pickImageUrl(ad: AdData, platform: SharePlatform): string {
-  const squarePlatforms: SharePlatform[] = ["instagram", "facebook", "x", "email"];
+  const squarePlatforms: SharePlatform[] = ["instagram", "facebook", "x", "email", "linkedin"];
   return squarePlatforms.includes(platform) ? ad.imageSquareUrl : ad.imagePortraitUrl;
 }
 
@@ -193,6 +193,17 @@ export async function shareAd(
         openWindow(
           `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}&quote=${encodeURIComponent(ad.marketingText)}`,
         );
+        return { kind: "opened" };
+      }
+
+      case "linkedin": {
+        // الجوال: مشاركة الجهاز مع الصورة المربعة إن أمكن، وإلا النص + الرابط
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+        // الكمبيوتر: نافذة مشاركة الرابط في لينكد إن — تقرأ Open Graph من صفحة الإعلان
+        openWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`);
         return { kind: "opened" };
       }
 
