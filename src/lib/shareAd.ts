@@ -182,7 +182,29 @@ export async function shareAd(
       // الجوال: نستخدم مشاركة الجهاز الأصلية إن توفرت.
       // الكمبيوتر: لا نستخدم مشاركة النظام (مثل Windows Share) —
       // نجهّز الصورة والنص وننقل المستخدم للمنصة ليكمل النشر بنفسه.
-      case "instagram":
+      case "instagram": {
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+
+        // الكمبيوتر: إنستغرام لا تسمح بتمرير النص أو الصورة عبر رابط ويب.
+        // أفضل تجهيز حقيقي متاح: نسخ الصورة المربعة إلى الحافظة (إن دعم المتصفح)
+        // مع نسخ النص + الرابط، ثم فتح صفحة إنشاء منشور في إنستغرام ويب.
+        const copiedImage = await copyImageToClipboard(imageUrl);
+        const copiedText = await copyText(text);
+        if (!copiedImage) downloadImage(imageUrl, `${ad.programId}-instagram.png`);
+        openWindow("https://www.instagram.com/create/select/");
+        return {
+          kind: "manual",
+          detail: copiedImage
+            ? "تم نسخ الصورة والنص إلى الحافظة — الصقهما داخل إنستغرام"
+            : copiedText
+              ? "تم نسخ النص وتجهيز الصورة — أكمل النشر داخل إنستغرام"
+              : "تم فتح إنستغرام — أكمل النشر يدويًا",
+        };
+      }
+
       case "tiktok":
       case "snapchat": {
         if (isMobileDevice()) {
