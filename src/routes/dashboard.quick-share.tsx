@@ -229,7 +229,7 @@ function QuickSharePage() {
             <h3 className="mb-4 text-center text-base font-black text-navy lg:text-right">
               شارك الإعلان
             </h3>
-            <div className="grid grid-cols-4 gap-3 sm:grid-cols-8 lg:flex lg:flex-col lg:gap-2.5">
+            <div className="grid grid-cols-3 gap-4 sm:grid-cols-8 sm:gap-3 lg:flex lg:flex-col lg:gap-2.5">
               {visiblePlatforms.map((platform) => {
                 const Icon = platform.icon;
                 return (
@@ -238,20 +238,20 @@ function QuickSharePage() {
                     type="button"
                     disabled={sharing !== null}
                     onClick={() => handleShare(platform)}
-                    className="group flex flex-col items-center gap-1.5 rounded-2xl border border-border p-2 transition-all duration-200 hover:border-brand/40 hover:bg-muted/40 lg:flex-row lg:rounded-full lg:p-1.5"
+                    className="group flex flex-col items-center gap-2 rounded-2xl border border-border p-3 transition-all duration-200 hover:border-brand/40 hover:bg-muted/40 sm:gap-1.5 sm:p-2 lg:flex-row lg:rounded-full lg:p-1.5"
                   >
                     {platform.image ? (
                       <img
                         src={platform.image}
                         alt={platform.label}
-                        className="size-10 shrink-0 rounded-full object-cover shadow-sm transition-transform duration-200 group-hover:scale-110"
+                        className="size-14 shrink-0 rounded-full object-cover shadow-sm transition-transform duration-200 group-hover:scale-110 sm:size-10"
                       />
                     ) : Icon ? (
-                      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-white shadow-sm transition-transform duration-200 group-hover:scale-110">
-                        <Icon size={38} />
+                      <span className="grid size-14 shrink-0 place-items-center rounded-full bg-white shadow-sm transition-transform duration-200 group-hover:scale-110 sm:size-10">
+                        <Icon size={1} className="h-10 w-10 sm:h-9 sm:w-9" />
                       </span>
                     ) : null}
-                    <span className="text-center text-xs font-bold text-navy lg:text-right">
+                    <span className="text-center text-sm font-bold text-navy sm:text-xs lg:text-right">
                       {platform.label}
                     </span>
                   </button>
