@@ -103,6 +103,15 @@ function CopyField({ value, label }: { value: string; label: string }) {
 
 function QuickSharePage() {
   const [sharing, setSharing] = useState<SharePlatform | null>(null);
+  const [isMobile, setIsMobile] = useState(true);
+
+  useEffect(() => {
+    setIsMobile(isMobileDevice());
+  }, []);
+
+  const visiblePlatforms = isMobile
+    ? platforms
+    : platforms.filter((p) => !mobileOnlyPlatforms.includes(p.id));
 
   const handleShare = async (platform: PlatformItem) => {
     setSharing(platform.id);
