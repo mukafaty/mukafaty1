@@ -25,7 +25,7 @@ export function buildShareText(ad: AdData, platform: SharePlatform): string {
 export type ShareOutcome =
   | { kind: "native" } // تمت المشاركة عبر نافذة مشاركة الجهاز
   | { kind: "opened" } // تم فتح المنصة لإكمال النشر
-  | { kind: "manual" } // تم تجهيز الصورة والنص لينشرها المستخدم بنفسه
+  | { kind: "manual"; detail?: string } // تم تجهيز الصورة والنص لينشرها المستخدم بنفسه
   | { kind: "cancelled" }
   | { kind: "error"; message: string };
 
@@ -89,6 +89,30 @@ function openWindow(url: string) {
 async function copyText(text: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(text);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+/** ينسخ الصورة إلى حافظة النظام (PNG فقط) — مدعوم في Chrome/Edge */
+async function copyImageToClipboard(url: string): Promise<boolean> {
+  try {
+    if (typeof ClipboardItem === "undefined" || !navigator.clipboard?.write) return false;
+    const res = await fetch(url);
+    if (!res.ok) return false;
+    let blob = await res.blob();
+    if (blob.type !== "image/png") {
+      const bitmap = await createImageBitmap(blob);
+      const canvas = document.createElement("canvas");
+      canvas.width = bitmap.width;
+      canvas.height = bitmap.height;
+      canvas.getContext("2d")?.drawImage(bitmap, 0, 0);
+      const png = await new Promise<Blob | null>((r) => canvas.toBlob(r, "image/png"));
+      if (!png) return false;
+      blob = png;
+    }
+    await navigator.clipboard.write([new ClipboardItem({ "image/png": blob })]);
     return true;
   } catch {
     return false;
