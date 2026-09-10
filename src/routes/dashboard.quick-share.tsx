@@ -60,8 +60,12 @@ const platforms: PlatformItem[] = [
   { id: "facebook", label: "فيسبوك", image: facebookIcon.url },
   { id: "tiktok", label: "تيك توك", icon: TiktokColorIcon },
   { id: "snapchat", label: "سناب شات", image: snapchatIcon.url },
+  { id: "linkedin", label: "لينكد إن", image: linkedinIcon.url },
   { id: "email", label: "البريد الإلكتروني", image: emailIcon.url },
 ];
+
+/** منصات تُخفى في نسخة الكمبيوتر فقط */
+const mobileOnlyPlatforms: SharePlatform[] = ["instagram", "tiktok", "snapchat"];
 
 const ad = quickShareAd;
 
