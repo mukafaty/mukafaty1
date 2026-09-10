@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import {
   Share2,
@@ -12,7 +12,8 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
-import { shareAd } from "@/lib/shareAd";
+import { shareAd, isMobileDevice } from "@/lib/shareAd";
+import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
 import telegramIcon from "@/assets/social/telegram.jpg.asset.json";
 import xIcon from "@/assets/social/x.jpg.asset.json";
