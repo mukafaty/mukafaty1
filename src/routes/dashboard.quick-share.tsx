@@ -111,7 +111,8 @@ function QuickSharePage() {
           break;
         case "manual":
           toast.success(
-            `تم تجهيز الإعلان: تم نسخ النص وتنزيل الصورة، أكمل النشر داخل ${platform.label}`,
+            result.detail ??
+              `تم تجهيز الإعلان: تم نسخ النص وتنزيل الصورة، أكمل النشر داخل ${platform.label}`,
             { id: toastId },
           );
           break;

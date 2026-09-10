@@ -1,5 +1,5 @@
 import portraitAsset from "@/assets/ad-portrait.jpg.asset.json";
-import squareAsset from "@/assets/ad-square.png.asset.json";
+import squareAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
 
 /** المنصات المدعومة — قيم ثابتة موحدة */
 export const SHARE_PLATFORMS = [
