@@ -10,6 +10,7 @@ export const SHARE_PLATFORMS = [
   "facebook",
   "tiktok",
   "snapchat",
+  "linkedin",
   "email",
 ] as const;
 

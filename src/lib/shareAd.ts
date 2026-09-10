@@ -12,7 +12,7 @@ export function buildPlatformReferralLink(
 
 /** اختيار الصورة الأنسب لكل منصة — مركزي وقابل للتعديل */
 export function pickImageUrl(ad: AdData, platform: SharePlatform): string {
-  const squarePlatforms: SharePlatform[] = ["instagram", "facebook", "x", "email"];
+  const squarePlatforms: SharePlatform[] = ["instagram", "facebook", "x", "email", "linkedin"];
   return squarePlatforms.includes(platform) ? ad.imageSquareUrl : ad.imagePortraitUrl;
 }
 
