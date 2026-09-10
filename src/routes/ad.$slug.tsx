@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import bannerAsset from "@/assets/landing/banner.jpg.asset.json";
 import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
+import diplomaOgAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
 import { Button } from "@/components/ui/button";
 import {
   calculateFinalPrice,
