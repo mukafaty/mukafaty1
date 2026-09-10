@@ -196,6 +196,17 @@ export async function shareAd(
         return { kind: "opened" };
       }
 
+      case "linkedin": {
+        // الجوال: مشاركة الجهاز مع الصورة المربعة إن أمكن، وإلا النص + الرابط
+        if (isMobileDevice()) {
+          const native = await tryNativeShare(ad, platform, true);
+          if (native && native.kind !== "error") return native;
+        }
+        // الكمبيوتر: نافذة مشاركة الرابط في لينكد إن — تقرأ Open Graph من صفحة الإعلان
+        openWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`);
+        return { kind: "opened" };
+      }
+
       case "email": {
         const body = `${ad.marketingText}\n\n${link}`;
         window.location.href = `mailto:?subject=${encodeURIComponent(ad.title)}&body=${encodeURIComponent(body)}`;
