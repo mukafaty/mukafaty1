@@ -1,5 +1,5 @@
 /** بيانات تجريبية (Mock) لمنطق الإحالة وأكواد الخصم — بدون قاعدة بيانات */
-import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
+import diplomaOgAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
 
 export interface Marketer {
   id: string;
@@ -84,7 +84,7 @@ export const adPrograms: AdProgram[] = [
     cashFee: 9500,
     ogTitle: "دبلوم إدارة الموارد البشرية - عن بُعد",
     ogDescription: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز",
-    ogImage: diplomaAdAsset.url,
+    ogImage: diplomaOgAsset.url,
   },
 ];
 
