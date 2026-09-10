@@ -212,20 +212,18 @@ export async function shareAd(
           if (native && native.kind !== "error") return native;
         }
 
-        // الكمبيوتر: إنستغرام لا تسمح بتمرير النص أو الصورة عبر رابط ويب.
-        // أفضل تجهيز حقيقي متاح: نسخ الصورة المربعة إلى الحافظة (إن دعم المتصفح)
-        // مع نسخ النص + الرابط، ثم فتح صفحة إنشاء منشور في إنستغرام ويب.
-        const copiedImage = await copyImageToClipboard(imageUrl);
-        const copiedText = await copyText(text);
-        if (!copiedImage) downloadImage(imageUrl, `${ad.programId}-instagram.png`);
+        // الكمبيوتر: إنستغرام ويب لا تدعم تمرير النص أو الصورة عبر رابط.
+        // نجهّز الصورة المربعة (حافظة النظام إن أمكن، وإلا ملف جاهز للرفع)
+        // ونضع النص + الرابط في الحافظة، ثم نفتح شاشة إنشاء منشور مباشرة.
+        const imageOnClipboard = await copyImageToClipboard(imageUrl);
+        downloadImage(imageUrl, `${ad.programId}-instagram.png`);
+        const textCopied = await copyText(text);
         openWindow("https://www.instagram.com/create/select/");
         return {
           kind: "manual",
-          detail: copiedImage
-            ? "تم نسخ الصورة والنص إلى الحافظة — الصقهما داخل إنستغرام"
-            : copiedText
-              ? "تم نسخ النص وتجهيز الصورة — أكمل النشر داخل إنستغرام"
-              : "تم فتح إنستغرام — أكمل النشر يدويًا",
+          detail: textCopied
+            ? `تم فتح شاشة إنشاء منشور في إنستغرام، والصورة المربعة${imageOnClipboard ? " متاحة للصق أيضًا" : " جاهزة للرفع"}، والنص مع الرابط منسوخ للصق في الوصف`
+            : "تم فتح شاشة إنشاء منشور في إنستغرام والصورة جاهزة للرفع",
         };
       }
 
