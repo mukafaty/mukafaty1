@@ -230,7 +230,7 @@ function QuickSharePage() {
               شارك الإعلان
             </h3>
             <div className="grid grid-cols-4 gap-3 sm:grid-cols-8 lg:flex lg:flex-col lg:gap-2.5">
-              {platforms.map((platform) => {
+              {visiblePlatforms.map((platform) => {
                 const Icon = platform.icon;
                 return (
                   <button
