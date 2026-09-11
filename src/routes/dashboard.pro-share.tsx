@@ -258,8 +258,8 @@ function ProSharePage() {
             </div>
           </div>
 
-          {/* العمود الأيمن — صورة الإعلان وبطاقة المشاركة */}
-          <div className="order-3 flex flex-col gap-5 lg:order-1">
+          {/* العمود الأيسر — صورة الإعلان وبطاقة المشاركة */}
+          <div className="order-3 flex flex-col gap-5 lg:order-3">
             <div className="overflow-hidden rounded-2xl border border-border bg-muted/20 p-3">
               <img
                 src={ad.mainAdImage}
