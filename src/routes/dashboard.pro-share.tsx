@@ -270,11 +270,6 @@ function ProSharePage() {
               />
             </div>
 
-            <p className="text-center text-sm font-medium text-muted-foreground lg:text-right">
-              حمّل المحتوى المناسب لكل منصة ثم اضغط على المنصة المناسبة أسفل
-              الصفحة.
-            </p>
-
             {/* بطاقة مشاركة الإعلان */}
             <ShareAdCard />
           </div>
