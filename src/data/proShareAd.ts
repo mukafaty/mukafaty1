@@ -3,6 +3,9 @@
  * تُستخدم حاليًا لوضع الهيكل البصري فقط، ويمكن استبدالها لاحقًا ببيانات حقيقية.
  */
 import mainAdImageAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
+import portraitAdAsset from "@/assets/ad-portrait.jpg.asset.json";
+import squareAdAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
+import wideAdAsset from "@/assets/ad-square.png.asset.json";
 
 export interface ProShareData {
   programName: string;
@@ -14,6 +17,24 @@ export interface ProShareData {
   marketingText: string;
   xText: string;
   mainAdImage: string;
+}
+
+export interface ReferralLink {
+  id: string;
+  title: string;
+  value: string;
+}
+
+export interface AdDownloadSize {
+  id: string;
+  platform: string;
+  title: string;
+  width: number;
+  height: number;
+  aspectRatio: string;
+  description: string;
+  previewImage: string;
+  fileUrl: string;
 }
 
 export const professionalShareData: ProShareData = {
@@ -37,3 +58,68 @@ export const professionalShareData: ProShareData = {
     "mharatcom.com/r/ahmed2487",
   mainAdImage: mainAdImageAsset.url,
 };
+
+export const referralLinks: ReferralLink[] = [
+  {
+    id: "referral-link",
+    title: "رابط الإحالة",
+    value: "https://mukafaty.com/ad/hr-diploma?ref=ahmed2487",
+  },
+  {
+    id: "referral-link-short",
+    title: "رابط الإحالة (مختصر)",
+    value: "https://mukafaty.com/ad/r/",
+  },
+  {
+    id: "discount-code",
+    title: "كود الخصم",
+    value: "AHMED15",
+  },
+];
+
+export const adDownloadSizes: AdDownloadSize[] = [
+  {
+    id: "size-9-16",
+    platform: "9:16",
+    title: "9:16",
+    width: 1080,
+    height: 1920,
+    aspectRatio: "9:16",
+    description: "مناسب\nسناب شات\nتيك توك",
+    previewImage: portraitAdAsset.url,
+    fileUrl: portraitAdAsset.url,
+  },
+  {
+    id: "size-1-1",
+    platform: "1:1",
+    title: "1:1",
+    width: 1080,
+    height: 1080,
+    aspectRatio: "1:1",
+    description: "مربع\nمناسب\nإنستغرام وفيسبوك",
+    previewImage: squareAdAsset.url,
+    fileUrl: squareAdAsset.url,
+  },
+  {
+    id: "size-x",
+    platform: "X",
+    title: "X",
+    width: 1200,
+    height: 628,
+    aspectRatio: "1.91:1",
+    description: "مناسب لمنصة X",
+    previewImage: wideAdAsset.url,
+    fileUrl: wideAdAsset.url,
+  },
+  {
+    id: "size-a5",
+    platform: "A5",
+    title: "A5",
+    width: 148,
+    height: 210,
+    aspectRatio: "148:210",
+    description: "مناسب للطباعة",
+    previewImage: portraitAdAsset.url,
+    fileUrl: portraitAdAsset.url,
+  },
+];
