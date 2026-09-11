@@ -187,8 +187,8 @@ function AdDownloadCard({
   fileUrl: string;
 }) {
   return (
-    <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4 shadow-sm sm:p-5">
-      <div className="flex items-start justify-between gap-2">
+    <div className="flex h-full flex-col gap-3 rounded-3xl border border-border bg-[#F7F8FD] p-4 shadow-sm sm:p-5">
+      <div className="flex flex-1 items-start justify-between gap-2">
         <div className="min-w-0 flex-1 text-right">
           <h3 className="text-base font-black text-navy">{title}</h3>
           <p dir="ltr" className="mt-0.5 text-xs font-bold text-muted-foreground">
@@ -209,7 +209,7 @@ function AdDownloadCard({
       <button
         type="button"
         onClick={() => triggerDownload(fileUrl, `ad-${title}-${width}x${height}.jpg`)}
-        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#006BFE] px-4 py-3 text-sm font-black text-white transition-colors hover:bg-[#0058D4]"
+        className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#006BFE] px-4 py-3 text-sm font-black text-white transition-colors hover:bg-[#FF0000]"
       >
         <Download size={16} />
         تحميل الإعلان
@@ -328,7 +328,7 @@ function ProSharePage() {
               </div>
               <button
                 type="button"
-                className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
+                className="mx-auto inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
               >
                 نسخ النص
               </button>
@@ -343,10 +343,10 @@ function ProSharePage() {
                   <p key={i}>{line}</p>
                 ))}
               </div>
-              <div className="flex items-center justify-between gap-3">
+              <div className="flex items-center justify-center gap-3">
                 <button
                   type="button"
-                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
+                  className="inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
                 >
                   نسخ نص X
                 </button>
