@@ -129,7 +129,7 @@ function ProSharePage() {
       <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
           {/* العمود الأول — معلومات الإعلان (يمين في RTL) */}
-          <div className="flex flex-col gap-5 lg:border-l lg:border-border lg:pl-6">
+          <div className="order-1 flex flex-col gap-5 lg:border-l lg:border-border lg:pl-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-black text-emerald-700">
                 <CheckCircle2 size={18} />
