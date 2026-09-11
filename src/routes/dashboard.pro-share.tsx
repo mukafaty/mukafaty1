@@ -15,15 +15,6 @@ import {
   Globe,
 } from "lucide-react";
 import { professionalShareData } from "@/data/proShareAd";
-import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
-import telegramIcon from "@/assets/social/telegram.jpg.asset.json";
-import xIcon from "@/assets/social/x.jpg.asset.json";
-import instagramIcon from "@/assets/social/instagram.jpg.asset.json";
-import facebookIcon from "@/assets/social/facebook.jpg.asset.json";
-import snapchatIcon from "@/assets/social/snapchat.jpg.asset.json";
-import emailIcon from "@/assets/social/email.png.asset.json";
-import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
-import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 
 export const Route = createFileRoute("/dashboard/pro-share")({
   head: () => ({
@@ -44,18 +35,6 @@ export const Route = createFileRoute("/dashboard/pro-share")({
   }),
   component: ProSharePage,
 });
-
-const socialIcons = [
-  { src: whatsappIcon.url, alt: "واتساب" },
-  { src: telegramIcon.url, alt: "تيليجرام" },
-  { src: xIcon.url, alt: "منصة X" },
-  { src: instagramIcon.url, alt: "إنستغرام" },
-  { src: facebookIcon.url, alt: "فيسبوك" },
-  { icon: TiktokColorIcon, alt: "تيك توك" },
-  { src: snapchatIcon.url, alt: "سناب شات" },
-  { src: linkedinIcon.url, alt: "لينكد إن" },
-  { src: emailIcon.url, alt: "البريد الإلكتروني" },
-];
 
 function ActionCard({
   icon: Icon,
@@ -84,6 +63,38 @@ function ActionCard({
         className="shrink-0 text-muted-foreground transition-colors group-hover:text-brand"
       />
     </div>
+  );
+}
+
+function ShareAdCard() {
+  return (
+    <a
+      href="#ready-to-publish"
+      onClick={(e) => {
+        e.preventDefault();
+        const target = document.getElementById("ready-to-publish");
+        if (target) {
+          target.scrollIntoView({ behavior: "smooth" });
+        }
+      }}
+      className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-brand/30"
+    >
+      <div className="flex items-center gap-3">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
+          <Share2 size={20} />
+        </span>
+        <div>
+          <h4 className="text-sm font-black text-navy">شارك الإعلان</h4>
+          <p className="mt-0.5 text-xs font-medium text-muted-foreground">
+            حمِّل المحتوى المناسب لكل منصة ثم اضغط على المنصة المناسبة أسفل الصفحة
+          </p>
+        </div>
+      </div>
+      <ChevronLeft
+        size={18}
+        className="shrink-0 text-muted-foreground transition-colors group-hover:text-brand"
+      />
+    </a>
   );
 }
 
@@ -128,7 +139,7 @@ function ProSharePage() {
       {/* البطاقة الرئيسية — 3 أعمدة */}
       <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3 lg:gap-8">
-          {/* العمود الأول — معلومات الإعلان (يمين في RTL) */}
+          {/* العمود الأيسر — معلومات الإعلان */}
           <div className="order-1 flex flex-col gap-5 lg:order-3 lg:border-l lg:border-border lg:pl-6">
             <div className="space-y-4">
               <div className="inline-flex items-center gap-2 rounded-full bg-emerald-100 px-3 py-1.5 text-sm font-black text-emerald-700">
@@ -197,7 +208,7 @@ function ProSharePage() {
             </div>
           </div>
 
-          {/* العمود الثاني — النصوص التسويقية (الوسط) */}
+          {/* العمود الأوسط — النصوص التسويقية */}
           <div className="order-2 flex flex-col gap-5 lg:order-2 lg:border-l lg:border-border lg:pl-6">
             <div className="flex items-center gap-2 text-lg font-black text-navy">
               <FileText size={22} className="text-brand" />
@@ -206,7 +217,7 @@ function ProSharePage() {
 
             <div className="space-y-3">
               <label className="text-sm font-bold text-navy">نص الإعلان</label>
-              <div className="min-h-[220px] overflow-auto rounded-2xl border border-border bg-muted/30 p-4 text-sm leading-7 text-navy">
+              <div className="h-[180px] overflow-y-auto rounded-2xl border border-border bg-muted/30 p-4 text-right text-sm leading-7 text-navy break-words lg:h-[220px]">
                 {ad.marketingText.split("\n").map((line, i) => (
                   <p key={i} className={line.startsWith("✓") ? "font-bold" : ""}>
                     {line}
@@ -225,7 +236,7 @@ function ProSharePage() {
               <label className="text-sm font-bold text-navy">
                 نص خاص بمنصة X
               </label>
-              <div className="min-h-[120px] overflow-auto rounded-2xl border border-border bg-muted/30 p-4 text-sm leading-7 text-navy">
+              <div className="h-[120px] overflow-y-auto rounded-2xl border border-border bg-muted/30 p-4 text-right text-sm leading-7 text-navy break-words lg:h-[160px]">
                 {ad.xText.split("\n").map((line, i) => (
                   <p key={i}>{line}</p>
                 ))}
@@ -247,7 +258,7 @@ function ProSharePage() {
             </div>
           </div>
 
-          {/* العمود الثالث — صورة الإعلان (يسار في RTL) */}
+          {/* العمود الأيمن — صورة الإعلان وبطاقة المشاركة */}
           <div className="order-3 flex flex-col gap-5 lg:order-1">
             <div className="overflow-hidden rounded-2xl border border-border bg-muted/20 p-3">
               <img
@@ -264,26 +275,8 @@ function ProSharePage() {
               الصفحة.
             </p>
 
-            {/* أيقونات التواصل كعنصر بصري فقط */}
-            <div className="flex flex-wrap items-center justify-center gap-3 lg:justify-start">
-              {socialIcons.map((item, idx) =>
-                item.src ? (
-                  <img
-                    key={idx}
-                    src={item.src}
-                    alt={item.alt}
-                    className="size-10 rounded-full border border-border object-cover shadow-sm"
-                  />
-                ) : item.icon ? (
-                  <span
-                    key={idx}
-                    className="grid size-10 place-items-center rounded-full border border-border bg-white shadow-sm"
-                  >
-                    <item.icon size={1} className="h-7 w-7" />
-                  </span>
-                ) : null
-              )}
-            </div>
+            {/* بطاقة مشاركة الإعلان */}
+            <ShareAdCard />
           </div>
         </div>
       </div>
