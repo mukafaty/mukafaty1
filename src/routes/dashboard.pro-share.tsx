@@ -13,8 +13,10 @@ import {
   FileText,
   ChevronLeft,
   Globe,
+  Copy,
+  Download,
 } from "lucide-react";
-import { professionalShareData } from "@/data/proShareAd";
+import { professionalShareData, referralLinks, adDownloadSizes } from "@/data/proShareAd";
 
 export const Route = createFileRoute("/dashboard/pro-share")({
   head: () => ({
@@ -112,6 +114,106 @@ function InfoRow({
       <Icon size={18} className="shrink-0 text-brand" />
       <span className="text-muted-foreground">{label}</span>
       <span className="mr-1">{value}</span>
+    </div>
+  );
+}
+
+async function copyToClipboard(value: string) {
+  try {
+    await navigator.clipboard.writeText(value);
+  } catch {
+    // Fallback for older browsers
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    document.body.appendChild(textarea);
+    textarea.select();
+    document.execCommand("copy");
+    document.body.removeChild(textarea);
+  }
+}
+
+function triggerDownload(url: string, filename: string) {
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = filename;
+  anchor.target = "_blank";
+  anchor.rel = "noopener noreferrer";
+  document.body.appendChild(anchor);
+  anchor.click();
+  document.body.removeChild(anchor);
+}
+
+function ReferralLinkCard({ title, value }: { title: string; value: string }) {
+  return (
+    <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4 shadow-sm sm:p-5">
+      <h3 className="text-center text-sm font-black text-navy">{title}</h3>
+      <div className="flex items-center gap-2 rounded-2xl bg-[#F0F7FF] p-2">
+        <input
+          type="text"
+          readOnly
+          value={value}
+          className="min-w-0 flex-1 bg-transparent px-2 text-right text-xs font-bold text-navy outline-none"
+        />
+        <button
+          type="button"
+          onClick={() => copyToClipboard(value)}
+          className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#006BFE] px-4 py-2.5 text-xs font-black text-white transition-colors hover:bg-[#0058D4]"
+        >
+          <Copy size={14} />
+          نسخ
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function AdDownloadCard({
+  title,
+  width,
+  height,
+  aspectRatio,
+  description,
+  previewImage,
+  fileUrl,
+}: {
+  title: string;
+  width: number;
+  height: number;
+  aspectRatio: string;
+  description: string;
+  previewImage: string;
+  fileUrl: string;
+}) {
+  return (
+    <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4 shadow-sm sm:p-5">
+      <div className="flex items-start justify-between gap-2">
+        <div className="text-right">
+          <h3 className="text-base font-black text-navy">{title}</h3>
+          <p className="mt-0.5 text-xs font-bold text-muted-foreground">
+            ( {width} × {height} )
+          </p>
+          <p className="mt-2 whitespace-pre-line text-xs font-medium leading-relaxed text-navy">
+            {description}
+          </p>
+        </div>
+        <div className="shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
+          <img
+            src={previewImage}
+            alt={`معاينة إعلان ${title}`}
+            className="size-20 object-cover sm:size-24"
+          />
+        </div>
+      </div>
+      <button
+        type="button"
+        onClick={() => triggerDownload(fileUrl, `ad-${title}-${width}x${height}.jpg`)}
+        className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#006BFE] px-4 py-3 text-sm font-black text-white transition-colors hover:bg-[#0058D4]"
+      >
+        <Download size={16} />
+        تحميل الإعلان
+      </button>
     </div>
   );
 }
@@ -273,6 +375,40 @@ function ProSharePage() {
             {/* بطاقة مشاركة الإعلان */}
             <ShareAdCard />
           </div>
+        </div>
+      </div>
+
+      {/* قسم روابط الإحالة */}
+      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {referralLinks.map((link) => (
+            <ReferralLinkCard key={link.id} title={link.title} value={link.value} />
+          ))}
+        </div>
+      </div>
+
+      {/* قسم تحميل الإعلان */}
+      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
+        <div className="mb-5 flex items-center gap-2 text-lg font-black text-navy">
+          <ImageIcon size={22} className="text-brand" />
+          تحميل الإعلان
+        </div>
+        <p className="mb-5 text-sm font-medium text-muted-foreground">
+          اختر حجم الإعلان المناسب للمنصة التي ترغب بالنشر عليها
+        </p>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {adDownloadSizes.map((size) => (
+            <AdDownloadCard
+              key={size.id}
+              title={size.title}
+              width={size.width}
+              height={size.height}
+              aspectRatio={size.aspectRatio}
+              description={size.description}
+              previewImage={size.previewImage}
+              fileUrl={size.fileUrl}
+            />
+          ))}
         </div>
       </div>
     </section>
