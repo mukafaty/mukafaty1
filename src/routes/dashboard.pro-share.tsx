@@ -217,7 +217,7 @@ function ProSharePage() {
 
             <div className="space-y-3">
               <label className="text-sm font-bold text-navy">نص الإعلان</label>
-              <div className="min-h-[220px] overflow-auto rounded-2xl border border-border bg-muted/30 p-4 text-sm leading-7 text-navy">
+              <div className="h-[180px] overflow-y-auto rounded-2xl border border-border bg-muted/30 p-4 text-right text-sm leading-7 text-navy break-words lg:h-[220px]">
                 {ad.marketingText.split("\n").map((line, i) => (
                   <p key={i} className={line.startsWith("✓") ? "font-bold" : ""}>
                     {line}
