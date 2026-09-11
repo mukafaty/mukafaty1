@@ -198,7 +198,7 @@ function ProSharePage() {
           </div>
 
           {/* العمود الثاني — النصوص التسويقية (الوسط) */}
-          <div className="order-2 flex flex-col gap-5 lg:border-l lg:border-border lg:pl-6">
+          <div className="order-2 flex flex-col gap-5 lg:order-2 lg:border-l lg:border-border lg:pl-6">
             <div className="flex items-center gap-2 text-lg font-black text-navy">
               <FileText size={22} className="text-brand" />
               النصوص التسويقية
