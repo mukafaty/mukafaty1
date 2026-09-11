@@ -237,7 +237,10 @@ function ProSharePage() {
                 >
                   نسخ نص X
                 </button>
-                <span className="shrink-0 text-xs font-bold text-muted-foreground">
+                <span
+                  dir="ltr"
+                  className="shrink-0 text-xs font-bold text-muted-foreground"
+                >
                   124 / 280
                 </span>
               </div>
