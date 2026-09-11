@@ -245,7 +245,7 @@ function ProSharePage() {
           </div>
 
           {/* العمود الثالث — صورة الإعلان (يسار في RTL) */}
-          <div className="flex flex-col gap-5">
+          <div className="order-3 flex flex-col gap-5">
             <div className="overflow-hidden rounded-2xl border border-border bg-muted/20 p-3">
               <img
                 src={ad.mainAdImage}
