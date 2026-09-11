@@ -154,7 +154,7 @@ function ReferralLinkCard({ title, value }: { title: string; value: string }) {
           type="text"
           readOnly
           value={value}
-          className="min-w-0 flex-1 bg-transparent px-2 text-right text-xs font-bold text-navy outline-none"
+          className="min-w-0 flex-1 truncate bg-transparent px-2 text-right text-[11px] font-bold text-navy outline-none sm:text-xs"
         />
         <button
           type="button"
@@ -189,9 +189,9 @@ function AdDownloadCard({
   return (
     <div className="flex flex-col gap-3 rounded-3xl border border-border bg-card p-4 shadow-sm sm:p-5">
       <div className="flex items-start justify-between gap-2">
-        <div className="text-right">
+        <div className="min-w-0 flex-1 text-right">
           <h3 className="text-base font-black text-navy">{title}</h3>
-          <p className="mt-0.5 text-xs font-bold text-muted-foreground">
+          <p dir="ltr" className="mt-0.5 text-xs font-bold text-muted-foreground">
             ( {width} × {height} )
           </p>
           <p className="mt-2 whitespace-pre-line text-xs font-medium leading-relaxed text-navy">
