@@ -178,6 +178,7 @@ function AdDownloadCard({
   aspectRatio,
   description,
   previewImage,
+  previewVideoUrl,
   fileUrl,
 }: {
   title: string;
@@ -186,6 +187,7 @@ function AdDownloadCard({
   aspectRatio: string;
   description: string;
   previewImage: string;
+  previewVideoUrl: string;
   fileUrl: string;
 }) {
   return (
@@ -258,7 +260,7 @@ function VideoCard({
       <div className="relative shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
         <video
           ref={videoRef}
-          src={fileUrl}
+          src={previewVideoUrl}
           poster={previewImage}
           preload="metadata"
           onPlay={() => setIsPlaying(true)}
@@ -515,6 +517,7 @@ function ProSharePage() {
               aspectRatio={video.aspectRatio}
               description={video.description}
               previewImage={video.previewImage}
+              previewVideoUrl={video.previewVideoUrl}
               fileUrl={video.fileUrl}
             />
           ))}
