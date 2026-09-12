@@ -18,7 +18,64 @@ import {
   Download,
   Play,
 } from "lucide-react";
-import { professionalShareData, referralLinks, adDownloadSizes, videoDownloads } from "@/data/proShareAd";
+import {
+  professionalShareData,
+  referralLinks,
+  adDownloadSizes,
+  videoDownloads,
+  proSharePlatforms,
+  proShareContent,
+  type ProSharePlatform,
+} from "@/data/proShareAd";
+import { launchPlatform } from "@/lib/proShareLaunch";
+import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
+import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
+import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
+import telegramIcon from "@/assets/social/telegram.jpg.asset.json";
+import xIcon from "@/assets/social/x.jpg.asset.json";
+import instagramIcon from "@/assets/social/instagram.jpg.asset.json";
+import facebookIcon from "@/assets/social/facebook.jpg.asset.json";
+import snapchatIcon from "@/assets/social/snapchat.jpg.asset.json";
+import emailIcon from "@/assets/social/email.png.asset.json";
+
+const platformIcons: Partial<Record<string, string>> = {
+  whatsapp: whatsappIcon.url,
+  telegram: telegramIcon.url,
+  snapchat: snapchatIcon.url,
+  instagram: instagramIcon.url,
+  facebook: facebookIcon.url,
+  x: xIcon.url,
+  linkedin: linkedinIcon.url,
+  email: emailIcon.url,
+};
+
+function PlatformCard({ platform }: { platform: ProSharePlatform }) {
+  const iconUrl = platformIcons[platform.id];
+
+  return (
+    <button
+      type="button"
+      onClick={() => void launchPlatform(platform.id, proShareContent)}
+      className="group flex h-full flex-col items-center justify-between gap-2 rounded-2xl border border-border bg-card p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md"
+      aria-label={`النشر عبر ${platform.label}`}
+    >
+      <span className="grid size-12 place-items-center overflow-hidden rounded-full border border-border bg-card">
+        {iconUrl ? (
+          <img src={iconUrl} alt="" className="size-full object-cover" />
+        ) : (
+          <TiktokColorIcon size={26} />
+        )}
+      </span>
+      <span className="text-xs font-black text-navy">{platform.label}</span>
+      <span className="min-h-4 text-[10px] font-bold text-brand">
+        {platform.note ? `( ${platform.note} )` : ""}
+      </span>
+      <span className="grid size-6 place-items-center rounded-full bg-brand-soft text-brand transition-colors group-hover:bg-brand group-hover:text-primary-foreground">
+        <ChevronLeft size={14} />
+      </span>
+    </button>
+  );
+}
 
 export const Route = createFileRoute("/dashboard/pro-share")({
   head: () => ({
@@ -520,6 +577,25 @@ function ProSharePage() {
               previewVideoUrl={video.previewVideoUrl}
               fileUrl={video.fileUrl}
             />
+          ))}
+        </div>
+      </div>
+
+      {/* قسم جاهز للنشر */}
+      <div
+        id="ready-to-publish"
+        className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
+      >
+        <div className="text-right">
+          <h2 className="text-lg font-black text-navy">جاهز للنشر 🚀</h2>
+          <p className="mt-1 text-sm font-medium text-muted-foreground">
+            اختر المنصة التي تريد النشر عليها، حمّل المحتوى المناسب لكل منصة، انشر الآن وحقق المزيد من الأرباح
+          </p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-3 gap-3 rounded-3xl bg-[#F7F8FD] p-3 sm:grid-cols-5 sm:p-4 lg:grid-cols-9">
+          {proSharePlatforms.map((platform) => (
+            <PlatformCard key={platform.id} platform={platform} />
           ))}
         </div>
       </div>

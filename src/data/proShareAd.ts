@@ -166,3 +166,72 @@ export const videoDownloads: VideoDownload[] = [
     fileUrl: hrDiplomaVideoAsset.url,
   },
 ];
+
+/* ————— قسم "جاهز للنشر" — بيانات المشاركة لكل منصة ————— */
+
+export type ProSharePlatformId =
+  | "whatsapp"
+  | "telegram"
+  | "snapchat"
+  | "tiktok"
+  | "instagram"
+  | "facebook"
+  | "x"
+  | "linkedin"
+  | "email";
+
+export interface ProShareContent {
+  /** نص الإعلان التسويقي */
+  shareText: string;
+  /** نص خاص بمنصة X */
+  xShareText: string;
+  /** رابط الإحالة */
+  referralUrl: string;
+  /** رابط الصفحة التعريفية للإعلان (Open Graph ديناميكي) */
+  landingUrl: string;
+  /** كود الخصم */
+  discountCode: string;
+  /** صورة الإعلان العمودية (9:16) */
+  imageUrl: string;
+  /** صورة الإعلان المربعة (1:1) */
+  imageSquareUrl: string;
+  /** صورة معاينة الرابط */
+  openGraphImage: string;
+  /** فيديو الإعلان */
+  videoUrl: string;
+  /** عنوان المشاركة (يُستخدم في البريد ونافذة مشاركة الجهاز) */
+  title: string;
+}
+
+export const proShareContent: ProShareContent = {
+  shareText: professionalShareData.marketingText,
+  xShareText: professionalShareData.xText,
+  referralUrl: referralLinks[0]!.value,
+  landingUrl: referralLinks[0]!.value,
+  discountCode: referralLinks[2]!.value,
+  imageUrl: portraitAdAsset.url,
+  imageSquareUrl: squareAdAsset.url,
+  openGraphImage: squareAdAsset.url,
+  videoUrl: hrDiplomaVideoAsset.url,
+  title: professionalShareData.programName,
+};
+
+export interface ProSharePlatform {
+  id: ProSharePlatformId;
+  label: string;
+  /** نص ثانوي يظهر داخل البطاقة */
+  note?: string;
+}
+
+/** الترتيب من اليمين إلى اليسار في RTL */
+export const proSharePlatforms: ProSharePlatform[] = [
+  { id: "whatsapp", label: "واتساب" },
+  { id: "telegram", label: "تيليجرام" },
+  { id: "snapchat", label: "سناب شات", note: "تحميل المحتوى" },
+  { id: "tiktok", label: "تيك توك", note: "تحميل المحتوى" },
+  { id: "instagram", label: "انستجرام", note: "تحميل المحتوى" },
+  { id: "facebook", label: "فيسبوك" },
+  { id: "x", label: "اكس" },
+  { id: "linkedin", label: "لينكد إن" },
+  { id: "email", label: "البريد الإلكتروني" },
+];
