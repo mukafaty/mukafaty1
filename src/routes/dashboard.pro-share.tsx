@@ -239,7 +239,7 @@ function VideoCard({
   fileUrl: string;
 }) {
   return (
-    <div className="flex h-full flex-col gap-3 rounded-3xl border border-border bg-[#F7F8FD] p-4 shadow-sm sm:p-5">
+    <div className="flex flex-col gap-3 rounded-3xl border border-border bg-[#F7F8FD] p-4 shadow-sm sm:p-5">
       <div className="relative shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
         <img
           src={previewImage}
