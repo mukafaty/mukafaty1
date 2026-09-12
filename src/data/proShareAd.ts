@@ -1,3 +1,4 @@
+import { quickShareAd, type AdData } from "@/data/quickShareAd";
 /**
  * بيانات تجريبية (Mock) لصفحة "النشر الاحترافي"
  * تُستخدم حاليًا لوضع الهيكل البصري فقط، ويمكن استبدالها لاحقًا ببيانات حقيقية.
@@ -235,3 +236,14 @@ export const proSharePlatforms: ProSharePlatform[] = [
   { id: "linkedin", label: "لينكد إن" },
   { id: "email", label: "البريد الإلكتروني" },
 ];
+
+/* ————— بيانات الإعلان بصيغة AdData — لاستخدام منطق المشاركة نفسه المستعمل في النشر السريع ————— */
+export const proShareAdData: AdData = {
+  ...quickShareAd,
+  title: professionalShareData.programName,
+  marketingText: professionalShareData.marketingText,
+  baseReferralLink: referralLinks[0]!.value,
+  discountCode: referralLinks[2]!.value,
+  imagePortraitUrl: proShareContent.imageUrl,
+  imageSquareUrl: proShareContent.imageSquareUrl,
+};
