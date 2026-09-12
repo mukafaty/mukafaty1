@@ -178,7 +178,6 @@ function AdDownloadCard({
   aspectRatio,
   description,
   previewImage,
-  previewVideoUrl,
   fileUrl,
 }: {
   title: string;
@@ -187,7 +186,6 @@ function AdDownloadCard({
   aspectRatio: string;
   description: string;
   previewImage: string;
-  previewVideoUrl: string;
   fileUrl: string;
 }) {
   return (
