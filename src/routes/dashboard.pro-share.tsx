@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useRef, useState } from "react";
 import {
   Share2,
   CheckCircle2,
@@ -177,6 +178,7 @@ function AdDownloadCard({
   aspectRatio,
   description,
   previewImage,
+  previewVideoUrl,
   fileUrl,
 }: {
   title: string;
@@ -185,6 +187,7 @@ function AdDownloadCard({
   aspectRatio: string;
   description: string;
   previewImage: string;
+  previewVideoUrl: string;
   fileUrl: string;
 }) {
   return (
@@ -238,25 +241,44 @@ function VideoCard({
   previewImage: string;
   fileUrl: string;
 }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  const togglePlayback = async () => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (video.paused) {
+      await video.play();
+    } else {
+      video.pause();
+    }
+  };
+
   return (
     <div className="flex flex-col gap-3 rounded-3xl border border-border bg-[#F7F8FD] p-4 shadow-sm sm:p-5">
       <div className="relative shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
-        <img
-          src={previewImage}
-          alt={`معاينة ${title}`}
+        <video
+          ref={videoRef}
+          src={previewVideoUrl}
+          poster={previewImage}
+          preload="metadata"
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
+          onEnded={() => setIsPlaying(false)}
+          aria-label={`معاينة ${title}`}
           className="aspect-video w-full object-cover"
         />
-        <a
-          href={fileUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="absolute inset-0 grid place-items-center bg-black/20 transition-colors hover:bg-black/30"
-          aria-label={`معاينة ${title}`}
+        <button
+          type="button"
+          onClick={togglePlayback}
+          className={`absolute inset-0 grid place-items-center transition-colors ${isPlaying ? "bg-black/0 opacity-0 hover:bg-black/20 hover:opacity-100" : "bg-black/20 hover:bg-black/30"}`}
+          aria-label={isPlaying ? `إيقاف ${title}` : `تشغيل ${title}`}
         >
           <span className="grid size-12 place-items-center rounded-full bg-white/90 text-brand shadow-lg backdrop-blur-sm">
             <Play size={22} fill="currentColor" />
           </span>
-        </a>
+        </button>
         <span className="absolute bottom-2 right-2 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-black text-white">
           {duration}
         </span>
@@ -495,6 +517,7 @@ function ProSharePage() {
               aspectRatio={video.aspectRatio}
               description={video.description}
               previewImage={video.previewImage}
+              previewVideoUrl={video.previewVideoUrl}
               fileUrl={video.fileUrl}
             />
           ))}
