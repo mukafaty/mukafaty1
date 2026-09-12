@@ -580,6 +580,25 @@ function ProSharePage() {
           ))}
         </div>
       </div>
+
+      {/* قسم جاهز للنشر */}
+      <div
+        id="ready-to-publish"
+        className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
+      >
+        <div className="text-right">
+          <h2 className="text-lg font-black text-navy">جاهز للنشر 🚀</h2>
+          <p className="mt-1 text-sm font-medium text-muted-foreground">
+            اختر المنصة التي تريد النشر عليها، حمّل المحتوى المناسب لكل منصة، انشر الآن وحقق المزيد من الأرباح
+          </p>
+        </div>
+
+        <div className="mt-5 grid grid-cols-3 gap-3 rounded-3xl bg-[#F7F8FD] p-3 sm:grid-cols-5 sm:p-4 lg:grid-cols-9">
+          {proSharePlatforms.map((platform) => (
+            <PlatformCard key={platform.id} platform={platform} />
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
