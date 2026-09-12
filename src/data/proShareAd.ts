@@ -36,7 +36,6 @@ export interface AdDownloadSize {
   aspectRatio: string;
   description: string;
   previewImage: string;
-  previewVideoUrl: string;
   fileUrl: string;
 }
 
@@ -49,6 +48,7 @@ export interface VideoDownload {
   aspectRatio: string;
   description: string;
   previewImage: string;
+  previewVideoUrl: string;
   fileUrl: string;
 }
 

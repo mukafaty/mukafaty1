@@ -230,6 +230,7 @@ function VideoCard({
   aspectRatio,
   description,
   previewImage,
+  previewVideoUrl,
   fileUrl,
 }: {
   title: string;
@@ -239,6 +240,7 @@ function VideoCard({
   aspectRatio: string;
   description: string;
   previewImage: string;
+  previewVideoUrl: string;
   fileUrl: string;
 }) {
   const videoRef = useRef<HTMLVideoElement>(null);
