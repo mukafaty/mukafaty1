@@ -15,8 +15,9 @@ import {
   Globe,
   Copy,
   Download,
+  Play,
 } from "lucide-react";
-import { professionalShareData, referralLinks, adDownloadSizes } from "@/data/proShareAd";
+import { professionalShareData, referralLinks, adDownloadSizes, videoDownloads } from "@/data/proShareAd";
 
 export const Route = createFileRoute("/dashboard/pro-share")({
   head: () => ({
@@ -218,6 +219,71 @@ function AdDownloadCard({
   );
 }
 
+function VideoCard({
+  title,
+  duration,
+  width,
+  height,
+  aspectRatio,
+  description,
+  previewImage,
+  fileUrl,
+}: {
+  title: string;
+  duration: string;
+  width: number;
+  height: number;
+  aspectRatio: string;
+  description: string;
+  previewImage: string;
+  fileUrl: string;
+}) {
+  return (
+    <div className="flex h-full flex-col gap-3 rounded-3xl border border-border bg-[#F7F8FD] p-4 shadow-sm sm:p-5">
+      <div className="relative shrink-0 overflow-hidden rounded-xl border border-border bg-muted/20">
+        <img
+          src={previewImage}
+          alt={`معاينة ${title}`}
+          className="aspect-video w-full object-cover"
+        />
+        <a
+          href={fileUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute inset-0 grid place-items-center bg-black/20 transition-colors hover:bg-black/30"
+          aria-label={`معاينة ${title}`}
+        >
+          <span className="grid size-12 place-items-center rounded-full bg-white/90 text-brand shadow-lg backdrop-blur-sm">
+            <Play size={22} fill="currentColor" />
+          </span>
+        </a>
+        <span className="absolute bottom-2 right-2 rounded-md bg-black/70 px-1.5 py-0.5 text-[10px] font-black text-white">
+          {duration}
+        </span>
+      </div>
+
+      <div className="flex flex-1 flex-col text-right">
+        <h3 className="text-base font-black text-navy">{title}</h3>
+        <p dir="ltr" className="mt-0.5 text-xs font-bold text-muted-foreground">
+          {aspectRatio} ( {width} × {height} )
+        </p>
+        <p className="mt-2 flex-1 whitespace-pre-line text-xs font-medium leading-relaxed text-navy">
+          {description}
+        </p>
+      </div>
+
+      <button
+        type="button"
+        onClick={() => triggerDownload(fileUrl, `video-${title}.mp4`)}
+        className="mt-auto inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#006BFE] px-4 py-3 text-sm font-black text-white transition-colors hover:bg-[#FF0000]"
+      >
+        <Download size={16} />
+        تحميل الفيديو
+      </button>
+    </div>
+  );
+}
+
 function ProSharePage() {
   const ad = professionalShareData;
 
@@ -407,6 +473,29 @@ function ProSharePage() {
               description={size.description}
               previewImage={size.previewImage}
               fileUrl={size.fileUrl}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* قسم تحميل الفيديوهات */}
+      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
+        <div className="mb-5 flex items-center gap-2 text-lg font-black text-navy">
+          <Video size={22} className="text-brand" />
+          تحميل الفيديوهات
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {videoDownloads.map((video) => (
+            <VideoCard
+              key={video.id}
+              title={video.title}
+              duration={video.duration}
+              width={video.width}
+              height={video.height}
+              aspectRatio={video.aspectRatio}
+              description={video.description}
+              previewImage={video.previewImage}
+              fileUrl={video.fileUrl}
             />
           ))}
         </div>
