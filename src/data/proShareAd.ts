@@ -6,6 +6,7 @@ import mainAdImageAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
 import portraitAdAsset from "@/assets/ad-portrait.jpg.asset.json";
 import squareAdAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
 import wideAdAsset from "@/assets/ad-square.png.asset.json";
+import hrDiplomaVideoAsset from "@/assets/vid-hr-diploma.mp4.asset.json";
 
 export interface ProShareData {
   programName: string;
@@ -147,7 +148,7 @@ export const videoDownloads: VideoDownload[] = [
     aspectRatio: "16:9",
     description: "مناسب لجميع المنصات",
     previewImage: portraitAdAsset.url,
-    fileUrl: portraitAdAsset.url,
+    fileUrl: hrDiplomaVideoAsset.url,
   },
   {
     id: "video-public",
@@ -158,6 +159,6 @@ export const videoDownloads: VideoDownload[] = [
     aspectRatio: "9:16",
     description: "مقطع تعريفي عن برامج إدارة الموارد البشرية",
     previewImage: mainAdImageAsset.url,
-    fileUrl: mainAdImageAsset.url,
+    fileUrl: hrDiplomaVideoAsset.url,
   },
 ];
