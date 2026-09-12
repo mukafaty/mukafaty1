@@ -24,10 +24,12 @@ import {
   adDownloadSizes,
   videoDownloads,
   proSharePlatforms,
-  proShareContent,
+  proShareAdData,
   type ProSharePlatform,
 } from "@/data/proShareAd";
-import { launchPlatform } from "@/lib/proShareLaunch";
+import type { SharePlatform } from "@/data/quickShareAd";
+import { shareAd } from "@/lib/shareAd";
+import { toast } from "sonner";
 import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
@@ -51,11 +53,42 @@ const platformIcons: Partial<Record<string, string>> = {
 
 function PlatformCard({ platform }: { platform: ProSharePlatform }) {
   const iconUrl = platformIcons[platform.id];
+  const [sharing, setSharing] = useState(false);
+
+  /** نفس منطق المشاركة المستخدم في صفحة النشر السريع */
+  const handleShare = async () => {
+    setSharing(true);
+    const toastId = toast.loading(`جاري تجهيز الإعلان للمشاركة عبر ${platform.label}`);
+    try {
+      const result = await shareAd(platform.id as SharePlatform, proShareAdData);
+      switch (result.kind) {
+        case "native":
+        case "opened":
+          toast.success(`تم تجهيز الإعلان للمشاركة عبر ${platform.label}`, { id: toastId });
+          break;
+        case "manual":
+          toast.success(
+            result.detail ??
+              `تم تجهيز الإعلان: تم نسخ النص وتنزيل الصورة، أكمل النشر داخل ${platform.label}`,
+            { id: toastId },
+          );
+          break;
+        case "cancelled":
+          toast.dismiss(toastId);
+          break;
+        default:
+          toast.error(result.message || "تعذر تجهيز الإعلان للمشاركة", { id: toastId });
+      }
+    } finally {
+      setSharing(false);
+    }
+  };
 
   return (
     <button
       type="button"
-      onClick={() => void launchPlatform(platform.id, proShareContent)}
+      disabled={sharing}
+      onClick={() => void handleShare()}
       className="group flex h-full flex-col items-center justify-between gap-2 rounded-2xl border border-border bg-card p-3 shadow-sm transition-all hover:-translate-y-0.5 hover:border-brand/40 hover:shadow-md"
       aria-label={`النشر عبر ${platform.label}`}
     >
