@@ -37,6 +37,19 @@ export interface AdDownloadSize {
   fileUrl: string;
 }
 
+export interface VideoDownload {
+  id: string;
+  title: string;
+  duration: string;
+  width: number;
+  height: number;
+  aspectRatio: string;
+  description: string;
+  previewImage: string;
+  fileUrl: string;
+}
+
+
 export const professionalShareData: ProShareData = {
   programName: "دبلوم إدارة الموارد البشرية عن بُعد",
   location: "جميع أنحاء المملكة",
@@ -121,5 +134,30 @@ export const adDownloadSizes: AdDownloadSize[] = [
     description: "مناسب\nواتساب\nتيليجرام",
     previewImage: portraitAdAsset.url,
     fileUrl: portraitAdAsset.url,
+  },
+];
+
+export const videoDownloads: VideoDownload[] = [
+  {
+    id: "video-private",
+    title: "فيديو خاص",
+    duration: "00:45",
+    width: 1920,
+    height: 1080,
+    aspectRatio: "16:9",
+    description: "مقاس: 16:9 (1920 × 1080)\nمناسب لجميع المنصات",
+    previewImage: portraitAdAsset.url,
+    fileUrl: portraitAdAsset.url,
+  },
+  {
+    id: "video-public",
+    title: "فيديو عام",
+    duration: "02:30",
+    width: 1080,
+    height: 1920,
+    aspectRatio: "9:16",
+    description: "مقاس: 9:16 (1080 × 1920)\nمقطع تعريفي عن برامج إدارة الموارد البشرية",
+    previewImage: mainAdImageAsset.url,
+    fileUrl: mainAdImageAsset.url,
   },
 ];
