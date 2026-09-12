@@ -265,7 +265,7 @@ function VideoCard({
       <div className="flex flex-1 flex-col text-right">
         <h3 className="text-base font-black text-navy">{title}</h3>
         <p dir="ltr" className="mt-0.5 text-xs font-bold text-muted-foreground">
-          {aspectRatio} ( {width} × {height} )
+          المقاس: {aspectRatio} ( {width} × {height} )
         </p>
         <p className="mt-2 flex-1 whitespace-pre-line text-xs font-medium leading-relaxed text-navy">
           {description}
