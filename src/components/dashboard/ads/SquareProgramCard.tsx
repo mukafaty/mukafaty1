@@ -1,4 +1,5 @@
-import { MapPin, Send, User } from "lucide-react";
+import { MapPin, Rocket, Share2, User } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import type { Program } from "@/data/adsPrograms";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
