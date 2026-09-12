@@ -1,4 +1,5 @@
-import { MapPin, Send, User } from "lucide-react";
+import { MapPin, Rocket, Share2, User } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import type { Program } from "@/data/adsPrograms";
 
 const fmt = (n: number) => n.toLocaleString("en-US");
@@ -88,11 +89,21 @@ export function SquareProgramCard({ program }: { program: Program }) {
           <p className="text-xs text-muted-foreground">{program.promotionalText}</p>
         )}
 
-        <div className="mt-auto pt-1">
-          <button className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-[#006BFE] text-sm font-black text-white transition-colors hover:bg-[#FF0000] hover:text-white">
-            <Send size={17} />
-            ابدأ النشر
-          </button>
+        <div className="mt-auto flex gap-2 pt-1">
+          <Link
+            to="/dashboard/quick-share"
+            className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#006BFE] text-xs font-black text-white transition-all duration-200 hover:bg-[#FF0000] sm:text-sm"
+          >
+            <Rocket size={16} className="shrink-0" />
+            النشر السريع
+          </Link>
+          <Link
+            to="/dashboard/pro-share"
+            className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-border bg-card text-xs font-black text-navy transition-all duration-200 hover:border-[#FF0000] hover:text-[#FF0000] sm:text-sm"
+          >
+            <Share2 size={16} className="shrink-0" />
+            النشر الاحترافي
+          </Link>
         </div>
       </div>
     </article>
