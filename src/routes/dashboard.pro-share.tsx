@@ -24,10 +24,12 @@ import {
   adDownloadSizes,
   videoDownloads,
   proSharePlatforms,
-  proShareContent,
+  proShareAdData,
   type ProSharePlatform,
 } from "@/data/proShareAd";
-import { launchPlatform } from "@/lib/proShareLaunch";
+import type { SharePlatform } from "@/data/quickShareAd";
+import { shareAd } from "@/lib/shareAd";
+import { toast } from "sonner";
 import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
