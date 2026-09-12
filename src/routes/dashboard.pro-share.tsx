@@ -134,19 +134,30 @@ function ActionCard({
   icon: Icon,
   title,
   description,
+  targetId,
 }: {
   icon: React.ComponentType<{ size?: number; className?: string }>;
   title: string;
   description: string;
+  targetId: string;
 }) {
   return (
-    <div className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/30 p-4 transition-colors hover:border-brand/30 hover:bg-muted/50">
+    <a
+      href={`#${targetId}`}
+      onClick={(event) => {
+        event.preventDefault();
+        document.getElementById(targetId)?.scrollIntoView({ behavior: "smooth" });
+      }}
+      className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-muted/30 p-4 transition-all duration-200 lg:hover:border-[#006BFE] lg:hover:bg-[#E8F2FF] lg:hover:shadow-sm"
+    >
       <div className="flex items-center gap-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand transition-colors duration-200 lg:group-hover:bg-[#D5E8FF]">
           <Icon size={20} />
         </span>
         <div>
-          <h4 className="text-sm font-black text-navy">{title}</h4>
+          <h4 className="text-sm font-black text-navy transition-colors duration-200 lg:group-hover:text-red-600">
+            {title}
+          </h4>
           <p className="mt-0.5 text-xs font-medium text-muted-foreground">
             {description}
           </p>
@@ -154,9 +165,9 @@ function ActionCard({
       </div>
       <ChevronLeft
         size={18}
-        className="shrink-0 text-muted-foreground transition-colors group-hover:text-brand"
+        className="shrink-0 text-muted-foreground transition-colors duration-200 lg:group-hover:text-brand"
       />
-    </div>
+    </a>
   );
 }
 
@@ -171,14 +182,16 @@ function ShareAdCard() {
           target.scrollIntoView({ behavior: "smooth" });
         }
       }}
-      className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-colors hover:border-brand/30"
+      className="group flex items-center justify-between gap-3 rounded-2xl border border-border bg-card p-4 shadow-sm transition-all duration-200 lg:hover:border-[#006BFE] lg:hover:bg-[#E8F2FF] lg:hover:shadow-md"
     >
       <div className="flex items-center gap-3">
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-brand-soft text-brand transition-colors duration-200 lg:group-hover:bg-[#D5E8FF]">
           <Share2 size={20} />
         </span>
         <div>
-          <h4 className="text-sm font-black text-navy">شارك الإعلان</h4>
+          <h4 className="text-sm font-black text-navy transition-colors duration-200 lg:group-hover:text-red-600">
+            شارك الإعلان
+          </h4>
           <p className="mt-0.5 text-xs font-medium text-muted-foreground">
             حمِّل المحتوى المناسب لكل منصة ثم اضغط على المنصة المناسبة أسفل الصفحة
           </p>
@@ -186,7 +199,7 @@ function ShareAdCard() {
       </div>
       <ChevronLeft
         size={18}
-        className="shrink-0 text-muted-foreground transition-colors group-hover:text-brand"
+        className="shrink-0 text-muted-foreground transition-colors duration-200 lg:group-hover:text-brand"
       />
     </a>
   );
@@ -210,20 +223,55 @@ function InfoRow({
   );
 }
 
-async function copyToClipboard(value: string) {
+async function copyToClipboard(value: string): Promise<boolean> {
   try {
     await navigator.clipboard.writeText(value);
+    return true;
   } catch {
-    // Fallback for older browsers
-    const textarea = document.createElement("textarea");
-    textarea.value = value;
-    textarea.style.position = "fixed";
-    textarea.style.opacity = "0";
-    document.body.appendChild(textarea);
-    textarea.select();
-    document.execCommand("copy");
-    document.body.removeChild(textarea);
+    try {
+      const textarea = document.createElement("textarea");
+      textarea.value = value;
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+      const copied = document.execCommand("copy");
+      document.body.removeChild(textarea);
+      return copied;
+    } catch {
+      return false;
+    }
   }
+}
+
+function CopyButton({
+  value,
+  label,
+  className,
+  showIcon = false,
+}: {
+  value: string;
+  label: string;
+  className: string;
+  showIcon?: boolean;
+}) {
+  const [copied, setCopied] = useState(false);
+
+  const handleCopy = async () => {
+    const succeeded = await copyToClipboard(value);
+    if (!succeeded) return;
+
+    setCopied(true);
+    toast.success("تم النسخ إلى الحافظة");
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+
+  return (
+    <button type="button" onClick={() => void handleCopy()} className={className}>
+      {showIcon && (copied ? <CheckCircle2 size={14} /> : <Copy size={14} />)}
+      {copied ? "تم النسخ" : label}
+    </button>
+  );
 }
 
 function triggerDownload(url: string, filename: string) {
@@ -248,14 +296,12 @@ function ReferralLinkCard({ title, value }: { title: string; value: string }) {
           value={value}
           className="min-w-0 flex-1 truncate bg-transparent px-2 text-right text-[11px] font-bold text-navy outline-none sm:text-xs"
         />
-        <button
-          type="button"
-          onClick={() => copyToClipboard(value)}
+        <CopyButton
+          value={value}
+          label="نسخ"
+          showIcon
           className="inline-flex shrink-0 items-center gap-1.5 rounded-xl bg-[#006BFE] px-4 py-2.5 text-xs font-black text-white transition-colors hover:bg-[#0058D4]"
-        >
-          <Copy size={14} />
-          نسخ
-        </button>
+        />
       </div>
     </div>
   );
@@ -474,16 +520,19 @@ function ProSharePage() {
                 icon={Link2}
                 title="رابط الإحالة وكود الخصم"
                 description="نسخ رابط الإحالة أو كود الخصم"
+                targetId="referral-links"
               />
               <ActionCard
                 icon={ImageIcon}
                 title="تحميل الإعلان"
                 description="اختر حجم الإعلان المناسب للمنصة التي ترغب بالنشر عليها"
+                targetId="ad-downloads"
               />
               <ActionCard
                 icon={Video}
                 title="تحميل فيديو"
                 description="حمّل فيديو الإعلان واستخدمه في منصات التواصل الاجتماعي"
+                targetId="video-downloads"
               />
             </div>
           </div>
@@ -504,12 +553,11 @@ function ProSharePage() {
                   </p>
                 ))}
               </div>
-              <button
-                type="button"
+              <CopyButton
+                value={ad.marketingText}
+                label="نسخ النص"
                 className="mx-auto inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
-              >
-                نسخ النص
-              </button>
+              />
             </div>
 
             <div className="space-y-3">
@@ -521,16 +569,15 @@ function ProSharePage() {
                   <p key={i}>{line}</p>
                 ))}
               </div>
-              <div className="flex items-center justify-center gap-3">
-                <button
-                  type="button"
+              <div className="relative flex items-center justify-center">
+                <CopyButton
+                  value={ad.xText}
+                  label="نسخ نص X"
                   className="inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
-                >
-                  نسخ نص X
-                </button>
+                />
                 <span
                   dir="ltr"
-                  className="shrink-0 text-xs font-bold text-muted-foreground"
+                  className="absolute left-0 shrink-0 text-xs font-bold text-muted-foreground"
                 >
                   124 / 280
                 </span>
@@ -557,7 +604,10 @@ function ProSharePage() {
       </div>
 
       {/* قسم روابط الإحالة */}
-      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
+      <div
+        id="referral-links"
+        className="scroll-mt-5 overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
+      >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {referralLinks.map((link) => (
             <ReferralLinkCard key={link.id} title={link.title} value={link.value} />
@@ -566,7 +616,10 @@ function ProSharePage() {
       </div>
 
       {/* قسم تحميل الإعلان */}
-      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
+      <div
+        id="ad-downloads"
+        className="scroll-mt-5 overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
+      >
         <div className="mb-5 flex items-center gap-2 text-lg font-black text-navy">
           <ImageIcon size={22} className="text-brand" />
           تحميل الإعلان
@@ -591,7 +644,10 @@ function ProSharePage() {
       </div>
 
       {/* قسم تحميل الفيديوهات */}
-      <div className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6">
+      <div
+        id="video-downloads"
+        className="scroll-mt-5 overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
+      >
         <div className="mb-5 flex items-center gap-2 text-lg font-black text-navy">
           <Video size={22} className="text-brand" />
           تحميل الفيديوهات
@@ -617,7 +673,7 @@ function ProSharePage() {
       {/* قسم جاهز للنشر */}
       <div
         id="ready-to-publish"
-        className="overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
+        className="scroll-mt-5 overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
       >
         <div className="text-right">
           <h2 className="text-lg font-black text-navy">جاهز للنشر 🚀</h2>
