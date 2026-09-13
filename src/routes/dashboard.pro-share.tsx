@@ -553,11 +553,13 @@ function ProSharePage() {
                   </p>
                 ))}
               </div>
-              <CopyButton
-                value={ad.marketingText}
-                label="نسخ النص"
-                className="mx-auto inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
-              />
+              <div className="flex justify-center">
+                <CopyButton
+                  value={ad.marketingText}
+                  label="نسخ النص"
+                  className="inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
+                />
+              </div>
             </div>
 
             <div className="space-y-3">
