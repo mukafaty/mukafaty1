@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Share2,
   CheckCircle2,
@@ -9,6 +9,8 @@ import {
   Copy,
   Banknote,
   Gift,
+  Rocket,
+  List,
 } from "lucide-react";
 import { toast } from "sonner";
 import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
