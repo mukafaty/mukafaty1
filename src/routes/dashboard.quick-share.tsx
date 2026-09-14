@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   Share2,
   CheckCircle2,
@@ -9,6 +9,8 @@ import {
   Copy,
   Banknote,
   Gift,
+  Rocket,
+  List,
 } from "lucide-react";
 import { toast } from "sonner";
 import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
@@ -144,17 +146,34 @@ function QuickSharePage() {
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
       {/* العنوان والوصف */}
-      <header className="flex items-center gap-4">
+      <header className="flex flex-wrap items-center gap-4">
         <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
           <Share2 size={24} />
         </span>
-        <div className="min-w-0 text-right">
+        <div className="min-w-0 flex-1 text-right">
           <h1 className="truncate text-2xl font-black text-navy sm:text-3xl">
             نشر الإعلانات السريع
           </h1>
           <p className="mt-1 text-sm text-muted-foreground">
             شارك الإعلان عبر مواقع التواصل الاجتماعي واحصل على مكافأة مالية عند كل عملية تسجيل.
           </p>
+        </div>
+
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <Link
+            to="/dashboard/ads"
+            className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-[#006BFE] bg-white px-3 text-xs font-black text-[#006BFE] transition-all duration-200 hover:border-[#FF0000] hover:bg-[#FF0000] hover:text-white sm:flex-none sm:px-4 sm:text-sm"
+          >
+            <List size={18} className="shrink-0" />
+            <span className="whitespace-nowrap">اختيار إعلان آخر</span>
+          </Link>
+          <Link
+            to="/dashboard/quick-share"
+            className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#081952] px-3 text-xs font-black text-white transition-all duration-200 hover:bg-[#0773FA] sm:flex-none sm:px-4 sm:text-sm"
+          >
+            <Rocket size={18} className="shrink-0" />
+            <span className="whitespace-nowrap">النشر السريع</span>
+          </Link>
         </div>
       </header>
 
