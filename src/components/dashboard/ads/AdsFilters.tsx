@@ -102,6 +102,15 @@ export function AdsFilters({
         </div>
         <div className="xl:order-3">
           <SelectBox
+            icon={Users}
+            label="الفئة المستهدفة"
+            value={value.audience}
+            options={audiences}
+            onChange={(v) => set({ audience: v })}
+          />
+        </div>
+        <div className="xl:order-4">
+          <SelectBox
             icon={LayoutGrid}
             label="نوع البرنامج"
             value={value.kind}
@@ -109,22 +118,13 @@ export function AdsFilters({
             onChange={(v) => set({ kind: v })}
           />
         </div>
-        <div className="xl:order-4">
+        <div className="xl:order-5">
           <SelectBox
             icon={User}
             label="نمط التدريب"
             value={value.mode}
             options={modes}
             onChange={(v) => set({ mode: v })}
-          />
-        </div>
-        <div className="xl:order-5">
-          <SelectBox
-            icon={Users}
-            label="الفئة المستهدفة"
-            value={value.audience}
-            options={audiences}
-            onChange={(v) => set({ audience: v })}
           />
         </div>
         <div className="xl:order-6">

@@ -17,13 +17,13 @@ import { AdsGrid } from "@/components/dashboard/ads/AdsGrid";
 export const Route = createFileRoute("/dashboard/ads")({
   head: () => ({
     meta: [
-      { title: "تسويق الإعلانات | لوحة تحكم مكافآتي" },
+      { title: "نشر الإعلانات | لوحة تحكم مكافآتي" },
       {
         name: "description",
         content:
           "اختر البرنامج التدريبي الذي ترغب في الترويج له من بطاقات الدبلومات والدورات وابدأ بكسب المكافآت.",
       },
-      { property: "og:title", content: "تسويق الإعلانات | لوحة تحكم مكافآتي" },
+      { property: "og:title", content: "نشر الإعلانات | لوحة تحكم مكافآتي" },
       {
         property: "og:description",
         content:
@@ -84,7 +84,7 @@ function AdsPage() {
           <Megaphone size={24} />
         </span>
         <div className="min-w-0 text-right">
-          <h1 className="truncate text-2xl font-black text-navy sm:text-3xl">تسويق الإعلانات</h1>
+          <h1 className="truncate text-2xl font-black text-navy sm:text-3xl">نشر الإعلانات</h1>
           <p className="mt-1 text-sm text-muted-foreground">
             اختر البرنامج التدريبي الذي ترغب في الترويج له وابدأ بكسب المكافآت.
           </p>
