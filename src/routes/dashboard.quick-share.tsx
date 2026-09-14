@@ -168,11 +168,11 @@ function QuickSharePage() {
             <span className="whitespace-nowrap">اختيار إعلان آخر</span>
           </Link>
           <Link
-            to="/dashboard/quick-share"
+            to="/dashboard/pro-share"
             className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#081952] px-3 text-xs font-black text-white transition-all duration-200 hover:bg-[#0773FA] sm:flex-none sm:px-4 sm:text-sm"
           >
             <Rocket size={18} className="shrink-0" />
-            <span className="whitespace-nowrap">النشر السريع</span>
+            <span className="whitespace-nowrap">النشر الاحترافي</span>
           </Link>
         </div>
       </header>
