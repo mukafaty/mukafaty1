@@ -161,18 +161,18 @@ function QuickSharePage() {
 
         <div className="flex w-full items-center gap-2 sm:w-auto">
           <Link
-            to="/dashboard/quick-share"
-            className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#081952] px-3 text-xs font-black text-white transition-all duration-200 hover:bg-[#0773FA] sm:flex-none sm:px-4 sm:text-sm"
-          >
-            <Rocket size={18} className="shrink-0" />
-            <span className="whitespace-nowrap">النشر السريع</span>
-          </Link>
-          <Link
             to="/dashboard/ads"
             className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-[#006BFE] bg-white px-3 text-xs font-black text-[#006BFE] transition-all duration-200 hover:border-[#FF0000] hover:bg-[#FF0000] hover:text-white sm:flex-none sm:px-4 sm:text-sm"
           >
             <List size={18} className="shrink-0" />
             <span className="whitespace-nowrap">اختيار إعلان آخر</span>
+          </Link>
+          <Link
+            to="/dashboard/quick-share"
+            className="flex h-11 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#081952] px-3 text-xs font-black text-white transition-all duration-200 hover:bg-[#0773FA] sm:flex-none sm:px-4 sm:text-sm"
+          >
+            <Rocket size={18} className="shrink-0" />
+            <span className="whitespace-nowrap">النشر السريع</span>
           </Link>
         </div>
       </header>
