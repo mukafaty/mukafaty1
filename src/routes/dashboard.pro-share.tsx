@@ -17,6 +17,8 @@ import {
   Copy,
   Download,
   Play,
+  Rocket,
+  List,
 } from "lucide-react";
 import {
   professionalShareData,
