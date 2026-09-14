@@ -76,11 +76,6 @@ export function SquareProgramCard({ program }: { program: Program }) {
         <h3 className="text-base font-black text-navy">{program.programName}</h3>
 
         <FeeRow label="الرسوم كـاش" fee={program.cashFee} commission={program.cashCommission} />
-        <FeeRow
-          label="الرسوم أقساط"
-          fee={program.installmentFee}
-          commission={program.installmentCommission}
-        />
 
         {program.marketingText && (
           <p className="text-sm font-bold text-navy">{program.marketingText}</p>
@@ -92,14 +87,14 @@ export function SquareProgramCard({ program }: { program: Program }) {
         <div className="mt-auto flex gap-2 pt-1">
           <Link
             to="/dashboard/quick-share"
-            className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl bg-[#006BFE] text-xs font-black text-white transition-all duration-200 hover:bg-[#FF0000] sm:text-sm"
+            className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-[#006BFE] bg-white text-xs font-black text-[#006BFE] transition-all duration-200 hover:border-[#FF0000] hover:text-[#FF0000] sm:text-sm"
           >
             <Rocket size={16} className="shrink-0" />
             النشر السريع
           </Link>
           <Link
             to="/dashboard/pro-share"
-            className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-border bg-card text-xs font-black text-navy transition-all duration-200 hover:border-[#FF0000] hover:text-[#FF0000] sm:text-sm"
+            className="inline-flex h-12 flex-1 items-center justify-center gap-1.5 rounded-2xl border border-[#006BFE] bg-[#006BFE] text-xs font-black text-white transition-all duration-200 hover:border-[#FF0000] hover:bg-[#FF0000] hover:text-white sm:text-sm"
           >
             <Share2 size={16} className="shrink-0" />
             النشر الاحترافي
