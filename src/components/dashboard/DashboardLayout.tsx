@@ -146,7 +146,11 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
     <div dir="rtl" lang="ar" className="min-h-screen overflow-x-hidden bg-brand-soft/50">
       <header className="sticky top-0 z-40 border-b border-border/60 bg-background">
         <div className="mx-auto flex h-[72px] max-w-[1600px] items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
-          <div className="flex min-w-0 items-center gap-3">
+          <Link
+            to="/dashboard"
+            className="flex min-w-0 cursor-pointer items-center gap-3"
+            aria-label="الصفحة الرئيسية للداشبورد"
+          >
             <img
               src={logoAsset.url}
               alt="شعار منصة مكافآتي"
@@ -154,7 +158,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
               height={60}
               className="h-9 w-auto shrink-0 md:h-11"
             />
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3 sm:gap-5">
             {/* Notifications */}
@@ -344,11 +348,11 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-[1600px] flex-col items-center justify-between gap-2 px-4 py-4 text-xs text-muted-foreground sm:flex-row sm:px-6 sm:text-sm lg:px-8">
           <p>منصة مكافآتي للتسويق بالعمولة | جميع الحقوق محفوظة 2026</p>
           <a
-            href="https://www.mkafaati.com"
+            href="https://www.mukafaty.com"
             dir="ltr"
             className="font-bold text-navy transition-colors duration-200 hover:text-brand"
           >
-            www.mkafaati.com
+            www.mukafaty.com
           </a>
         </div>
       </footer>
