@@ -342,10 +342,74 @@ function DateFilter({
   );
 }
 
+function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
+  const ordered = [...payments].sort((a, b) => a.paidAt.localeCompare(b.paidAt));
+
+  if (ordered.length === 0) {
+    return (
+      <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
+        لا توجد دفعات مسجلة لهذا العميل
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-2xl border-4 border-white">
+      <table className="w-full border-collapse text-right">
+        <thead>
+          <tr className="bg-[#D6D7DB] text-slate-800">
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">رقم السند</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">تاريخ السداد</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">المبلغ المسدد</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">مكافأتك على الدفعة</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">حالة سحب المكافأة</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ordered.map((payment) => {
+            const badge = payment.status ? STATUS_BADGE[payment.status] : null;
+            return (
+              <tr key={payment.id} className="bg-[#FAFAFA]">
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  <bdi>{payment.receipt}</bdi>
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  <bdi>{format(parseISO(payment.paidAt), "dd/MM/yyyy")}</bdi>
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  {formatMoney(payment.amount)}
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  {formatMoney(payment.reward)}
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold">
+                  {badge ? (
+                    <span className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${badge.className}`}>
+                      {badge.label}
+                    </span>
+                  ) : (
+                    <span className="text-slate-600">—</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function BalancePage() {
   const [perPage, setPerPage] = useState(5);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<BalanceFilters>(INITIAL_FILTERS);
+  const [expandedId, setExpandedId] = useState<number | null>(BALANCE_ROWS[0]?.id ?? null);
+
+  const goToPage = (nextPage: number) => {
+    setPage(nextPage);
+    setExpandedId(null);
+  };
 
   const rows = useMemo(() => BALANCE_ROWS, []);
   const branches = useMemo(
