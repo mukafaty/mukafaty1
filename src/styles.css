@@ -68,6 +68,10 @@
   --color-brand: var(--brand);
   --color-brand-soft: var(--brand-soft);
   --color-gold: var(--gold);
+  --color-balance-detail: var(--balance-detail);
+  --color-balance-payments-head: var(--balance-payments-head);
+  --color-balance-payments-row: var(--balance-payments-row);
+  --color-balance-payments-divider: var(--balance-payments-divider);
 }
 
 :root {
@@ -79,6 +83,10 @@
   --brand: oklch(0.63 0.18 254);
   --brand-soft: oklch(0.96 0.02 250);
   --gold: oklch(0.75 0.11 82);
+  --balance-detail: oklch(0.932243 0.01791 261.337);
+  --balance-payments-head: oklch(0.836657 0.023157 260.718);
+  --balance-payments-row: oklch(0.981359 0.001064 197.139);
+  --balance-payments-divider: oklch(0.89123 0.002933 264.541);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);
