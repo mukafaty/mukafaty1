@@ -651,7 +651,7 @@ ${rows
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPage(Math.max(1, current - 1))}
+              onClick={() => goToPage(Math.max(1, current - 1))}
               disabled={current === 1}
               className="h-9 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:bg-brand-soft disabled:opacity-40"
             >
@@ -660,7 +660,7 @@ ${rows
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
               <button
                 key={p}
-                onClick={() => setPage(p)}
+                onClick={() => goToPage(p)}
                 className={`h-9 w-9 rounded-xl text-sm font-bold transition-colors ${
                   p === current
                     ? "bg-brand text-primary-foreground"
@@ -671,7 +671,7 @@ ${rows
               </button>
             ))}
             <button
-              onClick={() => setPage(Math.min(totalPages, current + 1))}
+              onClick={() => goToPage(Math.min(totalPages, current + 1))}
               disabled={current === totalPages}
               className="h-9 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:bg-brand-soft disabled:opacity-40"
             >
@@ -687,7 +687,7 @@ ${rows
                 value={perPage}
                 onChange={(e) => {
                   setPerPage(Number(e.target.value));
-                  setPage(1);
+                  goToPage(1);
                 }}
                 className="h-9 appearance-none rounded-xl border border-border bg-card pr-3 pl-7 text-sm font-bold text-navy outline-none focus:border-brand"
               >
