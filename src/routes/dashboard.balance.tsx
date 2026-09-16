@@ -352,11 +352,12 @@ function DateFilter({
           />
         </PopoverContent>
       </Popover>
+      {error ? <p className="text-[11px] font-semibold text-red-600">{error}</p> : null}
     </div>
   );
 }
 
-function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
+function PaymentsTable({ payments, note }: { payments: PaymentRow[]; note?: string | undefined }) {
   const ordered = [...payments].sort((a, b) => a.paidAt.localeCompare(b.paidAt));
 
   if (ordered.length === 0) {
