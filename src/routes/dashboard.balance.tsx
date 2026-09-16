@@ -307,12 +307,14 @@ function DateFilter({
   label,
   placeholder,
   value,
+  error,
   onChange,
 }: {
   id: string;
   label: string;
   placeholder: string;
   value: string;
+  error?: string;
   onChange: (value: string) => void;
 }) {
   const selectedDate = value ? parseISO(value) : undefined;
