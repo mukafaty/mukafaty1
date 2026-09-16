@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
+import { format, parseISO } from "date-fns";
+import { arSA } from "date-fns/locale";
 import {
   CalendarDays,
   ChevronDown,
@@ -12,6 +14,8 @@ import {
 } from "lucide-react";
 import { CountUp } from "@/components/dashboard/CountUp";
 import { Button } from "@/components/ui/button";
+import { Calendar } from "@/components/ui/calendar";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 export const Route = createFileRoute("/dashboard/balance")({
   head: () => ({
@@ -143,31 +147,38 @@ function DateFilter({
   value: string;
   onChange: (value: string) => void;
 }) {
+  const selectedDate = value ? parseISO(value) : undefined;
+
   return (
     <div className="min-w-0 space-y-1.5">
-      <label htmlFor={id} className="block text-xs font-bold text-navy">
+      <label id={`${id}-label`} className="block text-xs font-bold text-navy">
         {label}
       </label>
-      <div className="relative">
-        <input
-          id={id}
-          type="date"
-          value={value}
-          aria-label={label}
-          data-placeholder={placeholder}
-          onChange={(event) => onChange(event.target.value)}
-          className="h-11 w-full rounded-xl border border-border bg-background px-3 text-xs font-semibold text-navy outline-none transition-colors focus:border-brand [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0"
-        />
-        <CalendarDays
-          size={16}
-          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-brand"
-        />
-        {!value && (
-          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
-            {placeholder}
-          </span>
-        )}
-      </div>
+      <Popover>
+        <PopoverTrigger asChild>
+          <Button
+            id={id}
+            type="button"
+            variant="outline"
+            aria-labelledby={`${id}-label`}
+            className="h-11 w-full justify-between rounded-xl border-border bg-background px-3 text-xs font-semibold text-navy shadow-none hover:bg-background hover:text-navy"
+          >
+            <span className={value ? "text-navy" : "text-muted-foreground"}>
+              {selectedDate ? format(selectedDate, "dd/MM/yyyy") : placeholder}
+            </span>
+            <CalendarDays size={16} className="text-brand" />
+          </Button>
+        </PopoverTrigger>
+        <PopoverContent className="w-auto p-0" align="start">
+          <Calendar
+            mode="single"
+            selected={selectedDate}
+            onSelect={(date) => onChange(date ? format(date, "yyyy-MM-dd") : "")}
+            locale={arSA}
+            className="pointer-events-auto p-3"
+          />
+        </PopoverContent>
+      </Popover>
     </div>
   );
 }
@@ -251,7 +262,7 @@ ${rows
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-4 sm:p-5">
-        <div className="grid gap-3 xl:grid-cols-[minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(130px,0.9fr)_minmax(130px,0.9fr)_auto] xl:items-end">
+        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-[minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(130px,0.9fr)_minmax(130px,0.9fr)_auto] 2xl:items-end">
           <div className="min-w-0 space-y-1.5">
             <label htmlFor="balance-search" className="block text-xs font-bold text-navy">
               بحث عن عميل
@@ -313,12 +324,12 @@ ${rows
             value={filters.paidTo}
             onChange={(paidTo) => setFilters((currentFilters) => ({ ...currentFilters, paidTo }))}
           />
-          <div className="flex items-center gap-2 xl:justify-end">
+          <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-3 2xl:col-span-1 2xl:justify-end">
             <Button
               type="button"
               variant="outline"
               onClick={() => setFilters(INITIAL_FILTERS)}
-              className="h-11 flex-1 rounded-xl border-brand bg-background px-3 text-xs font-bold text-brand shadow-none hover:border-brand hover:bg-brand-soft hover:text-brand xl:flex-none"
+              className="h-11 flex-1 rounded-xl border-brand bg-background px-3 text-xs font-bold text-brand shadow-none hover:border-brand hover:bg-brand-soft hover:text-brand 2xl:flex-none"
             >
               <RotateCcw size={16} />
               مسح الفلاتر
@@ -326,7 +337,7 @@ ${rows
             <Button
               type="button"
               onClick={exportPdf}
-              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy xl:flex-none"
+              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy 2xl:flex-none"
             >
               <Download size={16} />
               تصدير
