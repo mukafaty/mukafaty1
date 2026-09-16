@@ -250,6 +250,14 @@ const WITHDRAWAL_STATUSES = [
 
 const CITIES = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
 
+/** ربط كل فرع بمدينته بمعرّف ثابت بدل مطابقة النصوص الحرة */
+const BRANCH_CITY: Record<string, string> = {
+  "جدة الصالحية": "جدة",
+  "جدة الحمراء": "جدة",
+  "مكة المكرمة - الزاهر": "مكة المكرمة",
+  "الرياض المنار": "الرياض",
+};
+
 function formatMoney(value: number | undefined) {
   return typeof value === "number" ? `${value.toLocaleString("en-US")} ريال` : "—";
 }
