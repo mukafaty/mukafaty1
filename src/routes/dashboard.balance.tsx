@@ -1,4 +1,5 @@
-import { Fragment, useMemo, useState } from "react";
+import { Fragment, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import { createFileRoute } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { arSA } from "date-fns/locale";
@@ -249,6 +250,14 @@ const WITHDRAWAL_STATUSES = [
 
 const CITIES = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
 
+/** ربط كل فرع بمدينته بمعرّف ثابت بدل مطابقة النصوص الحرة */
+const BRANCH_CITY: Record<string, string> = {
+  "جدة الصالحية": "جدة",
+  "جدة الحمراء": "جدة",
+  "مكة المكرمة - الزاهر": "مكة المكرمة",
+  "الرياض المنار": "الرياض",
+};
+
 function formatMoney(value: number | undefined) {
   return typeof value === "number" ? `${value.toLocaleString("en-US")} ريال` : "—";
 }
@@ -298,12 +307,14 @@ function DateFilter({
   label,
   placeholder,
   value,
+  error,
   onChange,
 }: {
   id: string;
   label: string;
   placeholder: string;
   value: string;
+  error?: string | undefined;
   onChange: (value: string) => void;
 }) {
   const selectedDate = value ? parseISO(value) : undefined;
@@ -320,7 +331,10 @@ function DateFilter({
             type="button"
             variant="outline"
             aria-labelledby={`${id}-label`}
-            className="h-11 w-full justify-between rounded-xl border-border bg-background px-3 text-xs font-semibold text-navy shadow-none hover:bg-background hover:text-navy"
+            aria-invalid={Boolean(error)}
+            className={`h-11 w-full justify-between rounded-xl bg-background px-3 text-xs font-semibold text-navy shadow-none hover:bg-background hover:text-navy ${
+              error ? "border-red-500" : "border-border"
+            }`}
           >
             <span className={value ? "text-navy" : "text-muted-foreground"}>
               {selectedDate ? format(selectedDate, "dd/MM/yyyy") : placeholder}
@@ -338,23 +352,29 @@ function DateFilter({
           />
         </PopoverContent>
       </Popover>
+      {error ? <p className="text-[11px] font-semibold text-red-600">{error}</p> : null}
     </div>
   );
 }
 
-function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
+function PaymentsTable({ payments, note }: { payments: PaymentRow[]; note?: string | undefined }) {
   const ordered = [...payments].sort((a, b) => a.paidAt.localeCompare(b.paidAt));
 
   if (ordered.length === 0) {
     return (
-      <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
-        لا توجد دفعات مسجلة لهذا العميل
+      <div className="space-y-2">
+        {note ? <p className="text-[11px] font-semibold text-slate-600">{note}</p> : null}
+        <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
+          لا توجد دفعات مسجلة لهذا العميل
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border-4 border-white">
+    <div className="space-y-2">
+      {note ? <p className="text-[11px] font-semibold text-slate-600">{note}</p> : null}
+      <div className="overflow-hidden rounded-2xl border-4 border-white">
       <table className="w-full border-collapse text-right">
         <thead>
           <tr className="bg-[#D6D7DB] text-slate-800">
@@ -396,6 +416,7 @@ function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
@@ -404,26 +425,84 @@ function BalancePage() {
   const [perPage, setPerPage] = useState(5);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<BalanceFilters>(INITIAL_FILTERS);
-  const [expandedId, setExpandedId] = useState<number | null>(BALANCE_ROWS[0]?.id ?? null);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  /** تأخير قصير أثناء الكتابة في البحث */
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(filters.query.trim()), 250);
+    return () => clearTimeout(timer);
+  }, [filters.query]);
 
   const goToPage = (nextPage: number) => {
     setPage(nextPage);
     setExpandedId(null);
   };
 
-  const rows = useMemo(() => BALANCE_ROWS, []);
-  const branches = useMemo(
+  /** أي تغيير في الفلاتر يعيد الترقيم للصفحة الأولى ويغلق التفاصيل */
+  const updateFilters = (patch: Partial<BalanceFilters>) => {
+    setFilters((currentFilters) => ({ ...currentFilters, ...patch }));
+    setPage(1);
+    setExpandedId(null);
+  };
+
+  const allBranches = useMemo(
     () => Array.from(new Set(BALANCE_ROWS.map((row) => row.branch))),
     [],
   );
+  const branches = useMemo(
+    () =>
+      filters.city === "all"
+        ? allBranches
+        : allBranches.filter((branch) => BRANCH_CITY[branch] === filters.city),
+    [allBranches, filters.city],
+  );
+
+  const invalidRange = Boolean(
+    filters.paidFrom && filters.paidTo && filters.paidTo < filters.paidFrom,
+  );
+  const paidFrom = invalidRange ? "" : filters.paidFrom;
+  const paidTo = invalidRange ? "" : filters.paidTo;
+  const paymentFilterActive =
+    filters.withdrawalStatus !== "all" || Boolean(paidFrom) || Boolean(paidTo);
+
+  const matchPayment = (payment: PaymentRow) => {
+    if (filters.withdrawalStatus !== "all" && payment.status !== filters.withdrawalStatus) {
+      return false;
+    }
+    if (paidFrom && payment.paidAt < paidFrom) return false;
+    if (paidTo && payment.paidAt > paidTo) return false;
+    return true;
+  };
+
+  const rows = BALANCE_ROWS.filter((row) => {
+    if (debouncedQuery && !row.name.includes(debouncedQuery)) return false;
+    if (filters.city !== "all" && BRANCH_CITY[row.branch] !== filters.city) return false;
+    if (filters.branch !== "all" && row.branch !== filters.branch) return false;
+    if (paymentFilterActive && !row.payments.some(matchPayment)) return false;
+    return true;
+  });
+
   const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
   const current = Math.min(page, totalPages);
   const start = (current - 1) * perPage;
   const visible = rows.slice(start, start + perPage);
 
+  const clearFilters = () => {
+    setFilters(INITIAL_FILTERS);
+    setDebouncedQuery("");
+    setPage(1);
+    setExpandedId(null);
+  };
+
   const exportPdf = () => {
-    const html = `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
-<title>رصيدي المالي - مكافآتي</title>
+    if (rows.length === 0 || isExporting) return;
+    setIsExporting(true);
+    try {
+      const fileName = `الرصيد-المالي-${format(new Date(), "yyyy-MM-dd")}`;
+      const html = `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
+<title>${fileName}</title>
 <style>
 body{font-family:Tajawal,system-ui,sans-serif;padding:24px;color:#06143F}
 h1{font-size:20px;margin:0 0 4px}p{margin:0 0 16px;color:#64748b;font-size:12px}
@@ -441,12 +520,23 @@ ${rows
   )
   .join("")}
 </tbody></table></body></html>`;
-    const w = window.open("", "_blank");
-    if (!w) return;
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 400);
+      const w = window.open("", "_blank");
+      if (!w) {
+        toast.error("تعذّر فتح نافذة التصدير. فعّل النوافذ المنبثقة ثم حاول مجددًا.");
+        setIsExporting(false);
+        return;
+      }
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+      setTimeout(() => {
+        w.print();
+        setIsExporting(false);
+      }, 400);
+    } catch {
+      toast.error("تعذّر تجهيز ملف التصدير. حاول مجددًا.");
+      setIsExporting(false);
+    }
   };
 
   return (
@@ -499,7 +589,7 @@ ${rows
                 id="balance-search"
                 type="search"
                 value={filters.query}
-                onChange={(event) => setFilters((currentFilters) => ({ ...currentFilters, query: event.target.value }))}
+                onChange={(event) => updateFilters({ query: event.target.value })}
                 placeholder="بحث عن عميل"
                 className="h-11 w-full rounded-xl border border-border bg-background pr-9 pl-3 text-right text-xs font-semibold text-navy outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
               />
@@ -511,7 +601,7 @@ ${rows
             label="حالة سحب المكافأة"
             value={filters.withdrawalStatus}
             options={WITHDRAWAL_STATUSES}
-            onChange={(withdrawalStatus) => setFilters((currentFilters) => ({ ...currentFilters, withdrawalStatus }))}
+            onChange={(withdrawalStatus) => updateFilters({ withdrawalStatus })}
           />
           <FilterSelect
             id="balance-city"
@@ -521,7 +611,11 @@ ${rows
               { value: "all", label: "جميع المدن" },
               ...CITIES.map((city) => ({ value: city, label: city })),
             ]}
-            onChange={(city) => setFilters((currentFilters) => ({ ...currentFilters, city }))}
+            onChange={(city) => {
+              const branchStillValid =
+                filters.branch === "all" || city === "all" || BRANCH_CITY[filters.branch] === city;
+              updateFilters({ city, branch: branchStillValid ? filters.branch : "all" });
+            }}
           />
           <FilterSelect
             id="balance-branch"
@@ -531,27 +625,28 @@ ${rows
               { value: "all", label: "جميع الفروع" },
               ...branches.map((branch) => ({ value: branch, label: branch })),
             ]}
-            onChange={(branch) => setFilters((currentFilters) => ({ ...currentFilters, branch }))}
+            onChange={(branch) => updateFilters({ branch })}
           />
           <DateFilter
             id="paid-from"
             label="السداد من"
             placeholder="من تاريخ"
             value={filters.paidFrom}
-            onChange={(paidFrom) => setFilters((currentFilters) => ({ ...currentFilters, paidFrom }))}
+            onChange={(paidFrom) => updateFilters({ paidFrom })}
           />
           <DateFilter
             id="paid-to"
             label="السداد إلى"
             placeholder="إلى تاريخ"
             value={filters.paidTo}
-            onChange={(paidTo) => setFilters((currentFilters) => ({ ...currentFilters, paidTo }))}
+            error={invalidRange ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده." : undefined}
+            onChange={(paidTo) => updateFilters({ paidTo })}
           />
           <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-3 2xl:col-span-1 2xl:justify-end">
             <Button
               type="button"
               variant="outline"
-              onClick={() => setFilters(INITIAL_FILTERS)}
+              onClick={clearFilters}
               className="h-11 flex-1 rounded-xl border-brand bg-background px-3 text-xs font-bold text-brand shadow-none hover:border-brand hover:bg-brand-soft hover:text-brand 2xl:flex-none"
             >
               <RotateCcw size={16} />
@@ -560,10 +655,11 @@ ${rows
             <Button
               type="button"
               onClick={exportPdf}
-              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy 2xl:flex-none"
+              disabled={rows.length === 0 || isExporting}
+              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy disabled:opacity-50 2xl:flex-none"
             >
               <Download size={16} />
-              تصدير
+              {isExporting ? "جارٍ التجهيز" : "تصدير"}
             </Button>
           </div>
         </div>
@@ -632,13 +728,25 @@ ${rows
                     {isOpen ? (
                       <tr className="bg-[#D8DCE2]">
                         <td id={panelId} colSpan={9} className="px-4 pb-4 pt-0">
-                          <PaymentsTable payments={row.payments} />
+                          <PaymentsTable
+                            payments={
+                              paymentFilterActive ? row.payments.filter(matchPayment) : row.payments
+                            }
+                            note={paymentFilterActive ? "تُعرض الدفعات المطابقة للفلاتر" : undefined}
+                          />
                         </td>
                       </tr>
                     ) : null}
                   </Fragment>
                 );
               })}
+              {visible.length === 0 ? (
+                <tr className="bg-card">
+                  <td colSpan={9} className="px-4 py-10 text-center text-sm font-bold text-navy">
+                    لا توجد نتائج مطابقة للفلاتر المحددة
+                  </td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>
