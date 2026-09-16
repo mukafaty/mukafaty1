@@ -1,7 +1,17 @@
 import { useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
-import { ChevronDown, Download, Users, Wallet } from "lucide-react";
+import {
+  CalendarDays,
+  ChevronDown,
+  Download,
+  FileText,
+  RotateCcw,
+  Search,
+  Users,
+  Wallet,
+} from "lucide-react";
 import { CountUp } from "@/components/dashboard/CountUp";
+import { Button } from "@/components/ui/button";
 
 export const Route = createFileRoute("/dashboard/balance")({
   head: () => ({
@@ -20,9 +30,18 @@ type BalanceRow = {
   name: string;
   program: string;
   branch: string;
-  fee: number;
-  paid: number;
+  fee?: number;
+  paid?: number;
   reward: number;
+};
+
+type BalanceFilters = {
+  query: string;
+  withdrawalStatus: string;
+  city: string;
+  branch: string;
+  paidFrom: string;
+  paidTo: string;
 };
 
 const BALANCE_ROWS: BalanceRow[] = [
@@ -47,11 +66,120 @@ const stats = [
   { title: "الرصيد المتاح", value: 2450, unit: "ريال سعودي", icon: Wallet, tone: "bg-sky-50 text-sky-600" },
 ];
 
+const INITIAL_FILTERS: BalanceFilters = {
+  query: "",
+  withdrawalStatus: "all",
+  city: "all",
+  branch: "all",
+  paidFrom: "",
+  paidTo: "",
+};
+
+const WITHDRAWAL_STATUSES = [
+  { value: "all", label: "جميع الحالات" },
+  { value: "withdrawn", label: "تم السحب" },
+  { value: "not-withdrawn", label: "لم يتم السحب" },
+  { value: "pending", label: "قيد الاعتماد" },
+];
+
+const CITIES = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
+
+function formatMoney(value: number | undefined) {
+  return typeof value === "number" ? `${value.toLocaleString("en-US")} ريال` : "—";
+}
+
+function FilterSelect({
+  id,
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="min-w-0 space-y-1.5">
+      <label htmlFor={id} className="block text-xs font-bold text-navy">
+        {label}
+      </label>
+      <div className="relative">
+        <select
+          id={id}
+          value={value}
+          onChange={(event) => onChange(event.target.value)}
+          className="h-11 w-full appearance-none rounded-xl border border-border bg-background pr-3 pl-8 text-right text-xs font-semibold text-navy outline-none transition-colors focus:border-brand"
+        >
+          {options.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        <ChevronDown
+          size={14}
+          className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-muted-foreground"
+        />
+      </div>
+    </div>
+  );
+}
+
+function DateFilter({
+  id,
+  label,
+  placeholder,
+  value,
+  onChange,
+}: {
+  id: string;
+  label: string;
+  placeholder: string;
+  value: string;
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="min-w-0 space-y-1.5">
+      <label htmlFor={id} className="block text-xs font-bold text-navy">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={id}
+          type="date"
+          value={value}
+          aria-label={label}
+          data-placeholder={placeholder}
+          onChange={(event) => onChange(event.target.value)}
+          className="h-11 w-full rounded-xl border border-border bg-background px-3 text-xs font-semibold text-navy outline-none transition-colors focus:border-brand [&::-webkit-calendar-picker-indicator]:cursor-pointer [&::-webkit-calendar-picker-indicator]:opacity-0"
+        />
+        <CalendarDays
+          size={16}
+          className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-brand"
+        />
+        {!value && (
+          <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs font-medium text-muted-foreground">
+            {placeholder}
+          </span>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function BalancePage() {
   const [perPage, setPerPage] = useState(5);
   const [page, setPage] = useState(1);
+  const [filters, setFilters] = useState<BalanceFilters>(INITIAL_FILTERS);
 
   const rows = useMemo(() => BALANCE_ROWS, []);
+  const branches = useMemo(
+    () => Array.from(new Set(BALANCE_ROWS.map((row) => row.branch))),
+    [],
+  );
   const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
   const current = Math.min(page, totalPages);
   const start = (current - 1) * perPage;
@@ -69,11 +197,11 @@ td{padding:7px 8px;border-bottom:1px solid #e5e7eb;text-align:right}
 tr:nth-child(even) td{background:#f1f6ff}
 </style></head><body>
 <h1>رصيدي المالي</h1><p>تابع مكافآتك المالية الناتجة عن تسجيل عملائك.</p>
-<table><thead><tr><th>الرقم</th><th>اسم المتدرب</th><th>البرنامج التدريبي</th><th>الفرع</th><th>الرسوم</th><th>المبلغ المسدد</th><th>المكافأة المالية</th></tr></thead><tbody>
+ <table><thead><tr><th>الرقم</th><th>اسم المتدرب</th><th>البرنامج التدريبي</th><th>الفرع</th><th>إجمالي الرسوم</th><th>المبلغ المسدد</th><th>المبلغ المتبقي</th><th>المكافأة المالية</th></tr></thead><tbody>
 ${rows
   .map(
     (r) =>
-      `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${r.fee.toLocaleString("en-US")} ريال</td><td>${r.paid.toLocaleString("en-US")} ريال</td><td>${r.reward.toLocaleString("en-US")} ريال</td></tr>`,
+       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(r.paid)}</td><td>${typeof r.fee === "number" && typeof r.paid === "number" ? formatMoney(r.fee - r.paid) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
   )
   .join("")}
 </tbody></table></body></html>`;
@@ -87,12 +215,17 @@ ${rows
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
-      <div className="text-right">
-        <h1 className="text-2xl font-black text-navy sm:text-3xl">رصيدي المالي</h1>
-        <p className="mt-1 text-sm text-muted-foreground">
-          تابع مكافآتك المالية الناتجة عن تسجيل عملائك.
-        </p>
-      </div>
+      <header className="flex items-center gap-4">
+        <span className="grid size-12 shrink-0 place-items-center rounded-2xl bg-brand-soft text-brand">
+          <Wallet size={24} />
+        </span>
+        <div className="min-w-0 text-right">
+          <h1 className="truncate text-2xl font-black text-navy sm:text-3xl">رصيدي المالي</h1>
+          <p className="mt-1 text-sm text-muted-foreground">
+            تابع مكافآتك المالية الناتجة عن تسجيل عملائك.
+          </p>
+        </div>
+      </header>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((s, i) => (
@@ -116,28 +249,102 @@ ${rows
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-4 sm:p-5">
-        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
-          <h2 className="text-lg font-black text-navy">جدول الرصيد المالي</h2>
-          <button
-            onClick={exportPdf}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-brand px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-navy"
-          >
-            <Download size={17} />
-            تصدير
-          </button>
+        <div className="grid gap-3 xl:grid-cols-[minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(130px,0.9fr)_minmax(130px,0.9fr)_auto] xl:items-end">
+          <div className="min-w-0 space-y-1.5">
+            <label htmlFor="balance-search" className="block text-xs font-bold text-navy">
+              بحث عن عميل
+            </label>
+            <div className="relative">
+              <Search
+                size={16}
+                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+              />
+              <input
+                id="balance-search"
+                type="search"
+                value={filters.query}
+                onChange={(event) => setFilters((currentFilters) => ({ ...currentFilters, query: event.target.value }))}
+                placeholder="بحث عن عميل"
+                className="h-11 w-full rounded-xl border border-border bg-background pr-9 pl-3 text-right text-xs font-semibold text-navy outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
+              />
+            </div>
+          </div>
+
+          <FilterSelect
+            id="withdrawal-status"
+            label="حالة سحب المكافأة"
+            value={filters.withdrawalStatus}
+            options={WITHDRAWAL_STATUSES}
+            onChange={(withdrawalStatus) => setFilters((currentFilters) => ({ ...currentFilters, withdrawalStatus }))}
+          />
+          <FilterSelect
+            id="balance-city"
+            label="المدينة"
+            value={filters.city}
+            options={[
+              { value: "all", label: "جميع المدن" },
+              ...CITIES.map((city) => ({ value: city, label: city })),
+            ]}
+            onChange={(city) => setFilters((currentFilters) => ({ ...currentFilters, city }))}
+          />
+          <FilterSelect
+            id="balance-branch"
+            label="الفرع"
+            value={filters.branch}
+            options={[
+              { value: "all", label: "جميع الفروع" },
+              ...branches.map((branch) => ({ value: branch, label: branch })),
+            ]}
+            onChange={(branch) => setFilters((currentFilters) => ({ ...currentFilters, branch }))}
+          />
+          <DateFilter
+            id="paid-from"
+            label="السداد من"
+            placeholder="من تاريخ"
+            value={filters.paidFrom}
+            onChange={(paidFrom) => setFilters((currentFilters) => ({ ...currentFilters, paidFrom }))}
+          />
+          <DateFilter
+            id="paid-to"
+            label="السداد إلى"
+            placeholder="إلى تاريخ"
+            value={filters.paidTo}
+            onChange={(paidTo) => setFilters((currentFilters) => ({ ...currentFilters, paidTo }))}
+          />
+          <div className="flex items-center gap-2 xl:justify-end">
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setFilters(INITIAL_FILTERS)}
+              className="h-11 flex-1 rounded-xl border-brand bg-background px-3 text-xs font-bold text-brand shadow-none hover:border-brand hover:bg-brand-soft hover:text-brand xl:flex-none"
+            >
+              <RotateCcw size={16} />
+              مسح الفلاتر
+            </Button>
+            <Button
+              type="button"
+              onClick={exportPdf}
+              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy xl:flex-none"
+            >
+              <Download size={16} />
+              تصدير
+            </Button>
+          </div>
         </div>
 
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[900px] border-collapse overflow-hidden rounded-2xl text-right">
+        <div className="mt-5 max-w-full overflow-x-auto">
+          <table className="w-full min-w-[1180px] border-collapse overflow-hidden rounded-2xl text-right">
             <thead>
               <tr className="bg-navy-deep text-primary-foreground">
                 <th className="px-4 py-3.5 text-sm font-bold">الرقم</th>
                 <th className="px-4 py-3.5 text-sm font-bold">اسم المتدرب</th>
                 <th className="px-4 py-3.5 text-sm font-bold">البرنامج التدريبي</th>
                 <th className="px-4 py-3.5 text-sm font-bold">الفرع</th>
-                <th className="px-4 py-3.5 text-sm font-bold">الرسوم</th>
+                <th className="px-4 py-3.5 text-sm font-bold">إجمالي الرسوم</th>
                 <th className="px-4 py-3.5 text-sm font-bold">المبلغ المسدد</th>
+                <th className="px-4 py-3.5 text-sm font-bold">المبلغ المتبقي</th>
                 <th className="px-4 py-3.5 text-sm font-bold">المكافأة المالية</th>
+                <th className="px-4 py-3.5 text-sm font-bold">تفاصيل الدفعات</th>
               </tr>
             </thead>
             <tbody>
@@ -148,13 +355,28 @@ ${rows
                   <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
                   <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
                   <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {row.fee.toLocaleString("en-US")} ريال
+                    {formatMoney(row.fee)}
                   </td>
                   <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {row.paid.toLocaleString("en-US")} ريال
+                    {formatMoney(row.paid)}
                   </td>
                   <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {row.reward.toLocaleString("en-US")} ريال
+                    {typeof row.fee === "number" && typeof row.paid === "number"
+                      ? formatMoney(row.fee - row.paid)
+                      : "—"}
+                  </td>
+                  <td className="px-4 py-3 text-sm font-bold text-navy">
+                    {formatMoney(row.reward)}
+                  </td>
+                  <td className="px-4 py-3 text-sm font-bold text-brand">
+                    <span
+                      aria-label={`تفاصيل دفعات ${row.name} — ستتوفر في المرحلة الثانية`}
+                      className="inline-flex items-center gap-1.5 whitespace-nowrap"
+                    >
+                      <FileText size={16} />
+                      التفاصيل
+                      <ChevronDown size={14} />
+                    </span>
                   </td>
                 </tr>
               ))}
