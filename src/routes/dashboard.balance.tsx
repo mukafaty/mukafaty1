@@ -372,7 +372,7 @@ tr:nth-child(even) td{background:#f1f6ff}
 ${rows
   .map(
     (r) =>
-       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(r.paid)}</td><td>${typeof r.fee === "number" && typeof r.paid === "number" ? formatMoney(r.fee - r.paid) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
+       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(sumPaid(r))}</td><td>${typeof r.fee === "number" ? formatMoney(r.fee - sumPaid(r)) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
   )
   .join("")}
 </tbody></table></body></html>`;
