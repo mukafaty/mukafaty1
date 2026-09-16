@@ -362,9 +362,9 @@ function PaymentsTable({ payments, note }: { payments: PaymentRow[]; note?: stri
 
   if (ordered.length === 0) {
     return (
-      <div className="space-y-2">
+      <div className="mx-auto w-[90%] space-y-2">
         {note ? <p className="text-[11px] font-semibold text-slate-600">{note}</p> : null}
-        <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
+        <div className="rounded-2xl border-4 border-white bg-balance-payments-row px-4 py-6 text-center text-sm font-semibold text-slate-600">
           لا توجد دفعات مسجلة لهذا العميل
         </div>
       </div>
@@ -372,50 +372,64 @@ function PaymentsTable({ payments, note }: { payments: PaymentRow[]; note?: stri
   }
 
   return (
-    <div className="space-y-2">
+    <div className="mx-auto w-[90%] space-y-2">
       {note ? <p className="text-[11px] font-semibold text-slate-600">{note}</p> : null}
-      <div className="overflow-hidden rounded-2xl border-4 border-white">
-      <table className="w-full border-collapse text-right">
-        <thead>
-          <tr className="bg-[#D6D7DB] text-slate-800">
-            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">رقم السند</th>
-            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">تاريخ السداد</th>
-            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">المبلغ المسدد</th>
-            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">مكافأتك على الدفعة</th>
-            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">حالة سحب المكافأة</th>
-          </tr>
-        </thead>
-        <tbody>
-          {ordered.map((payment) => {
-            const badge = payment.status ? STATUS_BADGE[payment.status] : null;
-            return (
-              <tr key={payment.id} className="bg-[#FAFAFA]">
-                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
-                  <bdi>{payment.receipt}</bdi>
-                </td>
-                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
-                  <bdi>{format(parseISO(payment.paidAt), "dd/MM/yyyy")}</bdi>
-                </td>
-                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
-                  {formatMoney(payment.amount)}
-                </td>
-                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
-                  {formatMoney(payment.reward)}
-                </td>
-                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold">
-                  {badge ? (
-                    <span className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${badge.className}`}>
-                      {badge.label}
-                    </span>
-                  ) : (
-                    <span className="text-slate-600">—</span>
-                  )}
-                </td>
-              </tr>
-            );
-          })}
-        </tbody>
-      </table>
+      <div className="overflow-x-auto rounded-2xl border-4 border-white">
+        <table className="w-full min-w-[700px] table-fixed border-collapse text-center">
+          <colgroup>
+            {Array.from({ length: 5 }, (_, index) => (
+              <col key={index} className="w-1/5" />
+            ))}
+          </colgroup>
+          <thead>
+            <tr className="bg-balance-payments-head text-slate-800">
+              {[
+                "رقم السند",
+                "تاريخ السداد",
+                "المبلغ المسدد",
+                "مكافأتك على الدفعة",
+                "حالة سحب المكافأة",
+              ].map((heading) => (
+                <th
+                  key={heading}
+                  className="border-b border-l border-balance-payments-divider px-4 py-3 text-center align-middle text-xs font-bold last:border-l-0"
+                >
+                  {heading}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {ordered.map((payment) => {
+              const badge = payment.status ? STATUS_BADGE[payment.status] : null;
+              return (
+                <tr key={payment.id} className="bg-balance-payments-row">
+                  <td className="border-b border-l border-balance-payments-divider px-4 py-3 text-center align-middle text-xs font-semibold text-slate-800">
+                    <bdi>{payment.receipt}</bdi>
+                  </td>
+                  <td className="border-b border-l border-balance-payments-divider px-4 py-3 text-center align-middle text-xs font-semibold text-slate-800">
+                    <bdi>{format(parseISO(payment.paidAt), "dd/MM/yyyy")}</bdi>
+                  </td>
+                  <td className="border-b border-l border-balance-payments-divider px-4 py-3 text-center align-middle text-xs font-semibold text-slate-800">
+                    {formatMoney(payment.amount)}
+                  </td>
+                  <td className="border-b border-l border-balance-payments-divider px-4 py-3 text-center align-middle text-xs font-semibold text-slate-800">
+                    {formatMoney(payment.reward)}
+                  </td>
+                  <td className="border-b border-balance-payments-divider px-4 py-3 text-center align-middle text-xs font-semibold">
+                    {badge ? (
+                      <span className={`inline-flex items-center justify-center rounded-lg px-3 py-1 text-xs font-bold ${badge.className}`}>
+                        {badge.label}
+                      </span>
+                    ) : (
+                      <span className="text-slate-600">—</span>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
+          </tbody>
+        </table>
       </div>
     </div>
   );
@@ -689,7 +703,7 @@ ${rows
                     <tr
                       className={
                         isOpen
-                          ? "bg-[#D8DCE2]"
+                          ? "bg-balance-detail"
                           : i % 2 === 1
                             ? "bg-brand-soft/70"
                             : "bg-card"
@@ -697,8 +711,8 @@ ${rows
                     >
                       <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
                       <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
-                      <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
-                      <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.program}</td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.branch}</td>
                       <td className="px-4 py-3 text-sm font-bold text-navy">
                         {formatMoney(row.fee)}
                       </td>
@@ -726,8 +740,8 @@ ${rows
                       </td>
                     </tr>
                     {isOpen ? (
-                      <tr className="bg-[#D8DCE2]">
-                        <td id={panelId} colSpan={9} className="px-4 pb-4 pt-0">
+                      <tr className="bg-balance-detail">
+                        <td id={panelId} colSpan={9} className="px-0 pb-4 pt-0">
                           <PaymentsTable
                             payments={
                               paymentFilterActive ? row.payments.filter(matchPayment) : row.payments
