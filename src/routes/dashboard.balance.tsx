@@ -416,6 +416,7 @@ function PaymentsTable({ payments, note }: { payments: PaymentRow[]; note?: stri
           })}
         </tbody>
       </table>
+      </div>
     </div>
   );
 }
