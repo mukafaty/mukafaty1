@@ -31,15 +31,55 @@ export const Route = createFileRoute("/dashboard/balance")({
   component: BalancePage,
 });
 
+type WithdrawalStatus = "withdrawn" | "not-withdrawn" | "pending";
+
+type PaymentRow = {
+  /** معرّف الدفعة داخل التسجيل */
+  id: string;
+  /** رقم السند */
+  receipt: string;
+  /** تاريخ السداد بصيغة ISO */
+  paidAt: string;
+  amount: number;
+  reward: number;
+  status?: WithdrawalStatus;
+};
+
 type BalanceRow = {
+  /** معرّف التسجيل (السجل المالي) */
   id: number;
   name: string;
   program: string;
   branch: string;
   fee?: number;
-  paid?: number;
   reward: number;
+  payments: PaymentRow[];
 };
+
+const STATUS_BADGE: Record<WithdrawalStatus, { label: string; className: string }> = {
+  withdrawn: { label: "تم السحب", className: "bg-emerald-100 text-emerald-800" },
+  "not-withdrawn": { label: "لم يتم السحب", className: "bg-slate-200 text-slate-700" },
+  pending: { label: "قيد الاعتماد", className: "bg-amber-100 text-amber-800" },
+};
+
+/** مجموع الدفعات المحتسبة كسداد */
+function sumPaid(row: BalanceRow) {
+  return row.payments.reduce((total, payment) => total + payment.amount, 0);
+}
+
+function makePayments(
+  prefix: string,
+  entries: [receipt: string, paidAt: string, amount: number, reward: number, status: WithdrawalStatus][],
+): PaymentRow[] {
+  return entries.map(([receipt, paidAt, amount, reward, status]) => ({
+    id: `${prefix}-${receipt}`,
+    receipt,
+    paidAt,
+    amount,
+    reward,
+    status,
+  }));
+}
 
 type BalanceFilters = {
   query: string;
