@@ -1,10 +1,11 @@
-import { useMemo, useState } from "react";
+import { Fragment, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { format, parseISO } from "date-fns";
 import { arSA } from "date-fns/locale";
 import {
   CalendarDays,
   ChevronDown,
+  ChevronUp,
   Download,
   FileText,
   RotateCcw,
@@ -31,15 +32,55 @@ export const Route = createFileRoute("/dashboard/balance")({
   component: BalancePage,
 });
 
+type WithdrawalStatus = "withdrawn" | "not-withdrawn" | "pending";
+
+type PaymentRow = {
+  /** معرّف الدفعة داخل التسجيل */
+  id: string;
+  /** رقم السند */
+  receipt: string;
+  /** تاريخ السداد بصيغة ISO */
+  paidAt: string;
+  amount: number;
+  reward: number;
+  status?: WithdrawalStatus;
+};
+
 type BalanceRow = {
+  /** معرّف التسجيل (السجل المالي) */
   id: number;
   name: string;
   program: string;
   branch: string;
   fee?: number;
-  paid?: number;
   reward: number;
+  payments: PaymentRow[];
 };
+
+const STATUS_BADGE: Record<WithdrawalStatus, { label: string; className: string }> = {
+  withdrawn: { label: "تم السحب", className: "bg-emerald-100 text-emerald-800" },
+  "not-withdrawn": { label: "لم يتم السحب", className: "bg-slate-200 text-slate-700" },
+  pending: { label: "قيد الاعتماد", className: "bg-amber-100 text-amber-800" },
+};
+
+/** مجموع الدفعات المحتسبة كسداد */
+function sumPaid(row: BalanceRow) {
+  return row.payments.reduce((total, payment) => total + payment.amount, 0);
+}
+
+function makePayments(
+  prefix: string,
+  entries: [receipt: string, paidAt: string, amount: number, reward: number, status: WithdrawalStatus][],
+): PaymentRow[] {
+  return entries.map(([receipt, paidAt, amount, reward, status]) => ({
+    id: `${prefix}-${receipt}`,
+    receipt,
+    paidAt,
+    amount,
+    reward,
+    status,
+  }));
+}
 
 type BalanceFilters = {
   query: string;
@@ -51,18 +92,136 @@ type BalanceFilters = {
 };
 
 const BALANCE_ROWS: BalanceRow[] = [
-  { id: 1, name: "فادي حسن المالكي", program: "دبلوم إدارة الموارد البشرية", branch: "جدة الصالحية", fee: 9500, paid: 9500, reward: 475 },
-  { id: 2, name: "سعود محسن الحارثي", program: "دبلوم إدارة الموارد البشرية", branch: "مكة المكرمة - الزاهر", fee: 9500, paid: 9500, reward: 475 },
-  { id: 3, name: "خالد ناصر العتيبي", program: "دبلوم الذكاء الاصطناعي", branch: "الرياض المنار", fee: 9500, paid: 9500, reward: 475 },
-  { id: 4, name: "طلال فهد الزهراني", program: "دبلوم المحاسبة المالية", branch: "جدة الحمراء", fee: 6500, paid: 6500, reward: 325 },
-  { id: 5, name: "نايف عمر الشريف", program: "دبلوم التسويق الرقمي", branch: "مكة المكرمة - الزاهر", fee: 8500, paid: 8500, reward: 425 },
-  { id: 6, name: "عمر يوسف الحربي", program: "دبلوم تحليل البيانات", branch: "الرياض المنار", fee: 9500, paid: 9500, reward: 475 },
-  { id: 7, name: "سلطان أحمد البقمي", program: "دبلوم إدارة المشاريع", branch: "جدة الصالحية", fee: 9000, paid: 9000, reward: 450 },
-  { id: 8, name: "عبدالعزيز فيصل السبيعي", program: "دبلوم إدارة الأعمال", branch: "الرياض المنار", fee: 8000, paid: 8000, reward: 400 },
-  { id: 9, name: "تركي عادل الشمراني", program: "دبلوم الأمن السيبراني", branch: "جدة الصالحية", fee: 7500, paid: 7500, reward: 375 },
-  { id: 10, name: "فيصل منصور الثبيتي", program: "دبلوم الذكاء الاصطناعي", branch: "الرياض المنار", fee: 9500, paid: 9500, reward: 475 },
-  { id: 11, name: "عادل حمزة الصاعدي", program: "دبلوم إدارة المشاريع", branch: "مكة المكرمة - الزاهر", fee: 9000, paid: 9000, reward: 450 },
-  { id: 12, name: "وليد صابر الحازمي", program: "دبلوم تحليل البيانات", branch: "جدة الحمراء", fee: 9500, paid: 9500, reward: 475 },
+  {
+    id: 1,
+    name: "فادي جميل المالكي",
+    program: "دبلوم إدارة الموارد البشرية",
+    branch: "جدة الصالحية",
+    fee: 9500,
+    reward: 225,
+    payments: makePayments("REG-1", [
+      ["REC-001", "2026-09-01", 2000, 100, "withdrawn"],
+      ["REC-002", "2026-09-10", 1500, 75, "not-withdrawn"],
+      ["REC-003", "2026-09-15", 1000, 50, "pending"],
+    ]),
+  },
+  {
+    id: 2,
+    name: "سعود محسن الحارثي",
+    program: "دبلوم إدارة الموارد البشرية",
+    branch: "مكة المكرمة - الزاهر",
+    fee: 9500,
+    reward: 475,
+    payments: makePayments("REG-2", [
+      ["REC-004", "2026-08-05", 5000, 250, "withdrawn"],
+      ["REC-005", "2026-08-28", 4500, 225, "not-withdrawn"],
+    ]),
+  },
+  {
+    id: 3,
+    name: "خالد ناصر العتيبي",
+    program: "دبلوم الذكاء الاصطناعي",
+    branch: "الرياض المنار",
+    fee: 9500,
+    reward: 475,
+    payments: makePayments("REG-3", [["REC-006", "2026-07-20", 9500, 475, "withdrawn"]]),
+  },
+  {
+    id: 4,
+    name: "طلال فهد الزهراني",
+    program: "دبلوم المحاسبة المالية",
+    branch: "جدة الحمراء",
+    fee: 6500,
+    reward: 325,
+    payments: makePayments("REG-4", [
+      ["REC-007", "2026-07-02", 3500, 175, "not-withdrawn"],
+      ["REC-008", "2026-07-25", 3000, 150, "pending"],
+    ]),
+  },
+  {
+    id: 5,
+    name: "نايف عمر الشريف",
+    program: "دبلوم التسويق الرقمي",
+    branch: "مكة المكرمة - الزاهر",
+    fee: 8500,
+    reward: 425,
+    payments: makePayments("REG-5", [
+      ["REC-009", "2026-06-11", 4000, 200, "withdrawn"],
+      ["REC-010", "2026-06-30", 4500, 225, "withdrawn"],
+    ]),
+  },
+  {
+    id: 6,
+    name: "عمر يوسف الحربي",
+    program: "دبلوم تحليل البيانات",
+    branch: "الرياض المنار",
+    fee: 9500,
+    reward: 475,
+    payments: makePayments("REG-6", [["REC-011", "2026-06-03", 9500, 475, "not-withdrawn"]]),
+  },
+  {
+    id: 7,
+    name: "سلطان أحمد البقمي",
+    program: "دبلوم إدارة المشاريع",
+    branch: "جدة الصالحية",
+    fee: 9000,
+    reward: 450,
+    payments: makePayments("REG-7", [
+      ["REC-012", "2026-05-14", 4000, 200, "withdrawn"],
+      ["REC-013", "2026-05-29", 5000, 250, "pending"],
+    ]),
+  },
+  {
+    id: 8,
+    name: "عبدالعزيز فيصل السبيعي",
+    program: "دبلوم إدارة الأعمال",
+    branch: "الرياض المنار",
+    fee: 8000,
+    reward: 400,
+    payments: makePayments("REG-8", [["REC-014", "2026-05-02", 8000, 400, "withdrawn"]]),
+  },
+  {
+    id: 9,
+    name: "تركي عادل الشمراني",
+    program: "دبلوم الأمن السيبراني",
+    branch: "جدة الصالحية",
+    fee: 7500,
+    reward: 375,
+    payments: makePayments("REG-9", [
+      ["REC-015", "2026-04-09", 2500, 125, "withdrawn"],
+      ["REC-016", "2026-04-21", 5000, 250, "not-withdrawn"],
+    ]),
+  },
+  {
+    id: 10,
+    name: "فيصل منصور الثبيتي",
+    program: "دبلوم الذكاء الاصطناعي",
+    branch: "الرياض المنار",
+    fee: 9500,
+    reward: 475,
+    payments: makePayments("REG-10", [["REC-017", "2026-03-17", 9500, 475, "pending"]]),
+  },
+  {
+    id: 11,
+    name: "عادل حمزة الصاعدي",
+    program: "دبلوم إدارة المشاريع",
+    branch: "مكة المكرمة - الزاهر",
+    fee: 9000,
+    reward: 450,
+    payments: makePayments("REG-11", [
+      ["REC-018", "2026-03-04", 4500, 225, "withdrawn"],
+      ["REC-019", "2026-03-22", 4500, 225, "not-withdrawn"],
+    ]),
+  },
+  {
+    id: 12,
+    name: "وليد صابر الحازمي",
+    program: "دبلوم تحليل البيانات",
+    branch: "جدة الحمراء",
+    fee: 9500,
+    reward: 475,
+    payments: makePayments("REG-12", [["REC-020", "2026-02-19", 9500, 475, "withdrawn"]]),
+  },
 ];
 
 const stats = [
@@ -183,10 +342,74 @@ function DateFilter({
   );
 }
 
+function PaymentsTable({ payments }: { payments: PaymentRow[] }) {
+  const ordered = [...payments].sort((a, b) => a.paidAt.localeCompare(b.paidAt));
+
+  if (ordered.length === 0) {
+    return (
+      <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
+        لا توجد دفعات مسجلة لهذا العميل
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-2xl border-4 border-white">
+      <table className="w-full border-collapse text-right">
+        <thead>
+          <tr className="bg-[#D6D7DB] text-slate-800">
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">رقم السند</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">تاريخ السداد</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">المبلغ المسدد</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">مكافأتك على الدفعة</th>
+            <th className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-bold">حالة سحب المكافأة</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ordered.map((payment) => {
+            const badge = payment.status ? STATUS_BADGE[payment.status] : null;
+            return (
+              <tr key={payment.id} className="bg-[#FAFAFA]">
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  <bdi>{payment.receipt}</bdi>
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  <bdi>{format(parseISO(payment.paidAt), "dd/MM/yyyy")}</bdi>
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  {formatMoney(payment.amount)}
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold text-slate-800">
+                  {formatMoney(payment.reward)}
+                </td>
+                <td className="border-b border-[#DADBDD] px-4 py-2.5 text-xs font-semibold">
+                  {badge ? (
+                    <span className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${badge.className}`}>
+                      {badge.label}
+                    </span>
+                  ) : (
+                    <span className="text-slate-600">—</span>
+                  )}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 function BalancePage() {
   const [perPage, setPerPage] = useState(5);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<BalanceFilters>(INITIAL_FILTERS);
+  const [expandedId, setExpandedId] = useState<number | null>(BALANCE_ROWS[0]?.id ?? null);
+
+  const goToPage = (nextPage: number) => {
+    setPage(nextPage);
+    setExpandedId(null);
+  };
 
   const rows = useMemo(() => BALANCE_ROWS, []);
   const branches = useMemo(
@@ -214,7 +437,7 @@ tr:nth-child(even) td{background:#f1f6ff}
 ${rows
   .map(
     (r) =>
-       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(r.paid)}</td><td>${typeof r.fee === "number" && typeof r.paid === "number" ? formatMoney(r.fee - r.paid) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
+       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(sumPaid(r))}</td><td>${typeof r.fee === "number" ? formatMoney(r.fee - sumPaid(r)) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
   )
   .join("")}
 </tbody></table></body></html>`;
@@ -361,38 +584,61 @@ ${rows
               </tr>
             </thead>
             <tbody>
-              {visible.map((row, i) => (
-                <tr key={row.id} className={i % 2 === 1 ? "bg-brand-soft/70" : "bg-card"}>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
-                  <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {formatMoney(row.fee)}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {formatMoney(row.paid)}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {typeof row.fee === "number" && typeof row.paid === "number"
-                      ? formatMoney(row.fee - row.paid)
-                      : "—"}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {formatMoney(row.reward)}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-brand">
-                    <span
-                      aria-label={`تفاصيل دفعات ${row.name} — ستتوفر في المرحلة الثانية`}
-                      className="inline-flex items-center gap-1.5 whitespace-nowrap"
+              {visible.map((row, i) => {
+                const paid = sumPaid(row);
+                const isOpen = expandedId === row.id;
+                const panelId = `payments-${row.id}`;
+                return (
+                  <Fragment key={row.id}>
+                    <tr
+                      className={
+                        isOpen
+                          ? "bg-[#D8DCE2]"
+                          : i % 2 === 1
+                            ? "bg-brand-soft/70"
+                            : "bg-card"
+                      }
                     >
-                      <FileText size={16} />
-                      التفاصيل
-                      <ChevronDown size={14} />
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
+                      <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {formatMoney(row.fee)}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {formatMoney(paid)}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {typeof row.fee === "number" ? formatMoney(row.fee - paid) : "—"}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {formatMoney(row.reward)}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-brand">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedId(isOpen ? null : row.id)}
+                          aria-expanded={isOpen}
+                          aria-controls={panelId}
+                          className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg outline-none transition-colors hover:text-navy focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                        >
+                          <FileText size={16} />
+                          التفاصيل
+                          {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </button>
+                      </td>
+                    </tr>
+                    {isOpen ? (
+                      <tr className="bg-[#D8DCE2]">
+                        <td id={panelId} colSpan={9} className="px-4 pb-4 pt-0">
+                          <PaymentsTable payments={row.payments} />
+                        </td>
+                      </tr>
+                    ) : null}
+                  </Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
@@ -405,7 +651,7 @@ ${rows
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setPage(Math.max(1, current - 1))}
+              onClick={() => goToPage(Math.max(1, current - 1))}
               disabled={current === 1}
               className="h-9 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:bg-brand-soft disabled:opacity-40"
             >
@@ -414,7 +660,7 @@ ${rows
             {Array.from({ length: totalPages }, (_, i) => i + 1).map((p) => (
               <button
                 key={p}
-                onClick={() => setPage(p)}
+                onClick={() => goToPage(p)}
                 className={`h-9 w-9 rounded-xl text-sm font-bold transition-colors ${
                   p === current
                     ? "bg-brand text-primary-foreground"
@@ -425,7 +671,7 @@ ${rows
               </button>
             ))}
             <button
-              onClick={() => setPage(Math.min(totalPages, current + 1))}
+              onClick={() => goToPage(Math.min(totalPages, current + 1))}
               disabled={current === totalPages}
               className="h-9 rounded-xl border border-border px-3 text-sm font-bold text-navy transition-colors hover:bg-brand-soft disabled:opacity-40"
             >
@@ -441,7 +687,7 @@ ${rows
                 value={perPage}
                 onChange={(e) => {
                   setPerPage(Number(e.target.value));
-                  setPage(1);
+                  goToPage(1);
                 }}
                 className="h-9 appearance-none rounded-xl border border-border bg-card pr-3 pl-7 text-sm font-bold text-navy outline-none focus:border-brand"
               >
