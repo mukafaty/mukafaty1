@@ -413,26 +413,84 @@ function BalancePage() {
   const [perPage, setPerPage] = useState(5);
   const [page, setPage] = useState(1);
   const [filters, setFilters] = useState<BalanceFilters>(INITIAL_FILTERS);
-  const [expandedId, setExpandedId] = useState<number | null>(BALANCE_ROWS[0]?.id ?? null);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const [expandedId, setExpandedId] = useState<number | null>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  /** تأخير قصير أثناء الكتابة في البحث */
+  useEffect(() => {
+    const timer = setTimeout(() => setDebouncedQuery(filters.query.trim()), 250);
+    return () => clearTimeout(timer);
+  }, [filters.query]);
 
   const goToPage = (nextPage: number) => {
     setPage(nextPage);
     setExpandedId(null);
   };
 
-  const rows = useMemo(() => BALANCE_ROWS, []);
-  const branches = useMemo(
+  /** أي تغيير في الفلاتر يعيد الترقيم للصفحة الأولى ويغلق التفاصيل */
+  const updateFilters = (patch: Partial<BalanceFilters>) => {
+    setFilters((currentFilters) => ({ ...currentFilters, ...patch }));
+    setPage(1);
+    setExpandedId(null);
+  };
+
+  const allBranches = useMemo(
     () => Array.from(new Set(BALANCE_ROWS.map((row) => row.branch))),
     [],
   );
+  const branches = useMemo(
+    () =>
+      filters.city === "all"
+        ? allBranches
+        : allBranches.filter((branch) => BRANCH_CITY[branch] === filters.city),
+    [allBranches, filters.city],
+  );
+
+  const invalidRange = Boolean(
+    filters.paidFrom && filters.paidTo && filters.paidTo < filters.paidFrom,
+  );
+  const paidFrom = invalidRange ? "" : filters.paidFrom;
+  const paidTo = invalidRange ? "" : filters.paidTo;
+  const paymentFilterActive =
+    filters.withdrawalStatus !== "all" || Boolean(paidFrom) || Boolean(paidTo);
+
+  const matchPayment = (payment: PaymentRow) => {
+    if (filters.withdrawalStatus !== "all" && payment.status !== filters.withdrawalStatus) {
+      return false;
+    }
+    if (paidFrom && payment.paidAt < paidFrom) return false;
+    if (paidTo && payment.paidAt > paidTo) return false;
+    return true;
+  };
+
+  const rows = BALANCE_ROWS.filter((row) => {
+    if (debouncedQuery && !row.name.includes(debouncedQuery)) return false;
+    if (filters.city !== "all" && BRANCH_CITY[row.branch] !== filters.city) return false;
+    if (filters.branch !== "all" && row.branch !== filters.branch) return false;
+    if (paymentFilterActive && !row.payments.some(matchPayment)) return false;
+    return true;
+  });
+
   const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
   const current = Math.min(page, totalPages);
   const start = (current - 1) * perPage;
   const visible = rows.slice(start, start + perPage);
 
+  const clearFilters = () => {
+    setFilters(INITIAL_FILTERS);
+    setDebouncedQuery("");
+    setPage(1);
+    setExpandedId(null);
+  };
+
   const exportPdf = () => {
-    const html = `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
-<title>رصيدي المالي - مكافآتي</title>
+    if (rows.length === 0 || isExporting) return;
+    setIsExporting(true);
+    try {
+      const fileName = `الرصيد-المالي-${format(new Date(), "yyyy-MM-dd")}`;
+      const html = `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
+<title>${fileName}</title>
 <style>
 body{font-family:Tajawal,system-ui,sans-serif;padding:24px;color:#06143F}
 h1{font-size:20px;margin:0 0 4px}p{margin:0 0 16px;color:#64748b;font-size:12px}
@@ -450,12 +508,23 @@ ${rows
   )
   .join("")}
 </tbody></table></body></html>`;
-    const w = window.open("", "_blank");
-    if (!w) return;
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 400);
+      const w = window.open("", "_blank");
+      if (!w) {
+        toast.error("تعذّر فتح نافذة التصدير. فعّل النوافذ المنبثقة ثم حاول مجددًا.");
+        setIsExporting(false);
+        return;
+      }
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+      setTimeout(() => {
+        w.print();
+        setIsExporting(false);
+      }, 400);
+    } catch {
+      toast.error("تعذّر تجهيز ملف التصدير. حاول مجددًا.");
+      setIsExporting(false);
+    }
   };
 
   return (
