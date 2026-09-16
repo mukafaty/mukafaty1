@@ -728,13 +728,25 @@ ${rows
                     {isOpen ? (
                       <tr className="bg-[#D8DCE2]">
                         <td id={panelId} colSpan={9} className="px-4 pb-4 pt-0">
-                          <PaymentsTable payments={row.payments} />
+                          <PaymentsTable
+                            payments={
+                              paymentFilterActive ? row.payments.filter(matchPayment) : row.payments
+                            }
+                            note={paymentFilterActive ? "تُعرض الدفعات المطابقة للفلاتر" : undefined}
+                          />
                         </td>
                       </tr>
                     ) : null}
                   </Fragment>
                 );
               })}
+              {visible.length === 0 ? (
+                <tr className="bg-card">
+                  <td colSpan={9} className="px-4 py-10 text-center text-sm font-bold text-navy">
+                    لا توجد نتائج مطابقة للفلاتر المحددة
+                  </td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>
