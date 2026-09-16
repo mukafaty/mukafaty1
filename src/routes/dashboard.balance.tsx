@@ -362,14 +362,19 @@ function PaymentsTable({ payments, note }: { payments: PaymentRow[]; note?: stri
 
   if (ordered.length === 0) {
     return (
-      <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
-        لا توجد دفعات مسجلة لهذا العميل
+      <div className="space-y-2">
+        {note ? <p className="text-[11px] font-semibold text-slate-600">{note}</p> : null}
+        <div className="rounded-2xl border-4 border-white bg-[#FAFAFA] px-4 py-6 text-center text-sm font-semibold text-slate-600">
+          لا توجد دفعات مسجلة لهذا العميل
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="overflow-hidden rounded-2xl border-4 border-white">
+    <div className="space-y-2">
+      {note ? <p className="text-[11px] font-semibold text-slate-600">{note}</p> : null}
+      <div className="overflow-hidden rounded-2xl border-4 border-white">
       <table className="w-full border-collapse text-right">
         <thead>
           <tr className="bg-[#D6D7DB] text-slate-800">
