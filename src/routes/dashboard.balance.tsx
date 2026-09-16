@@ -577,7 +577,7 @@ ${rows
                 id="balance-search"
                 type="search"
                 value={filters.query}
-                onChange={(event) => setFilters((currentFilters) => ({ ...currentFilters, query: event.target.value }))}
+                onChange={(event) => updateFilters({ query: event.target.value })}
                 placeholder="بحث عن عميل"
                 className="h-11 w-full rounded-xl border border-border bg-background pr-9 pl-3 text-right text-xs font-semibold text-navy outline-none transition-colors placeholder:text-muted-foreground focus:border-brand"
               />
@@ -589,7 +589,7 @@ ${rows
             label="حالة سحب المكافأة"
             value={filters.withdrawalStatus}
             options={WITHDRAWAL_STATUSES}
-            onChange={(withdrawalStatus) => setFilters((currentFilters) => ({ ...currentFilters, withdrawalStatus }))}
+            onChange={(withdrawalStatus) => updateFilters({ withdrawalStatus })}
           />
           <FilterSelect
             id="balance-city"
@@ -599,7 +599,11 @@ ${rows
               { value: "all", label: "جميع المدن" },
               ...CITIES.map((city) => ({ value: city, label: city })),
             ]}
-            onChange={(city) => setFilters((currentFilters) => ({ ...currentFilters, city }))}
+            onChange={(city) => {
+              const branchStillValid =
+                filters.branch === "all" || city === "all" || BRANCH_CITY[filters.branch] === city;
+              updateFilters({ city, branch: branchStillValid ? filters.branch : "all" });
+            }}
           />
           <FilterSelect
             id="balance-branch"
@@ -609,27 +613,28 @@ ${rows
               { value: "all", label: "جميع الفروع" },
               ...branches.map((branch) => ({ value: branch, label: branch })),
             ]}
-            onChange={(branch) => setFilters((currentFilters) => ({ ...currentFilters, branch }))}
+            onChange={(branch) => updateFilters({ branch })}
           />
           <DateFilter
             id="paid-from"
             label="السداد من"
             placeholder="من تاريخ"
             value={filters.paidFrom}
-            onChange={(paidFrom) => setFilters((currentFilters) => ({ ...currentFilters, paidFrom }))}
+            onChange={(paidFrom) => updateFilters({ paidFrom })}
           />
           <DateFilter
             id="paid-to"
             label="السداد إلى"
             placeholder="إلى تاريخ"
             value={filters.paidTo}
-            onChange={(paidTo) => setFilters((currentFilters) => ({ ...currentFilters, paidTo }))}
+            error={invalidRange ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده." : undefined}
+            onChange={(paidTo) => updateFilters({ paidTo })}
           />
           <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-3 2xl:col-span-1 2xl:justify-end">
             <Button
               type="button"
               variant="outline"
-              onClick={() => setFilters(INITIAL_FILTERS)}
+              onClick={clearFilters}
               className="h-11 flex-1 rounded-xl border-brand bg-background px-3 text-xs font-bold text-brand shadow-none hover:border-brand hover:bg-brand-soft hover:text-brand 2xl:flex-none"
             >
               <RotateCcw size={16} />
@@ -638,10 +643,11 @@ ${rows
             <Button
               type="button"
               onClick={exportPdf}
-              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy 2xl:flex-none"
+              disabled={rows.length === 0 || isExporting}
+              className="h-11 flex-1 rounded-xl bg-brand px-4 text-xs font-bold text-primary-foreground shadow-none hover:bg-navy disabled:opacity-50 2xl:flex-none"
             >
               <Download size={16} />
-              تصدير
+              {isExporting ? "جارٍ التجهيز" : "تصدير"}
             </Button>
           </div>
         </div>
