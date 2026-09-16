@@ -331,7 +331,10 @@ function DateFilter({
             type="button"
             variant="outline"
             aria-labelledby={`${id}-label`}
-            className="h-11 w-full justify-between rounded-xl border-border bg-background px-3 text-xs font-semibold text-navy shadow-none hover:bg-background hover:text-navy"
+            aria-invalid={Boolean(error)}
+            className={`h-11 w-full justify-between rounded-xl bg-background px-3 text-xs font-semibold text-navy shadow-none hover:bg-background hover:text-navy ${
+              error ? "border-red-500" : "border-border"
+            }`}
           >
             <span className={value ? "text-navy" : "text-muted-foreground"}>
               {selectedDate ? format(selectedDate, "dd/MM/yyyy") : placeholder}
