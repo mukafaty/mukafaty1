@@ -519,38 +519,61 @@ ${rows
               </tr>
             </thead>
             <tbody>
-              {visible.map((row, i) => (
-                <tr key={row.id} className={i % 2 === 1 ? "bg-brand-soft/70" : "bg-card"}>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
-                  <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {formatMoney(row.fee)}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {formatMoney(row.paid)}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {typeof row.fee === "number" && typeof row.paid === "number"
-                      ? formatMoney(row.fee - row.paid)
-                      : "—"}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-navy">
-                    {formatMoney(row.reward)}
-                  </td>
-                  <td className="px-4 py-3 text-sm font-bold text-brand">
-                    <span
-                      aria-label={`تفاصيل دفعات ${row.name} — ستتوفر في المرحلة الثانية`}
-                      className="inline-flex items-center gap-1.5 whitespace-nowrap"
+              {visible.map((row, i) => {
+                const paid = sumPaid(row);
+                const isOpen = expandedId === row.id;
+                const panelId = `payments-${row.id}`;
+                return (
+                  <Fragment key={row.id}>
+                    <tr
+                      className={
+                        isOpen
+                          ? "bg-[#D8DCE2]"
+                          : i % 2 === 1
+                            ? "bg-brand-soft/70"
+                            : "bg-card"
+                      }
                     >
-                      <FileText size={16} />
-                      التفاصيل
-                      <ChevronDown size={14} />
-                    </span>
-                  </td>
-                </tr>
-              ))}
+                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
+                      <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
+                      <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {formatMoney(row.fee)}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {formatMoney(paid)}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {typeof row.fee === "number" ? formatMoney(row.fee - paid) : "—"}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-navy">
+                        {formatMoney(row.reward)}
+                      </td>
+                      <td className="px-4 py-3 text-sm font-bold text-brand">
+                        <button
+                          type="button"
+                          onClick={() => setExpandedId(isOpen ? null : row.id)}
+                          aria-expanded={isOpen}
+                          aria-controls={panelId}
+                          className="inline-flex items-center gap-1.5 whitespace-nowrap rounded-lg outline-none transition-colors hover:text-navy focus-visible:ring-2 focus-visible:ring-brand focus-visible:ring-offset-2"
+                        >
+                          <FileText size={16} />
+                          التفاصيل
+                          {isOpen ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
+                        </button>
+                      </td>
+                    </tr>
+                    {isOpen ? (
+                      <tr className="bg-[#D8DCE2]">
+                        <td id={panelId} colSpan={9} className="px-4 pb-4 pt-0">
+                          <PaymentsTable payments={row.payments} />
+                        </td>
+                      </tr>
+                    ) : null}
+                  </Fragment>
+                );
+              })}
             </tbody>
           </table>
         </div>
