@@ -20,6 +20,8 @@ export const Route = createFileRoute("/dashboard/balance")({
       { name: "description", content: "تابع مكافآتك المالية الناتجة عن تسجيل عملائك." },
       { property: "og:title", content: "رصيدي المالي | لوحة تحكم مكافآتي" },
       { property: "og:description", content: "تابع مكافآتك المالية الناتجة عن تسجيل عملائك." },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: BalancePage,
