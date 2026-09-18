@@ -1,40 +1,28 @@
+import firstPrizeImage from "@/assets/top-rewards/1st-win.png.asset.json";
+import secondPrizeImage from "@/assets/top-rewards/2nd-win.png.asset.json";
+import thirdPrizeImage from "@/assets/top-rewards/3rd-win.png.asset.json";
+
 export type TopReward = {
   rank: 1 | 2 | 3;
-  title: string;
-  amount: number;
-  benefit: string;
-  threshold: number;
-  condition: string;
-  tone: "gold" | "silver" | "bronze";
+  imageUrl: string;
+  imageAlt: string;
 };
 
 export const TOP_REWARDS: TopReward[] = [
   {
     rank: 1,
-    title: "المركز الأول",
-    amount: 3000,
-    benefit: "دبلوم تدريبي مجانًا",
-    threshold: 10000,
-    condition: "عند وصول مكافآتك إلى 10,000 ريال",
-    tone: "gold",
+    imageUrl: firstPrizeImage.url,
+    imageAlt: "جائزة المركز الأول الذهبية",
   },
   {
     rank: 2,
-    title: "المركز الثاني",
-    amount: 2000,
-    benefit: "دبلوم تدريبي مجانًا",
-    threshold: 9000,
-    condition: "عند وصول مكافآتك إلى 9,000 ريال",
-    tone: "silver",
+    imageUrl: secondPrizeImage.url,
+    imageAlt: "جائزة المركز الثاني الفضية",
   },
   {
     rank: 3,
-    title: "المركز الثالث",
-    amount: 1000,
-    benefit: "دبلوم تدريبي مجانًا",
-    threshold: 8000,
-    condition: "عند وصول مكافآتك إلى 8,000 ريال",
-    tone: "bronze",
+    imageUrl: thirdPrizeImage.url,
+    imageAlt: "جائزة المركز الثالث البرونزية",
   },
 ];
 
