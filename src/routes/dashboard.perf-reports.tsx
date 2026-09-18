@@ -480,10 +480,21 @@ function PerformanceReportsPage() {
         <div className="mt-3 grid items-center gap-3 lg:grid-cols-[1fr_1fr_1.25fr_auto]">
           <DateField label="من تاريخ" value={fromValue} onChange={(value) => updateFilter(() => setFromDate(value))} disabled={!customPeriod} />
           <DateField label="إلى تاريخ" value={toValue} onChange={(value) => updateFilter(() => setToDate(value))} disabled={!customPeriod} />
-          <p className={`text-xs font-bold ${invalidRange ? "text-destructive" : "text-brand"}`}>
-            {invalidRange ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده." : "تتفعّل التواريخ عند اختيار فترة مخصصة"}
+          <p className={`text-xs font-bold ${invalidRange || (exportBlockedReason && status === "error") ? "text-destructive" : "text-brand"}`}>
+            {invalidRange
+              ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده."
+              : exportBlockedReason || "تتفعّل التواريخ عند اختيار فترة مخصصة"}
           </p>
-          <Button type="button" className="h-12 rounded-xl bg-brand px-5 font-bold text-primary-foreground shadow-none hover:bg-navy"><Download size={17} />تحميل التقرير PDF</Button>
+          <Button
+            type="button"
+            onClick={handleExport}
+            disabled={Boolean(exportBlockedReason) || isExporting}
+            title={exportBlockedReason || undefined}
+            className="h-12 rounded-xl bg-brand px-5 font-bold text-primary-foreground shadow-none hover:bg-navy disabled:opacity-60"
+          >
+            {isExporting ? <LoaderCircle size={17} className="animate-spin" /> : <Download size={17} />}
+            {isExporting ? "جارٍ تجهيز التقرير…" : "تحميل التقرير PDF"}
+          </Button>
         </div>
       </div>
 
