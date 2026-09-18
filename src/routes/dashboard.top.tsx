@@ -8,7 +8,6 @@ import {
   Gift,
   Info,
   Medal,
-  Plus,
   RotateCcw,
   Trophy,
   TrendingUp,
@@ -91,44 +90,13 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-const PRIZE_TONES: Record<TopReward["tone"], { card: string; icon: string; foot: string }> = {
-  gold: {
-    card: "border-prize-gold-border bg-prize-gold-soft",
-    icon: "bg-prize-gold-border/20 text-prize-gold",
-    foot: "bg-prize-gold-border/15",
-  },
-  silver: {
-    card: "border-prize-silver-border bg-prize-silver-soft",
-    icon: "bg-prize-silver-border/25 text-prize-silver",
-    foot: "bg-prize-silver-border/20",
-  },
-  bronze: {
-    card: "border-prize-bronze-border bg-prize-bronze-soft",
-    icon: "bg-prize-bronze-border/20 text-prize-bronze",
-    foot: "bg-prize-bronze-border/15",
-  },
-};
-
 function PrizeCard({ reward }: { reward: TopReward }) {
-  const tone = PRIZE_TONES[reward.tone];
   return (
-    <article className={`flex h-full flex-col rounded-2xl border p-4 text-center ${tone.card}`}>
-      <h3 className="text-base font-black text-prize-navy">{reward.title}</h3>
-      <div className="mt-3 flex flex-1 flex-col items-center justify-center">
-        <span className={`grid h-16 w-16 place-items-center rounded-full ${tone.icon}`}>
-          <Trophy size={38} strokeWidth={1.8} />
-        </span>
-        <p className="mt-3 text-prize-navy">
-          <span className="text-3xl font-black">{nf(reward.amount)}</span>{" "}
-          <span className="text-base font-black">ريال</span>
-        </p>
-        <Plus className="my-1 text-brand" size={30} strokeWidth={3} aria-hidden="true" />
-        <p className="text-base font-black text-prize-navy">{reward.benefit}</p>
-      </div>
-      <p className={`mt-3 rounded-xl px-3 py-2 text-xs font-bold text-prize-navy ${tone.foot}`}>
-        {reward.condition}
-      </p>
-    </article>
+    <img
+      src={reward.imageUrl}
+      alt={reward.imageAlt}
+      className="block h-auto w-full"
+    />
   );
 }
 
@@ -248,7 +216,7 @@ function TopPage() {
           <h2 className="text-xl font-black text-navy sm:text-2xl">الجوائز</h2>
         </div>
 
-        <div className="grid gap-3 md:grid-cols-3">
+        <div className="grid items-start gap-3 md:grid-cols-3" dir="rtl">
           {TOP_REWARDS.map((reward) => <PrizeCard key={reward.rank} reward={reward} />)}
         </div>
 
