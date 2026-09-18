@@ -347,6 +347,8 @@ function PerformanceReportsPage() {
   const [perPage, setPerPage] = useState(5);
   const [status, setStatus] = useState<ReportStatus>("loading");
   const [reloadKey, setReloadKey] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   const customPeriod = period === "custom";
   const invalidRange = customPeriod && fromDate !== "" && toDate !== "" && toDate < fromDate;
