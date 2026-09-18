@@ -14,7 +14,10 @@ import {
   Wallet,
 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PerformanceReportDocument } from "@/components/dashboard/reports/PerformanceReportDocument";
+import { exportPerformanceReportPdf } from "@/lib/performanceReportPdf";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 import {
