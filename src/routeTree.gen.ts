@@ -19,6 +19,7 @@ import { Route as DashboardAdsRouteImport } from './routes/dashboard.ads'
 import { Route as DashboardBalanceRouteImport } from './routes/dashboard.balance'
 import { Route as DashboardClientsRouteImport } from './routes/dashboard.clients'
 import { Route as DashboardContactRouteImport } from './routes/dashboard.contact'
+import { Route as DashboardPerfReportsRouteImport } from './routes/dashboard.perf-reports'
 import { Route as DashboardProShareRouteImport } from './routes/dashboard.pro-share'
 import { Route as DashboardQuickShareRouteImport } from './routes/dashboard.quick-share'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
@@ -74,6 +75,11 @@ const DashboardContactRoute = DashboardContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardPerfReportsRoute = DashboardPerfReportsRouteImport.update({
+  id: '/perf-reports',
+  path: '/perf-reports',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardProShareRoute = DashboardProShareRouteImport.update({
   id: '/pro-share',
   path: '/pro-share',
@@ -105,6 +111,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/balance': typeof DashboardBalanceRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/perf-reports': typeof DashboardPerfReportsRoute
   '/dashboard/pro-share': typeof DashboardProShareRoute
   '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -120,6 +127,7 @@ export interface FileRoutesByTo {
   '/dashboard/balance': typeof DashboardBalanceRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/perf-reports': typeof DashboardPerfReportsRoute
   '/dashboard/pro-share': typeof DashboardProShareRoute
   '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -137,6 +145,7 @@ export interface FileRoutesById {
   '/dashboard/balance': typeof DashboardBalanceRoute
   '/dashboard/clients': typeof DashboardClientsRoute
   '/dashboard/contact': typeof DashboardContactRoute
+  '/dashboard/perf-reports': typeof DashboardPerfReportsRoute
   '/dashboard/pro-share': typeof DashboardProShareRoute
   '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
@@ -155,6 +164,7 @@ export interface FileRouteTypes {
     | '/dashboard/balance'
     | '/dashboard/clients'
     | '/dashboard/contact'
+    | '/dashboard/perf-reports'
     | '/dashboard/pro-share'
     | '/dashboard/quick-share'
     | '/dashboard/settings'
@@ -170,6 +180,7 @@ export interface FileRouteTypes {
     | '/dashboard/balance'
     | '/dashboard/clients'
     | '/dashboard/contact'
+    | '/dashboard/perf-reports'
     | '/dashboard/pro-share'
     | '/dashboard/quick-share'
     | '/dashboard/settings'
@@ -186,6 +197,7 @@ export interface FileRouteTypes {
     | '/dashboard/balance'
     | '/dashboard/clients'
     | '/dashboard/contact'
+    | '/dashboard/perf-reports'
     | '/dashboard/pro-share'
     | '/dashboard/quick-share'
     | '/dashboard/settings'
@@ -272,6 +284,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardContactRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/perf-reports': {
+      id: '/dashboard/perf-reports'
+      path: '/perf-reports'
+      fullPath: '/dashboard/perf-reports'
+      preLoaderRoute: typeof DashboardPerfReportsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/pro-share': {
       id: '/dashboard/pro-share'
       path: '/pro-share'
@@ -309,6 +328,7 @@ interface DashboardRouteChildren {
   DashboardBalanceRoute: typeof DashboardBalanceRoute
   DashboardClientsRoute: typeof DashboardClientsRoute
   DashboardContactRoute: typeof DashboardContactRoute
+  DashboardPerfReportsRoute: typeof DashboardPerfReportsRoute
   DashboardProShareRoute: typeof DashboardProShareRoute
   DashboardQuickShareRoute: typeof DashboardQuickShareRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
@@ -322,6 +342,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardBalanceRoute: DashboardBalanceRoute,
   DashboardClientsRoute: DashboardClientsRoute,
   DashboardContactRoute: DashboardContactRoute,
+  DashboardPerfReportsRoute: DashboardPerfReportsRoute,
   DashboardProShareRoute: DashboardProShareRoute,
   DashboardQuickShareRoute: DashboardQuickShareRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
