@@ -14,7 +14,10 @@ import {
   Wallet,
 } from "lucide-react";
 import { Bar, BarChart, CartesianGrid, Cell, LabelList, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { PerformanceReportDocument } from "@/components/dashboard/reports/PerformanceReportDocument";
+import { exportPerformanceReportPdf } from "@/lib/performanceReportPdf";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 import {
@@ -344,6 +347,8 @@ function PerformanceReportsPage() {
   const [perPage, setPerPage] = useState(5);
   const [status, setStatus] = useState<ReportStatus>("loading");
   const [reloadKey, setReloadKey] = useState(0);
+  const [isExporting, setIsExporting] = useState(false);
+  const pdfRef = useRef<HTMLDivElement>(null);
 
   const customPeriod = period === "custom";
   const invalidRange = customPeriod && fromDate !== "" && toDate !== "" && toDate < fromDate;
@@ -405,6 +410,50 @@ function PerformanceReportsPage() {
     { title: "إجمالي المكافآت", value: nf(totals.rewards), unit: "ريال سعودي", icon: Wallet, tone: "bg-emerald-100 text-emerald-700", info: INFO_TEXT.rewards },
   ];
 
+  /* ------- تصدير التقرير PDF بالفلاتر والنتائج المعروضة نفسها ------- */
+  const appliedRange = periodRange(appliedPeriod, new Date(), { from: fromDate, to: toDate });
+  const periodLabel = REPORT_PERIODS.find((item) => item.value === period)?.label ?? "جميع الأوقات";
+  const rangeLabel =
+    appliedRange.start === null || appliedRange.end === null
+      ? "غير محددة (جميع الأوقات)"
+      : `من ${toInputDate(appliedRange.start)} إلى ${toInputDate(appliedRange.end)}`;
+  const platformLabel = platform === "all" ? "جميع المنصات" : (PLATFORM_META.find((item) => item.key === platform)?.name ?? "جميع المنصات");
+  const programLabel = program === "all" ? "جميع البرامج" : (PROGRAM_META.find((item) => item.id === program)?.name ?? "جميع البرامج");
+  const metricLabel = METRICS.find((item) => item.key === metric)?.label ?? "";
+
+  const exportBlockedReason = customPeriod && !customReady
+    ? invalidRange
+      ? "لا يمكن تحميل التقرير: تاريخ النهاية قبل تاريخ البداية."
+      : "لا يمكن تحميل التقرير: أكمل تاريخي الفترة المخصصة."
+    : status === "error"
+      ? "لا يمكن تحميل التقرير: تعذر تحميل البيانات، أعد المحاولة أولًا."
+      : status === "loading"
+        ? "يرجى الانتظار حتى اكتمال تحميل البيانات."
+        : "";
+
+  const handleExport = async () => {
+    if (exportBlockedReason || isExporting) return;
+    const node = pdfRef.current;
+    if (!node) return;
+    setIsExporting(true);
+    const toastId = toast.loading("جارٍ تجهيز التقرير…");
+    try {
+      const stamp = toInputDate(Date.now());
+      await exportPerformanceReportPdf(node, `Mukafaty-Performance-Report-${stamp}.pdf`);
+      toast.success("تم تحميل التقرير بنجاح", { id: toastId });
+    } catch {
+      toast.error("تعذر تجهيز التقرير، يرجى إعادة المحاولة.", { id: toastId });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const generatedAt = new Date().toLocaleString("ar-SA-u-ca-gregory-nu-latn", {
+    timeZone: "Asia/Riyadh",
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500" dir="rtl">
       <header className="flex flex-wrap items-start justify-between gap-3">
@@ -431,10 +480,21 @@ function PerformanceReportsPage() {
         <div className="mt-3 grid items-center gap-3 lg:grid-cols-[1fr_1fr_1.25fr_auto]">
           <DateField label="من تاريخ" value={fromValue} onChange={(value) => updateFilter(() => setFromDate(value))} disabled={!customPeriod} />
           <DateField label="إلى تاريخ" value={toValue} onChange={(value) => updateFilter(() => setToDate(value))} disabled={!customPeriod} />
-          <p className={`text-xs font-bold ${invalidRange ? "text-destructive" : "text-brand"}`}>
-            {invalidRange ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده." : "تتفعّل التواريخ عند اختيار فترة مخصصة"}
+          <p className={`text-xs font-bold ${invalidRange || (exportBlockedReason && status === "error") ? "text-destructive" : "text-brand"}`}>
+            {invalidRange
+              ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده."
+              : exportBlockedReason || "تتفعّل التواريخ عند اختيار فترة مخصصة"}
           </p>
-          <Button type="button" className="h-12 rounded-xl bg-brand px-5 font-bold text-primary-foreground shadow-none hover:bg-navy"><Download size={17} />تحميل التقرير PDF</Button>
+          <Button
+            type="button"
+            onClick={handleExport}
+            disabled={Boolean(exportBlockedReason) || isExporting}
+            title={exportBlockedReason || undefined}
+            className="h-12 rounded-xl bg-brand px-5 font-bold text-primary-foreground shadow-none hover:bg-navy disabled:opacity-60"
+          >
+            {isExporting ? <LoaderCircle size={17} className="animate-spin" /> : <Download size={17} />}
+            {isExporting ? "جارٍ تجهيز التقرير…" : "تحميل التقرير PDF"}
+          </Button>
         </div>
       </div>
 
@@ -460,6 +520,29 @@ function PerformanceReportsPage() {
           </>}
         </section>
       </>}
+
+      {/* مستند التقرير المخفي المستخدم في تصدير PDF فقط */}
+      <div aria-hidden="true" className="pointer-events-none fixed -top-[10000px] right-0 -z-50 overflow-hidden">
+        <div ref={pdfRef}>
+          <PerformanceReportDocument
+            marketerName="أحمد السبيعي"
+            membership="MK-MAR-0001"
+            generatedAt={generatedAt}
+            periodLabel={periodLabel}
+            rangeLabel={rangeLabel}
+            platformLabel={platformLabel}
+            programLabel={programLabel}
+            metric={metric}
+            metricLabel={metricLabel}
+            totals={totals}
+            platforms={report.platforms}
+            programs={programRows}
+            hasData={report.hasData}
+            emptyMessage={EMPTY_MESSAGE}
+            note={INFO_TEXT.platforms}
+          />
+        </div>
+      </div>
     </section>
   );
 }
