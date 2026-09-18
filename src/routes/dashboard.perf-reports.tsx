@@ -520,6 +520,29 @@ function PerformanceReportsPage() {
           </>}
         </section>
       </>}
+
+      {/* مستند التقرير المخفي المستخدم في تصدير PDF فقط */}
+      <div aria-hidden="true" className="pointer-events-none fixed -top-[10000px] right-0 opacity-0">
+        <div ref={pdfRef}>
+          <PerformanceReportDocument
+            marketerName="أحمد السبيعي"
+            membership="MK-MAR-0001"
+            generatedAt={generatedAt}
+            periodLabel={periodLabel}
+            rangeLabel={rangeLabel}
+            platformLabel={platformLabel}
+            programLabel={programLabel}
+            metric={metric}
+            metricLabel={metricLabel}
+            totals={totals}
+            platforms={report.platforms}
+            programs={programRows}
+            hasData={report.hasData}
+            emptyMessage={EMPTY_MESSAGE}
+            note={INFO_TEXT.platforms}
+          />
+        </div>
+      </div>
     </section>
   );
 }
