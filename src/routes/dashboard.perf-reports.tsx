@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState, type ComponentType } from "react";
+import { useMemo, useRef, useState, type ComponentType } from "react";
 import {
   AlertCircle,
   BarChart3,
@@ -79,6 +79,15 @@ const PLATFORM_BAR_FILL: Record<PlatformKey, string> = {
 
 function InfoHelp({ label, text }: { label: string; text: string }) {
   const [open, setOpen] = useState(false);
+  const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const keepOpen = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setOpen(true);
+  };
+  const closeSoon = () => {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    closeTimer.current = setTimeout(() => setOpen(false), 120);
+  };
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
@@ -87,8 +96,8 @@ function InfoHelp({ label, text }: { label: string; text: string }) {
           variant="ghost"
           size="icon"
           aria-label={`معلومات عن ${label}`}
-          onMouseEnter={() => setOpen(true)}
-          onMouseLeave={() => setOpen(false)}
+          onMouseEnter={keepOpen}
+          onMouseLeave={closeSoon}
           className="size-7 shrink-0 rounded-full p-0 text-brand shadow-none hover:bg-brand-soft hover:text-brand"
         >
           <Info size={16} />
@@ -98,8 +107,8 @@ function InfoHelp({ label, text }: { label: string; text: string }) {
         side="bottom"
         align="start"
         collisionPadding={12}
-        onMouseEnter={() => setOpen(true)}
-        onMouseLeave={() => setOpen(false)}
+        onMouseEnter={keepOpen}
+        onMouseLeave={closeSoon}
         className="w-[min(19rem,calc(100vw-1.5rem))] rounded-xl p-3 text-right text-xs font-medium leading-6 text-navy"
         dir="rtl"
       >
