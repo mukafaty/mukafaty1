@@ -97,7 +97,7 @@ function TableChunk({
   title?: string;
   firstColumn: string;
   rows: { key: string; name: string; row: PerformanceRow }[];
-  total?: PerformanceRow;
+  total?: PerformanceRow | undefined;
   continued?: boolean;
 }) {
   return (
