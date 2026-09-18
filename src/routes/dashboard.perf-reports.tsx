@@ -522,7 +522,7 @@ function PerformanceReportsPage() {
       </>}
 
       {/* مستند التقرير المخفي المستخدم في تصدير PDF فقط */}
-      <div aria-hidden="true" className="pointer-events-none fixed -top-[10000px] right-0 opacity-0">
+      <div aria-hidden="true" className="pointer-events-none fixed -top-[10000px] right-0 -z-50 overflow-hidden">
         <div ref={pdfRef}>
           <PerformanceReportDocument
             marketerName="أحمد السبيعي"
