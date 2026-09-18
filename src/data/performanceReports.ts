@@ -64,7 +64,7 @@ export const PLATFORM_PERFORMANCE: PlatformPerformance[] = [
 
 export const PROGRAM_PERFORMANCE: ProgramPerformance[] = [
   { id: "hr", name: "دبلوم إدارة الموارد البشرية", clicks: 900, interests: 90, students: 20, rewards: 10000 },
-  { id: "business", name: "دبلوم إدارة الأعمال", clicks: 420, interests: 35, students: 6, rewards: 4000 },
+  { id: "business", name: "دبلوم إدارة الأعمال", clicks: 470, interests: 40, students: 6, rewards: 4000 },
   { id: "cyber", name: "دبلوم الأمن السيبراني", clicks: 260, interests: 25, students: 5, rewards: 2000 },
   { id: "marketing", name: "دبلوم التسويق الرقمي", clicks: 180, interests: 20, students: 3, rewards: 1500 },
   { id: "data", name: "دبلوم تحليل البيانات", clicks: 100, interests: 15, students: 2, rewards: 1000 },
