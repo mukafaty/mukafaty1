@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import {
   Calendar,
   ChevronDown,
@@ -21,6 +22,16 @@ import {
 } from "recharts";
 import { CountUp } from "@/components/dashboard/CountUp";
 import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
+import {
+  AVAILABLE_BALANCE,
+  CLICK_RECORDS,
+  PERIOD_OPTIONS,
+  REFERRAL_RECORDS,
+  formatArabicDate,
+  formatChartLabel,
+  periodStart,
+  type PeriodId,
+} from "@/data/dashboardActivity";
 
 export const Route = createFileRoute("/dashboard/")({
   head: () => ({
@@ -40,42 +51,13 @@ export const Route = createFileRoute("/dashboard/")({
   component: DashboardHome,
 });
 
-const chartData = [
-  { d: "22 أبريل", v: 38 },
-  { d: "26 أبريل", v: 57 },
-  { d: "30 أبريل", v: 30 },
-  { d: "4 مايو", v: 61 },
-  { d: "8 مايو", v: 18 },
-  { d: "12 مايو", v: 58 },
-  { d: "16 مايو", v: 40 },
-  { d: "20 مايو", v: 80 },
-  { d: "21 مايو", v: 26 },
-  { d: "24 مايو", v: 68 },
-];
+const STATUS_TONES: Record<string, string> = {
+  "تم الدفع": "bg-emerald-100 text-emerald-700",
+  مهتم: "bg-amber-100 text-amber-700",
+  جديد: "bg-sky-100 text-sky-700",
+};
 
-const referrals = [
-  {
-    name: "محمد الحربي",
-    program: "دبلوم إدارة الأعمال",
-    date: "21 مايو 2026",
-    status: "تم الدفع",
-    tone: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    name: "سارة الشهري",
-    program: "دبلوم الموارد البشرية",
-    date: "20 مايو 2026",
-    status: "مهتم",
-    tone: "bg-amber-100 text-amber-700",
-  },
-  {
-    name: "عبد الله المالكي",
-    program: "دبلوم الأمن السيبراني",
-    date: "19 مايو 2026",
-    status: "جديد",
-    tone: "bg-sky-100 text-sky-700",
-  },
-];
+const EMPTY_MESSAGE = "لا توجد بيانات خلال الفترة المحددة";
 
 type StatProps = {
   title: string;
@@ -100,6 +82,7 @@ function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }
       <div className="mt-3 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-baseline gap-2">
           <CountUp
+            key={`${title}-${value}`}
             value={value}
             decimals={decimals}
             className="text-3xl font-black tracking-tight text-navy sm:text-[34px]"
@@ -113,6 +96,7 @@ function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }
     </div>
   );
 }
+
 
 function DashboardHome() {
   return (
