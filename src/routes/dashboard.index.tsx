@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useMemo, useState } from "react";
 import {
   Calendar,
   ChevronDown,
@@ -21,6 +22,16 @@ import {
 } from "recharts";
 import { CountUp } from "@/components/dashboard/CountUp";
 import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
+import {
+  AVAILABLE_BALANCE,
+  CLICK_RECORDS,
+  PERIOD_OPTIONS,
+  REFERRAL_RECORDS,
+  formatArabicDate,
+  formatChartLabel,
+  periodStart,
+  type PeriodId,
+} from "@/data/dashboardActivity";
 
 export const Route = createFileRoute("/dashboard/")({
   head: () => ({
@@ -40,42 +51,13 @@ export const Route = createFileRoute("/dashboard/")({
   component: DashboardHome,
 });
 
-const chartData = [
-  { d: "22 أبريل", v: 38 },
-  { d: "26 أبريل", v: 57 },
-  { d: "30 أبريل", v: 30 },
-  { d: "4 مايو", v: 61 },
-  { d: "8 مايو", v: 18 },
-  { d: "12 مايو", v: 58 },
-  { d: "16 مايو", v: 40 },
-  { d: "20 مايو", v: 80 },
-  { d: "21 مايو", v: 26 },
-  { d: "24 مايو", v: 68 },
-];
+const STATUS_TONES: Record<string, string> = {
+  "تم الدفع": "bg-emerald-100 text-emerald-700",
+  مهتم: "bg-amber-100 text-amber-700",
+  جديد: "bg-sky-100 text-sky-700",
+};
 
-const referrals = [
-  {
-    name: "محمد الحربي",
-    program: "دبلوم إدارة الأعمال",
-    date: "21 مايو 2026",
-    status: "تم الدفع",
-    tone: "bg-emerald-100 text-emerald-700",
-  },
-  {
-    name: "سارة الشهري",
-    program: "دبلوم الموارد البشرية",
-    date: "20 مايو 2026",
-    status: "مهتم",
-    tone: "bg-amber-100 text-amber-700",
-  },
-  {
-    name: "عبد الله المالكي",
-    program: "دبلوم الأمن السيبراني",
-    date: "19 مايو 2026",
-    status: "جديد",
-    tone: "bg-sky-100 text-sky-700",
-  },
-];
+const EMPTY_MESSAGE = "لا توجد بيانات خلال الفترة المحددة";
 
 type StatProps = {
   title: string;
@@ -100,6 +82,7 @@ function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }
       <div className="mt-3 flex items-center justify-between gap-3">
         <div className="flex min-w-0 items-baseline gap-2">
           <CountUp
+            key={`${title}-${value}`}
             value={value}
             decimals={decimals}
             className="text-3xl font-black tracking-tight text-navy sm:text-[34px]"
@@ -114,7 +97,62 @@ function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }
   );
 }
 
+
 function DashboardHome() {
+  const [period, setPeriod] = useState<PeriodId>("all");
+
+  const stats = useMemo(() => {
+    const now = new Date();
+    const nowTs = now.getTime();
+    const start = periodStart(period, now);
+    const from = start ?? -Infinity;
+
+    const referrals = REFERRAL_RECORDS.filter((r) => {
+      const t = +new Date(r.date);
+      return t <= nowTs && t >= from;
+    });
+    const clicks = CLICK_RECORDS.filter((c) => {
+      const t = +new Date(c.date);
+      return t <= nowTs && t >= from;
+    }).reduce((sum, c) => sum + c.count, 0);
+
+    const interested = referrals.filter((r) => r.status === "مهتم").length;
+    const rewards = referrals.reduce((sum, r) => sum + r.reward, 0);
+
+    // الرسم البياني: توزيع الإحالات على فترات متساوية
+    const spanStart =
+      start ??
+      (referrals.length
+        ? Math.min(...referrals.map((r) => +new Date(r.date)))
+        : nowTs - 24 * 60 * 60 * 1000);
+    const span = Math.max(nowTs - spanStart, 60 * 60 * 1000);
+    const buckets = Math.min(10, Math.max(1, Math.round(span / (24 * 60 * 60 * 1000)))) || 1;
+    const size = span / buckets;
+    const granularity: "day" | "month" = span > 120 * 24 * 60 * 60 * 1000 ? "month" : "day";
+
+    const chart = Array.from({ length: buckets }, (_, i) => {
+      const bucketStart = spanStart + i * size;
+      const bucketEnd = bucketStart + size;
+      const v = referrals.filter((r) => {
+        const t = +new Date(r.date);
+        return t >= bucketStart && (i === buckets - 1 ? t <= nowTs : t < bucketEnd);
+      }).length;
+      return { d: formatChartLabel(bucketStart, granularity), v };
+    });
+
+    return {
+      referrals,
+      latest: referrals.slice(0, 3),
+      clients: referrals.length,
+      interested,
+      clicks,
+      rewards,
+      chart,
+    };
+  }, [period]);
+
+  const hasReferrals = stats.referrals.length > 0;
+
   return (
     <div className="space-y-5">
       <section className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
@@ -125,17 +163,34 @@ function DashboardHome() {
           </p>
         </div>
 
-        <button className="flex items-center gap-3 rounded-2xl border border-border bg-card px-4 py-3 text-sm font-bold text-navy transition-colors hover:border-brand sm:order-2">
-          <Calendar size={18} className="text-brand" />
-          <span>آخر 30 يومًا</span>
-          <ChevronDown size={16} className="text-muted-foreground" />
-        </button>
+        <div className="relative sm:order-2">
+          <Calendar
+            size={18}
+            className="pointer-events-none absolute right-4 top-1/2 -translate-y-1/2 text-brand"
+          />
+          <select
+            aria-label="فلتر الفترة"
+            value={period}
+            onChange={(e) => setPeriod(e.target.value as PeriodId)}
+            className="h-[50px] w-full appearance-none rounded-2xl border border-border bg-card pr-11 pl-10 text-right text-sm font-bold text-navy outline-none transition-colors hover:border-brand focus:border-brand"
+          >
+            {PERIOD_OPTIONS.map((o) => (
+              <option key={o.id} value={o.id}>
+                {o.label}
+              </option>
+            ))}
+          </select>
+          <ChevronDown
+            size={16}
+            className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground"
+          />
+        </div>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
           title="إجمالي العملاء"
-          value={162}
+          value={stats.clients}
           unit="عميل"
           icon={User}
           iconClass="bg-sky-100 text-sky-600"
@@ -143,7 +198,7 @@ function DashboardHome() {
         />
         <StatCard
           title="المهتمون"
-          value={120}
+          value={stats.interested}
           unit="مهتم"
           icon={Users}
           iconClass="bg-violet-100 text-violet-600"
@@ -151,7 +206,7 @@ function DashboardHome() {
         />
         <StatCard
           title="عدد النقرات"
-          value={248}
+          value={stats.clicks}
           unit="نقرة"
           icon={MousePointer2}
           iconClass="bg-brand-soft text-brand"
@@ -159,7 +214,7 @@ function DashboardHome() {
         />
         <StatCard
           title="الرصيد المتاح"
-          value={2500}
+          value={AVAILABLE_BALANCE}
           unit="ريال سعودي"
           icon={Wallet}
           iconClass="bg-orange-100 text-orange-500"
@@ -167,7 +222,7 @@ function DashboardHome() {
         />
         <StatCard
           title="إجمالي المكافآت"
-          value={18950.5}
+          value={stats.rewards}
           decimals={2}
           unit="ريال سعودي"
           icon={UserRound}
@@ -181,41 +236,47 @@ function DashboardHome() {
         style={{ animationDelay: "380ms" }}
       >
         <h2 className="text-lg font-black text-navy">آخر الإحالات</h2>
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[560px] text-right">
-            <thead>
-              <tr className="text-xs font-bold text-muted-foreground">
-                <th className="pb-2 pr-2 font-bold">الاسم</th>
-                <th className="pb-2 font-bold">البرنامج التدريبي</th>
-                <th className="pb-2 font-bold">تاريخ الإحالة</th>
-                <th className="pb-2 font-bold">الحالة</th>
-              </tr>
-            </thead>
-            <tbody>
-              {referrals.map((r) => (
-                <tr key={r.name} className="border-t border-border/70 text-sm text-navy">
-                  <td className="py-2 pr-2">
-                    <span className="flex items-center gap-3">
-                      <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
-                        <User size={16} />
-                      </span>
-                      <span className="font-bold">{r.name}</span>
-                    </span>
-                  </td>
-                  <td className="py-2 text-muted-foreground">{r.program}</td>
-                  <td className="py-2 text-muted-foreground">{r.date}</td>
-                  <td className="py-2">
-                    <span
-                      className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${r.tone}`}
-                    >
-                      {r.status}
-                    </span>
-                  </td>
+        {hasReferrals ? (
+          <div className="mt-4 overflow-x-auto">
+            <table className="w-full min-w-[560px] text-right">
+              <thead>
+                <tr className="text-xs font-bold text-muted-foreground">
+                  <th className="pb-2 pr-2 font-bold">الاسم</th>
+                  <th className="pb-2 font-bold">البرنامج التدريبي</th>
+                  <th className="pb-2 font-bold">تاريخ الإحالة</th>
+                  <th className="pb-2 font-bold">الحالة</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+              </thead>
+              <tbody>
+                {stats.latest.map((r) => (
+                  <tr key={r.id} className="border-t border-border/70 text-sm text-navy">
+                    <td className="py-2 pr-2">
+                      <span className="flex items-center gap-3">
+                        <span className="grid h-8 w-8 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
+                          <User size={16} />
+                        </span>
+                        <span className="font-bold">{r.name}</span>
+                      </span>
+                    </td>
+                    <td className="py-2 text-muted-foreground">{r.program}</td>
+                    <td className="py-2 text-muted-foreground">{formatArabicDate(r.date)}</td>
+                    <td className="py-2">
+                      <span
+                        className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${STATUS_TONES[r.status]}`}
+                      >
+                        {r.status}
+                      </span>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <p className="mt-6 py-8 text-center text-sm font-bold text-muted-foreground">
+            {EMPTY_MESSAGE}
+          </p>
+        )}
       </section>
 
       <section className="grid gap-4 lg:grid-cols-2">
@@ -224,50 +285,57 @@ function DashboardHome() {
           style={{ animationDelay: "460ms" }}
         >
           <h2 className="text-lg font-black text-navy">أداء الإحالات</h2>
-          <div className="mt-4 h-[240px] w-full" dir="ltr">
-            <ResponsiveContainer width="100%" height="100%">
-              <AreaChart data={chartData} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
-                <defs>
-                  <linearGradient id="refFill" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="var(--brand)" stopOpacity={0.28} />
-                    <stop offset="100%" stopColor="var(--brand)" stopOpacity={0} />
-                  </linearGradient>
-                </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
-                <XAxis
-                  dataKey="d"
-                  tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
-                  tickLine={false}
-                  axisLine={false}
-                  interval={0}
-                />
-                <YAxis
-                  domain={[0, 100]}
-                  tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
-                  tickLine={false}
-                  axisLine={false}
-                />
-                <Tooltip
-                  contentStyle={{
-                    borderRadius: 14,
-                    border: "1px solid var(--border)",
-                    fontSize: 12,
-                  }}
-                />
-                <Area
-                  type="monotone"
-                  dataKey="v"
-                  stroke="var(--brand)"
-                  strokeWidth={3}
-                  fill="url(#refFill)"
-                  dot={{ r: 4, fill: "var(--brand)", strokeWidth: 0 }}
-                  activeDot={{ r: 6 }}
-                  animationDuration={1400}
-                />
-              </AreaChart>
-            </ResponsiveContainer>
-          </div>
+          {hasReferrals ? (
+            <div className="mt-4 h-[240px] w-full" dir="ltr">
+              <ResponsiveContainer width="100%" height="100%">
+                <AreaChart data={stats.chart} margin={{ top: 8, right: 8, left: -18, bottom: 0 }}>
+                  <defs>
+                    <linearGradient id="refFill" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="var(--brand)" stopOpacity={0.28} />
+                      <stop offset="100%" stopColor="var(--brand)" stopOpacity={0} />
+                    </linearGradient>
+                  </defs>
+                  <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" vertical={false} />
+                  <XAxis
+                    dataKey="d"
+                    tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                    interval={0}
+                  />
+                  <YAxis
+                    allowDecimals={false}
+                    tick={{ fontSize: 10, fill: "var(--muted-foreground)" }}
+                    tickLine={false}
+                    axisLine={false}
+                  />
+                  <Tooltip
+                    contentStyle={{
+                      borderRadius: 14,
+                      border: "1px solid var(--border)",
+                      fontSize: 12,
+                    }}
+                  />
+                  <Area
+                    type="monotone"
+                    dataKey="v"
+                    stroke="var(--brand)"
+                    strokeWidth={3}
+                    fill="url(#refFill)"
+                    dot={{ r: 4, fill: "var(--brand)", strokeWidth: 0 }}
+                    activeDot={{ r: 6 }}
+                    animationDuration={1400}
+                  />
+                </AreaChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <p className="mt-4 grid h-[240px] place-items-center text-center text-sm font-bold text-muted-foreground">
+              {EMPTY_MESSAGE}
+            </p>
+          )}
         </div>
+
 
         <div
           className="animate-in fade-in slide-in-from-bottom-3 relative order-1 overflow-hidden rounded-3xl border border-brand/20 duration-700 fill-mode-backwards lg:order-2"
