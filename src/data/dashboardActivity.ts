@@ -71,7 +71,7 @@ function buildData() {
     const clickCount = Math.floor(rand() * 9) + (i < 30 ? 3 : 1);
     clicks.push({ date: new Date(base - Math.floor(rand() * day * 0.4)).toISOString(), count: clickCount });
 
-    const referralCount = rand() < 0.45 ? (rand() < 0.3 ? 2 : 1) : 0;
+    const referralCount = i <= 1 ? 2 : rand() < 0.45 ? (rand() < 0.3 ? 2 : 1) : 0;
     for (let k = 0; k < referralCount; k++) {
       const status = STATUSES[Math.floor(rand() * STATUSES.length)] as ReferralStatus;
       referrals.push({
