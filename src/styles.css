@@ -82,6 +82,7 @@
   --color-prize-bronze: var(--prize-bronze);
   --color-prize-bronze-soft: var(--prize-bronze-soft);
   --color-prize-bronze-border: var(--prize-bronze-border);
+  --color-report-google: var(--report-google);
 }
 
 :root {
@@ -107,6 +108,20 @@
   --prize-bronze: oklch(0.59 0.13 48);
   --prize-bronze-soft: oklch(0.98 0.022 55);
   --prize-bronze-border: oklch(0.82 0.09 52);
+  --report-whatsapp: #25d366;
+  --report-telegram: #229ed9;
+  --report-snapchat: #ffeb00;
+  --report-tiktok-red: #fe2c55;
+  --report-tiktok-cyan: #25f4ee;
+  --report-instagram-blue: #405de6;
+  --report-instagram-purple: #833ab4;
+  --report-instagram-pink: #fd1d1d;
+  --report-facebook: #1877f2;
+  --report-x: #000000;
+  --report-linkedin: #0a66c2;
+  --report-google: #4285f4;
+  --report-google-accent: #fbbc05;
+  --report-email: #ea4335;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);
