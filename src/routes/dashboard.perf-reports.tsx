@@ -410,6 +410,50 @@ function PerformanceReportsPage() {
     { title: "إجمالي المكافآت", value: nf(totals.rewards), unit: "ريال سعودي", icon: Wallet, tone: "bg-emerald-100 text-emerald-700", info: INFO_TEXT.rewards },
   ];
 
+  /* ------- تصدير التقرير PDF بالفلاتر والنتائج المعروضة نفسها ------- */
+  const appliedRange = periodRange(appliedPeriod, new Date(), { from: fromDate, to: toDate });
+  const periodLabel = REPORT_PERIODS.find((item) => item.value === period)?.label ?? "جميع الأوقات";
+  const rangeLabel =
+    appliedRange.start === null || appliedRange.end === null
+      ? "غير محددة (جميع الأوقات)"
+      : `من ${toInputDate(appliedRange.start)} إلى ${toInputDate(appliedRange.end)}`;
+  const platformLabel = platform === "all" ? "جميع المنصات" : (PLATFORM_META.find((item) => item.key === platform)?.name ?? "جميع المنصات");
+  const programLabel = program === "all" ? "جميع البرامج" : (PROGRAM_META.find((item) => item.id === program)?.name ?? "جميع البرامج");
+  const metricLabel = METRICS.find((item) => item.key === metric)?.label ?? "";
+
+  const exportBlockedReason = customPeriod && !customReady
+    ? invalidRange
+      ? "لا يمكن تحميل التقرير: تاريخ النهاية قبل تاريخ البداية."
+      : "لا يمكن تحميل التقرير: أكمل تاريخي الفترة المخصصة."
+    : status === "error"
+      ? "لا يمكن تحميل التقرير: تعذر تحميل البيانات، أعد المحاولة أولًا."
+      : status === "loading"
+        ? "يرجى الانتظار حتى اكتمال تحميل البيانات."
+        : "";
+
+  const handleExport = async () => {
+    if (exportBlockedReason || isExporting) return;
+    const node = pdfRef.current;
+    if (!node) return;
+    setIsExporting(true);
+    const toastId = toast.loading("جارٍ تجهيز التقرير…");
+    try {
+      const stamp = toInputDate(Date.now());
+      await exportPerformanceReportPdf(node, `Mukafaty-Performance-Report-${stamp}.pdf`);
+      toast.success("تم تحميل التقرير بنجاح", { id: toastId });
+    } catch {
+      toast.error("تعذر تجهيز التقرير، يرجى إعادة المحاولة.", { id: toastId });
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
+  const generatedAt = new Date().toLocaleString("ar-SA-u-ca-gregory-nu-latn", {
+    timeZone: "Asia/Riyadh",
+    dateStyle: "long",
+    timeStyle: "short",
+  });
+
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500" dir="rtl">
       <header className="flex flex-wrap items-start justify-between gap-3">
