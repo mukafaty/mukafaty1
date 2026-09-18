@@ -5,11 +5,17 @@ import {
   CalendarDays,
   ChevronDown,
   Coins,
+  Gift,
+  Info,
   Medal,
+  Plus,
+  RotateCcw,
   Trophy,
   TrendingUp,
   Users,
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { TOP_REWARDS, TOP_REWARDS_NOTE, type TopReward } from "@/data/topRewards";
 
 export const Route = createFileRoute("/dashboard/top")({
   head: () => ({
@@ -25,13 +31,13 @@ export const Route = createFileRoute("/dashboard/top")({
   component: TopPage,
 });
 
-type PeriodKey = "month" | "quarter" | "year" | "all";
+type PeriodKey = "all" | "month" | "quarter" | "year";
 
 const PERIODS: { key: PeriodKey; label: string }[] = [
+  { key: "all", label: "جميع الفترات" },
   { key: "month", label: "هذا الشهر" },
-  { key: "quarter", label: "آخر 3 أشهر" },
-  { key: "year", label: "هذه السنة" },
-  { key: "all", label: "كل الفترات" },
+  { key: "quarter", label: "آخر ثلاثة أشهر" },
+  { key: "year", label: "هذا العام" },
 ];
 
 type TopMarketer = {
@@ -41,19 +47,20 @@ type TopMarketer = {
   city: string;
   totalCustomers: number;
   totalRewards: number;
+  period: Exclude<PeriodKey, "all">;
 };
 
 const TOP_MARKETERS: TopMarketer[] = [
-  { rank: 1, memberId: "MK-1025", type: "رجل", city: "الرياض", totalCustomers: 24, totalRewards: 9750 },
-  { rank: 2, memberId: "MK-1187", type: "سيدة", city: "جدة", totalCustomers: 21, totalRewards: 8500 },
-  { rank: 3, memberId: "MK-1042", type: "رجل", city: "مكة المكرمة", totalCustomers: 18, totalRewards: 7250 },
-  { rank: 4, memberId: "MK-1263", type: "رجل", city: "ينبع", totalCustomers: 16, totalRewards: 6800 },
-  { rank: 5, memberId: "MK-1098", type: "سيدة", city: "الرياض", totalCustomers: 14, totalRewards: 5950 },
-  { rank: 6, memberId: "MK-1176", type: "رجل", city: "الدمام", totalCustomers: 13, totalRewards: 4950 },
-  { rank: 7, memberId: "MK-1109", type: "سيدة", city: "الخبر", totalCustomers: 12, totalRewards: 4250 },
-  { rank: 8, memberId: "MK-1033", type: "رجل", city: "أبها", totalCustomers: 11, totalRewards: 4100 },
-  { rank: 9, memberId: "MK-1120", type: "سيدة", city: "تبوك", totalCustomers: 10, totalRewards: 3800 },
-  { rank: 10, memberId: "MK-1050", type: "رجل", city: "حائل", totalCustomers: 9, totalRewards: 3600 },
+  { rank: 1, memberId: "MK-1025", type: "رجل", city: "الرياض", totalCustomers: 24, totalRewards: 9750, period: "month" },
+  { rank: 2, memberId: "MK-1187", type: "سيدة", city: "جدة", totalCustomers: 21, totalRewards: 8500, period: "month" },
+  { rank: 3, memberId: "MK-1042", type: "رجل", city: "مكة المكرمة", totalCustomers: 18, totalRewards: 7250, period: "month" },
+  { rank: 4, memberId: "MK-1263", type: "رجل", city: "ينبع", totalCustomers: 16, totalRewards: 6800, period: "quarter" },
+  { rank: 5, memberId: "MK-1098", type: "سيدة", city: "الرياض", totalCustomers: 14, totalRewards: 5950, period: "quarter" },
+  { rank: 6, memberId: "MK-1176", type: "رجل", city: "الدمام", totalCustomers: 13, totalRewards: 4950, period: "quarter" },
+  { rank: 7, memberId: "MK-1109", type: "سيدة", city: "الخبر", totalCustomers: 12, totalRewards: 4250, period: "year" },
+  { rank: 8, memberId: "MK-1033", type: "رجل", city: "أبها", totalCustomers: 11, totalRewards: 4100, period: "year" },
+  { rank: 9, memberId: "MK-1120", type: "سيدة", city: "تبوك", totalCustomers: 10, totalRewards: 3800, period: "year" },
+  { rank: 10, memberId: "MK-1050", type: "رجل", city: "حائل", totalCustomers: 9, totalRewards: 3600, period: "year" },
 ];
 
 const MY_STANDING = {
@@ -84,19 +91,113 @@ function RankBadge({ rank }: { rank: number }) {
   );
 }
 
-function TopPage() {
-  const [period, setPeriod] = useState<PeriodKey>("month");
+const PRIZE_TONES: Record<TopReward["tone"], { card: string; icon: string; foot: string }> = {
+  gold: {
+    card: "border-prize-gold-border bg-prize-gold-soft",
+    icon: "bg-prize-gold-border/20 text-prize-gold",
+    foot: "bg-prize-gold-border/15",
+  },
+  silver: {
+    card: "border-prize-silver-border bg-prize-silver-soft",
+    icon: "bg-prize-silver-border/25 text-prize-silver",
+    foot: "bg-prize-silver-border/20",
+  },
+  bronze: {
+    card: "border-prize-bronze-border bg-prize-bronze-soft",
+    icon: "bg-prize-bronze-border/20 text-prize-bronze",
+    foot: "bg-prize-bronze-border/15",
+  },
+};
 
-  const periodLabel = PERIODS.find((p) => p.key === period)?.label ?? "هذا الشهر";
-  const rows = useMemo(
-    () => [...TOP_MARKETERS].sort((a, b) => b.totalRewards - a.totalRewards),
-    [],
+function PrizeCard({ reward }: { reward: TopReward }) {
+  const tone = PRIZE_TONES[reward.tone];
+  return (
+    <article className={`flex h-full flex-col rounded-2xl border p-4 text-center ${tone.card}`}>
+      <h3 className="text-base font-black text-prize-navy">{reward.title}</h3>
+      <div className="mt-3 flex flex-1 flex-col items-center justify-center">
+        <span className={`grid h-16 w-16 place-items-center rounded-full ${tone.icon}`}>
+          <Trophy size={38} strokeWidth={1.8} />
+        </span>
+        <p className="mt-3 text-prize-navy">
+          <span className="text-3xl font-black">{nf(reward.amount)}</span>{" "}
+          <span className="text-base font-black">ريال</span>
+        </p>
+        <Plus className="my-1 text-brand" size={30} strokeWidth={3} aria-hidden="true" />
+        <p className="text-base font-black text-prize-navy">{reward.benefit}</p>
+      </div>
+      <p className={`mt-3 rounded-xl px-3 py-2 text-xs font-bold text-prize-navy ${tone.foot}`}>
+        {reward.condition}
+      </p>
+    </article>
   );
+}
+
+function FilterSelect({
+  label,
+  value,
+  options,
+  onChange,
+}: {
+  label: string;
+  value: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string) => void;
+}) {
+  return (
+    <div className="relative min-w-0">
+      <select
+        aria-label={label}
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        className="h-11 w-full appearance-none rounded-xl border border-border bg-card pr-4 pl-9 text-sm font-bold text-navy outline-none transition-colors focus:border-brand"
+      >
+        {options.map((option) => (
+          <option key={option.value} value={option.value}>{option.label}</option>
+        ))}
+      </select>
+      <ChevronDown size={16} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+    </div>
+  );
+}
+
+function TopPage() {
+  const [city, setCity] = useState("all");
+  const [type, setType] = useState("all");
+  const [period, setPeriod] = useState<PeriodKey>("all");
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+
+  const periodLabel = PERIODS.find((p) => p.key === period)?.label ?? "جميع الفترات";
+  const rows = useMemo(
+    () => TOP_MARKETERS
+      .filter((marketer) => city === "all" || marketer.city === city)
+      .filter((marketer) => type === "all" || marketer.type === type)
+      .filter((marketer) => period === "all" || marketer.period === period)
+      .sort((a, b) => b.totalRewards - a.totalRewards),
+    [city, period, type],
+  );
+  const cities = useMemo(() => Array.from(new Set(TOP_MARKETERS.map((marketer) => marketer.city))), []);
+  const totalPages = Math.max(1, Math.ceil(rows.length / perPage));
+  const start = (currentPage - 1) * perPage;
+  const visibleRows = rows.slice(start, start + perPage);
+  const hasActiveFilters = city !== "all" || type !== "all" || period !== "all";
+
+  const updateFilter = (update: () => void) => {
+    update();
+    setCurrentPage(1);
+  };
+
+  const clearFilters = () => {
+    setCity("all");
+    setType("all");
+    setPeriod("all");
+    setCurrentPage(1);
+  };
 
   const stats = [
     { title: "الفترة الحالية", value: periodLabel, unit: "", icon: CalendarDays, tone: "bg-brand-soft text-brand" },
     { title: "أعلى مكافأة", value: nf(rows[0]?.totalRewards ?? 0), unit: "ريال", icon: Coins, tone: "bg-amber-50 text-amber-600" },
-    { title: "أكثر العملاء تسجيلًا", value: nf(Math.max(...rows.map((r) => r.totalCustomers))), unit: "عميل", icon: Users, tone: "bg-emerald-50 text-emerald-600" },
+    { title: "أكثر العملاء تسجيلًا", value: nf(Math.max(0, ...rows.map((r) => r.totalCustomers))), unit: "عميل", icon: Users, tone: "bg-emerald-50 text-emerald-600" },
   ];
 
   return (
@@ -138,27 +239,55 @@ function TopPage() {
         ))}
       </div>
 
-      {/* Period filter */}
-      <div className="flex items-center gap-3">
-        <span className="text-sm font-bold text-navy">الفترة:</span>
-        <div className="relative">
-          <select
-            aria-label="الفترة"
-            value={period}
-            onChange={(e) => setPeriod(e.target.value as PeriodKey)}
-            className="h-11 appearance-none rounded-2xl border border-border bg-card pr-4 pl-9 text-sm font-bold text-navy outline-none focus:border-brand"
-          >
-            {PERIODS.map((p) => (
-              <option key={p.key} value={p.key}>
-                {p.label}
-              </option>
-            ))}
-          </select>
-          <ChevronDown
-            size={16}
-            className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground"
-          />
+      {/* Rewards */}
+      <div className="space-y-3">
+        <div className="flex items-center gap-3">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
+            <Gift size={22} />
+          </span>
+          <h2 className="text-xl font-black text-navy sm:text-2xl">الجوائز</h2>
         </div>
+
+        <div className="grid gap-3 md:grid-cols-3">
+          {TOP_REWARDS.map((reward) => <PrizeCard key={reward.rank} reward={reward} />)}
+        </div>
+
+        <div className="flex items-center gap-3 rounded-2xl border border-brand/20 bg-brand-soft px-4 py-3 text-brand">
+          <Info size={20} className="shrink-0" />
+          <p className="text-sm font-bold text-navy">{TOP_REWARDS_NOTE}</p>
+        </div>
+      </div>
+
+      {/* Filters */}
+      <div className="grid gap-3 rounded-2xl border border-border bg-card p-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto]">
+        <FilterSelect
+          label="المدينة"
+          value={city}
+          options={[{ value: "all", label: "جميع المدن" }, ...cities.map((item) => ({ value: item, label: item }))]}
+          onChange={(value) => updateFilter(() => setCity(value))}
+        />
+        <FilterSelect
+          label="النوع"
+          value={type}
+          options={[{ value: "all", label: "الجميع" }, { value: "رجل", label: "رجل" }, { value: "سيدة", label: "سيدة" }]}
+          onChange={(value) => updateFilter(() => setType(value))}
+        />
+        <FilterSelect
+          label="الفترة"
+          value={period}
+          options={PERIODS.map((item) => ({ value: item.key, label: item.label }))}
+          onChange={(value) => updateFilter(() => setPeriod(value as PeriodKey))}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          disabled={!hasActiveFilters}
+          onClick={clearFilters}
+          className="h-11 rounded-xl px-5 font-bold text-brand shadow-none enabled:border-brand enabled:hover:bg-brand-soft disabled:border-border disabled:bg-muted disabled:text-muted-foreground"
+        >
+          <RotateCcw size={16} />
+          مسح الفلاتر
+        </Button>
       </div>
 
       {/* Table (desktop) */}
@@ -176,7 +305,7 @@ function TopPage() {
               </tr>
             </thead>
             <tbody>
-              {rows.map((row, i) => (
+              {visibleRows.map((row, i) => (
                 <tr key={row.memberId} className={i % 2 === 1 ? "bg-brand-soft/50" : "bg-card"}>
                   <td className="px-4 py-3">
                     <RankBadge rank={row.rank} />
@@ -190,6 +319,13 @@ function TopPage() {
                   </td>
                 </tr>
               ))}
+              {visibleRows.length === 0 ? (
+                <tr>
+                  <td colSpan={6} className="px-4 py-10 text-center text-sm font-bold text-navy">
+                    لا توجد نتائج مطابقة للفلاتر
+                  </td>
+                </tr>
+              ) : null}
             </tbody>
           </table>
         </div>
@@ -197,7 +333,7 @@ function TopPage() {
 
       {/* Cards (mobile) */}
       <div className="space-y-3 sm:hidden">
-        {rows.map((row) => (
+        {visibleRows.map((row) => (
           <div key={row.memberId} className="rounded-2xl border border-border bg-card p-4">
             <div className="flex items-center justify-between gap-3">
               <RankBadge rank={row.rank} />
@@ -223,6 +359,72 @@ function TopPage() {
             </div>
           </div>
         ))}
+        {visibleRows.length === 0 ? (
+          <div className="rounded-2xl border border-border bg-card px-4 py-10 text-center text-sm font-bold text-navy">
+            لا توجد نتائج مطابقة للفلاتر
+          </div>
+        ) : null}
+      </div>
+
+      {/* Pagination */}
+      <div className="flex flex-col items-center justify-between gap-4 rounded-2xl border border-border bg-card p-4 lg:flex-row">
+        <p className="text-center text-xs text-muted-foreground sm:text-sm lg:text-right">
+          عرض {rows.length === 0 ? 0 : start + 1} إلى {Math.min(start + perPage, rows.length)} من إجمالي {rows.length} مسوق
+        </p>
+
+        <div className="flex flex-wrap items-center justify-center gap-2" dir="rtl">
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
+            disabled={currentPage === 1 || rows.length === 0}
+            className="h-9 rounded-xl px-3 font-bold text-navy shadow-none hover:bg-brand-soft"
+          >
+            السابق
+          </Button>
+          {Array.from({ length: totalPages }, (_, index) => index + 1).map((page) => (
+            <Button
+              type="button"
+              key={page}
+              variant={page === currentPage ? "default" : "outline"}
+              onClick={() => setCurrentPage(page)}
+              disabled={rows.length === 0}
+              aria-label={`الصفحة ${page}`}
+              aria-current={page === currentPage ? "page" : undefined}
+              className={`h-9 w-9 rounded-full p-0 font-bold shadow-none ${page === currentPage ? "bg-brand text-primary-foreground hover:bg-brand" : "text-navy hover:bg-brand-soft"}`}
+            >
+              {page}
+            </Button>
+          ))}
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setCurrentPage((page) => Math.min(totalPages, page + 1))}
+            disabled={currentPage === totalPages || rows.length === 0}
+            className="h-9 rounded-xl px-3 font-bold text-navy shadow-none hover:bg-brand-soft"
+          >
+            التالي
+          </Button>
+        </div>
+
+        <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+          <span>عرض</span>
+          <div className="relative">
+            <select
+              aria-label="عدد المسوقين في كل صفحة"
+              value={perPage}
+              onChange={(event) => {
+                setPerPage(Number(event.target.value));
+                setCurrentPage(1);
+              }}
+              className="h-9 appearance-none rounded-xl border border-border bg-card pr-3 pl-7 text-sm font-bold text-navy outline-none focus:border-brand"
+            >
+              {[5, 10, 15].map((count) => <option key={count} value={count}>{count}</option>)}
+            </select>
+            <ChevronDown size={14} className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          </div>
+          <span>من كل صفحة</span>
+        </div>
       </div>
 
       {/* My standing */}

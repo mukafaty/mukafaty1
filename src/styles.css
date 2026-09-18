@@ -72,6 +72,16 @@
   --color-balance-payments-head: var(--balance-payments-head);
   --color-balance-payments-row: var(--balance-payments-row);
   --color-balance-payments-divider: var(--balance-payments-divider);
+  --color-prize-navy: var(--prize-navy);
+  --color-prize-gold: var(--prize-gold);
+  --color-prize-gold-soft: var(--prize-gold-soft);
+  --color-prize-gold-border: var(--prize-gold-border);
+  --color-prize-silver: var(--prize-silver);
+  --color-prize-silver-soft: var(--prize-silver-soft);
+  --color-prize-silver-border: var(--prize-silver-border);
+  --color-prize-bronze: var(--prize-bronze);
+  --color-prize-bronze-soft: var(--prize-bronze-soft);
+  --color-prize-bronze-border: var(--prize-bronze-border);
 }
 
 :root {
@@ -87,6 +97,16 @@
   --balance-payments-head: oklch(0.836657 0.023157 260.718);
   --balance-payments-row: oklch(0.981359 0.001064 197.139);
   --balance-payments-divider: oklch(0.89123 0.002933 264.541);
+  --prize-navy: oklch(0.245389 0.106171 265.665);
+  --prize-gold: oklch(0.72 0.15 78);
+  --prize-gold-soft: oklch(0.98 0.025 88);
+  --prize-gold-border: oklch(0.82 0.12 82);
+  --prize-silver: oklch(0.58 0.025 255);
+  --prize-silver-soft: oklch(0.975 0.008 255);
+  --prize-silver-border: oklch(0.84 0.025 255);
+  --prize-bronze: oklch(0.59 0.13 48);
+  --prize-bronze-soft: oklch(0.98 0.022 55);
+  --prize-bronze-border: oklch(0.82 0.09 52);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);
