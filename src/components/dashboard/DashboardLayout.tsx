@@ -296,7 +296,7 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
                       onClick={() => {
                         setAccountOpen(false);
                         signOut();
-                        navigate({ to: "/login", replace: true });
+                        navigate({ to: "/protect", replace: true });
                       }}
                       className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-right transition-colors hover:bg-destructive/5"
                     >
