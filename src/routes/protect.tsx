@@ -5,7 +5,7 @@ import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import { signIn, verifyCredentials } from "@/lib/temp-auth";
 
 
-export const Route = createFileRoute("/login")({
+export const Route = createFileRoute("/protect")({
   head: () => ({
     meta: [
       { title: "تسجيل الدخول | مكافآتي" },

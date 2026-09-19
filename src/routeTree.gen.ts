@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as LoginRouteImport } from './routes/login'
+import { Route as ProtectRouteImport } from './routes/protect'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as AdSlugRouteImport } from './routes/ad.$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
@@ -36,9 +36,9 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const LoginRoute = LoginRouteImport.update({
-  id: '/login',
-  path: '/login',
+const ProtectRoute = ProtectRouteImport.update({
+  id: '/protect',
+  path: '/protect',
   getParentRoute: () => rootRouteImport,
 } as any)
 const RegisterRoute = RegisterRouteImport.update({
@@ -110,7 +110,7 @@ const DashboardTopRoute = DashboardTopRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/login': typeof LoginRoute
+  '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
   '/ad/$slug': typeof AdSlugRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -127,7 +127,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/login': typeof LoginRoute
+  '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
   '/ad/$slug': typeof AdSlugRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -146,7 +146,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
-  '/login': typeof LoginRoute
+  '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
   '/ad/$slug': typeof AdSlugRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -166,7 +166,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/dashboard'
-    | '/login'
+    | '/protect'
     | '/register'
     | '/ad/$slug'
     | '/dashboard/about'
@@ -183,7 +183,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
-    | '/login'
+    | '/protect'
     | '/register'
     | '/ad/$slug'
     | '/dashboard/about'
@@ -201,7 +201,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/dashboard'
-    | '/login'
+    | '/protect'
     | '/register'
     | '/ad/$slug'
     | '/dashboard/about'
@@ -220,7 +220,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
-  LoginRoute: typeof LoginRoute
+  ProtectRoute: typeof ProtectRoute
   RegisterRoute: typeof RegisterRoute
   AdSlugRoute: typeof AdSlugRoute
 }
@@ -241,11 +241,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/login': {
-      id: '/login'
-      path: '/login'
-      fullPath: '/login'
-      preLoaderRoute: typeof LoginRouteImport
+    '/protect': {
+      id: '/protect'
+      path: '/protect'
+      fullPath: '/protect'
+      preLoaderRoute: typeof ProtectRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/register': {
@@ -377,7 +377,7 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
-  LoginRoute: LoginRoute,
+  ProtectRoute: ProtectRoute,
   RegisterRoute: RegisterRoute,
   AdSlugRoute: AdSlugRoute,
 }
