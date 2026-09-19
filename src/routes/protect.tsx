@@ -28,7 +28,7 @@ function LoginPage() {
     e.preventDefault();
     if (verifyCredentials(username, password)) {
       signIn();
-      navigate({ to: "/dashboard", replace: true });
+      navigate({ to: "/", replace: true });
     } else {
       setError(true);
     }
