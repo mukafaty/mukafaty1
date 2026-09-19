@@ -70,7 +70,7 @@ export function RequireAuth({ children }: { children: ReactNode }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (authed === false) navigate({ to: "/login", replace: true });
+    if (authed === false) navigate({ to: "/protect", replace: true });
   }, [authed, navigate]);
 
   if (authed !== true) {
