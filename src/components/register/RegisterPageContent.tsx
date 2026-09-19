@@ -35,11 +35,11 @@ export function RegisterPageContent() {
     <main
       dir="rtl"
       lang="ar"
-      className="grid min-h-screen w-full overflow-x-hidden bg-brand-soft/50 lg:grid-cols-[44fr_56fr] lg:[direction:ltr]"
+      className="grid min-h-screen w-full overflow-x-hidden bg-brand-soft/50 md:grid-cols-[44fr_56fr] md:[direction:ltr]"
     >
       <section
         dir="rtl"
-        className="flex min-w-0 items-center justify-center px-4 py-6 sm:px-8 sm:py-10 lg:px-10 xl:px-14"
+        className="flex min-w-0 items-center justify-center px-4 py-6 sm:px-6 sm:py-8 lg:px-10 xl:px-14"
       >
         <div className="w-full max-w-[520px] rounded-3xl border border-border/70 bg-background px-6 py-7 shadow-[0_22px_60px_-42px_var(--navy)] sm:px-10 sm:py-9">
           <div className="flex justify-center">
@@ -154,7 +154,7 @@ export function RegisterPageContent() {
 
       <section
         dir="rtl"
-        className="relative min-h-[440px] min-w-0 overflow-hidden sm:min-h-[520px] lg:min-h-screen"
+        className="relative min-h-[440px] min-w-0 overflow-hidden sm:min-h-[520px] md:min-h-screen"
         aria-label="مكافآتي للتسويق الرقمي"
       >
         <img
@@ -168,7 +168,7 @@ export function RegisterPageContent() {
         <div className="absolute inset-0 bg-background/20" aria-hidden="true" />
         <div className="absolute inset-x-0 top-0 h-2/3 bg-gradient-to-b from-background/60 via-background/20 to-transparent" aria-hidden="true" />
 
-        <div className="relative z-10 mx-auto flex h-full max-w-3xl flex-col items-start px-6 pt-12 text-right sm:px-10 sm:pt-16 lg:px-14 lg:pt-[14vh] xl:px-20">
+        <div className="relative z-10 mx-auto flex h-full max-w-3xl flex-col items-start px-6 pt-12 text-right sm:px-8 sm:pt-14 lg:px-14 lg:pt-[14vh] xl:px-20">
           <h2 className="max-w-2xl text-3xl font-black leading-[1.3] text-navy sm:text-4xl lg:text-5xl">
             حوّل تأثيرك إلى مكافآت
           </h2>
@@ -183,7 +183,7 @@ export function RegisterPageContent() {
           aria-hidden="true"
           width={190}
           height={60}
-          className="absolute bottom-[25%] right-[13%] hidden h-6 w-auto opacity-90 xl:block"
+          className="absolute bottom-[25%] right-[13%] hidden h-5 w-auto opacity-90 md:block xl:h-6"
         />
       </section>
     </main>
