@@ -11,7 +11,7 @@ type Props = {
 export function HeroImageSlide({ desktopUrl, mobileUrl, alt, background, priority }: Props) {
   return (
     <div className="flex h-full w-full items-center" style={{ backgroundColor: background }}>
-      <Link to="/dashboard" aria-label="ابدأ التسويق مع مكافآتي" className="block w-full">
+      <Link to="/register" aria-label="ابدأ التسويق مع مكافآتي" className="block w-full">
       <picture className="block w-full">
         <source media="(min-width: 768px)" srcSet={desktopUrl} width={1920} height={823} />
         <img

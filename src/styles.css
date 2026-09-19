@@ -83,6 +83,9 @@
   --color-prize-bronze-soft: var(--prize-bronze-soft);
   --color-prize-bronze-border: var(--prize-bronze-border);
   --color-report-google: var(--report-google);
+  --color-register-primary: var(--register-primary);
+  --color-register-primary-hover: var(--register-primary-hover);
+  --color-register-input: var(--register-input);
 }
 
 :root {
@@ -122,6 +125,9 @@
   --report-google: #4285f4;
   --report-google-accent: #fbbc05;
   --report-email: #ea4335;
+  --register-primary: oklch(0.57 0.22 257);
+  --register-primary-hover: oklch(0.65 0.17 250);
+  --register-input: oklch(0.9 0.02 255);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);

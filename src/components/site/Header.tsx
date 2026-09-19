@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Menu, X } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 
 const scrollTo = (id: string) => {
@@ -32,12 +33,12 @@ export function Header() {
       >
         عن البرنامج
       </button>
-      <a href="/dashboard" className={linkClass} onClick={() => setOpen(false)}>
+      <Link to="/register" className={linkClass} onClick={() => setOpen(false)}>
         انضم الآن
-      </a>
-      <a href="/dashboard" className={linkClass} onClick={() => setOpen(false)}>
+      </Link>
+      <Link to="/login" className={linkClass} onClick={() => setOpen(false)}>
         دخول
-      </a>
+      </Link>
     </>
   );
 
