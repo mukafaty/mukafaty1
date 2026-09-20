@@ -140,11 +140,22 @@ export function LoginPageContent() {
           <Button
             type="button"
             variant="outline"
+            disabled={googleLoading}
+            aria-busy={googleLoading}
+            onClick={handleGoogleSignIn}
             className="h-14 w-full rounded-[10px] border-register-input bg-background text-base font-bold text-navy shadow-none hover:bg-muted"
           >
             <GoogleMark />
             سجل بحساب جوجل
           </Button>
+
+          <div className="min-h-6 pt-2">
+            {googleError && (
+              <p role="alert" className="text-center text-sm font-medium text-destructive">
+                {googleError}
+              </p>
+            )}
+          </div>
 
           <p className="mt-6 text-center text-sm text-muted-foreground">
             ليس لديك حساب؟{" "}
