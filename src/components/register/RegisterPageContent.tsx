@@ -22,6 +22,20 @@ function GoogleMark() {
 export function RegisterPageContent() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
+  const [googleError, setGoogleError] = useState<string | null>(null);
+
+  async function handleGoogleSignIn() {
+    if (googleLoading) return;
+    setGoogleError(null);
+    setGoogleLoading(true);
+    try {
+      await signInWithGoogle();
+    } catch {
+      setGoogleLoading(false);
+      setGoogleError("تعذّر بدء تسجيل الدخول بحساب جوجل. حاول مرة أخرى.");
+    }
+  }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
