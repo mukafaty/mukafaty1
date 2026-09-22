@@ -71,7 +71,7 @@ export function RegisterPageContent() {
             <span className="flex items-center justify-center rounded-lg bg-register-primary text-sm font-bold text-primary-foreground">
               إنشاء حساب
             </span>
-            <Button asChild variant="ghost" className="h-full rounded-lg font-medium text-navy hover:bg-background">
+            <Button asChild variant="ghost" className="h-full rounded-lg font-medium text-navy transition-colors duration-200 hover:bg-background hover:text-register-danger">
               <Link to="/login">تسجيل الدخول</Link>
             </Button>
           </div>
@@ -143,7 +143,7 @@ export function RegisterPageContent() {
             disabled={googleLoading}
             aria-busy={googleLoading}
             onClick={handleGoogleSignIn}
-            className="h-14 w-full rounded-[10px] border-register-input bg-background text-base font-bold text-navy shadow-none hover:bg-muted"
+            className="h-14 w-full rounded-[10px] border-register-input bg-background text-base font-bold text-navy shadow-none transition-colors duration-200 hover:border-register-danger hover:bg-background hover:text-register-danger"
           >
             <GoogleMark />
             سجل بحساب جوجل
