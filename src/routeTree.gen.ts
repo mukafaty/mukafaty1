@@ -17,6 +17,7 @@ import { Route as PasswordRouteImport } from './routes/password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProtectRouteImport } from './routes/protect'
 import { Route as RegisterRouteImport } from './routes/register'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AdSlugRouteImport } from './routes/ad.$slug'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardAboutRouteImport } from './routes/dashboard.about'
@@ -69,6 +70,11 @@ const ProtectRoute = ProtectRouteImport.update({
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
   path: '/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdSlugRoute = AdSlugRouteImport.update({
@@ -146,6 +152,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/ad/$slug': typeof AdSlugRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
@@ -168,6 +175,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/ad/$slug': typeof AdSlugRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
@@ -192,6 +200,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/ad/$slug': typeof AdSlugRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
@@ -217,6 +226,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/protect'
     | '/register'
+    | '/reset-password'
     | '/ad/$slug'
     | '/dashboard/about'
     | '/dashboard/ads'
@@ -239,6 +249,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/protect'
     | '/register'
+    | '/reset-password'
     | '/ad/$slug'
     | '/dashboard/about'
     | '/dashboard/ads'
@@ -262,6 +273,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/protect'
     | '/register'
+    | '/reset-password'
     | '/ad/$slug'
     | '/dashboard/about'
     | '/dashboard/ads'
@@ -286,6 +298,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ProtectRoute: typeof ProtectRoute
   RegisterRoute: typeof RegisterRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   AdSlugRoute: typeof AdSlugRoute
   LoginPasswordRoute: typeof LoginPasswordRoute
 }
@@ -346,6 +359,13 @@ declare module '@tanstack/react-router' {
       path: '/register'
       fullPath: '/register'
       preLoaderRoute: typeof RegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ad/$slug': {
@@ -483,6 +503,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ProtectRoute: ProtectRoute,
   RegisterRoute: RegisterRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   AdSlugRoute: AdSlugRoute,
   LoginPasswordRoute: LoginPasswordRoute,
 }
