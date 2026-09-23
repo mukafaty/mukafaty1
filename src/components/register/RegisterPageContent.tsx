@@ -21,6 +21,7 @@ function GoogleMark() {
 }
 
 export function RegisterPageContent() {
+  const navigate = useNavigate({ from: "/register" });
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -44,7 +45,8 @@ export function RegisterPageContent() {
     setEmailError(!valid);
     if (!valid) return;
 
-    // The validated email is ready for the Email OTP step in the next phase.
+    saveRegistrationFlow({ email: email.trim() });
+    navigate({ to: "/profile" });
   }
 
   return (
