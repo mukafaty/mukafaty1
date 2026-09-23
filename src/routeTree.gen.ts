@@ -28,6 +28,7 @@ import { Route as DashboardProShareRouteImport } from './routes/dashboard.pro-sh
 import { Route as DashboardQuickShareRouteImport } from './routes/dashboard.quick-share'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardTopRouteImport } from './routes/dashboard.top'
+import { Route as LoginPasswordRouteImport } from './routes/login_.password'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -124,6 +125,11 @@ const DashboardTopRoute = DashboardTopRouteImport.update({
   path: '/top',
   getParentRoute: () => DashboardRoute,
 } as any)
+const LoginPasswordRoute = LoginPasswordRouteImport.update({
+  id: '/login_/password',
+  path: '/login/password',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -144,6 +150,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
+  '/login/password': typeof LoginPasswordRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRoutesByTo {
@@ -164,6 +171,7 @@ export interface FileRoutesByTo {
   '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
+  '/login/password': typeof LoginPasswordRoute
   '/dashboard': typeof DashboardIndexRoute
 }
 export interface FileRoutesById {
@@ -186,6 +194,7 @@ export interface FileRoutesById {
   '/dashboard/quick-share': typeof DashboardQuickShareRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
+  '/login_/password': typeof LoginPasswordRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
 export interface FileRouteTypes {
@@ -209,6 +218,7 @@ export interface FileRouteTypes {
     | '/dashboard/quick-share'
     | '/dashboard/settings'
     | '/dashboard/top'
+    | '/login/password'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -229,6 +239,7 @@ export interface FileRouteTypes {
     | '/dashboard/quick-share'
     | '/dashboard/settings'
     | '/dashboard/top'
+    | '/login/password'
     | '/dashboard'
   id:
     | '__root__'
@@ -250,6 +261,7 @@ export interface FileRouteTypes {
     | '/dashboard/quick-share'
     | '/dashboard/settings'
     | '/dashboard/top'
+    | '/login_/password'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
 }
@@ -262,6 +274,7 @@ export interface RootRouteChildren {
   ProtectRoute: typeof ProtectRoute
   RegisterRoute: typeof RegisterRoute
   AdSlugRoute: typeof AdSlugRoute
+  LoginPasswordRoute: typeof LoginPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -399,6 +412,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardTopRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/login_/password': {
+      id: '/login_/password'
+      path: '/login/password'
+      fullPath: '/login/password'
+      preLoaderRoute: typeof LoginPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -443,6 +463,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectRoute: ProtectRoute,
   RegisterRoute: RegisterRoute,
   AdSlugRoute: AdSlugRoute,
+  LoginPasswordRoute: LoginPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
