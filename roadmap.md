@@ -46,6 +46,11 @@
 - [x] زر «متابعة» + فاصل «أو» + زر Google + رابط «إنشاء حساب جديد» + نص الشروط بدون روابط
 - [x] التحقق على الكمبيوتر والجوال (1280/390) — لا تمرير أفقي ولا أخطاء
 
+## صفحة بيانات المسوق (/profile)
+- [x] إنشاء الصفحة بنفس تصميم /register (بطاقة: شعار + اسم كامل + رقم جوال + زر «متابعة» فقط)
+- [x] تخزين مؤقت لبيانات التسجيل (email/full_name/phone) في src/lib/registrationFlow.ts بدون فقدان البريد
+- [x] تحقق: الاسم الفارغ/الأرقام فقط، الجوال 05 و10 أرقام فقط، رسائل تحت الحقول بلا Toast، الانتقال إلى /password
+
 ## ربط Google OAuth (2026-09-21)
 - [x] زر «سجل بحساب جوجل» في /register و /login → supabase.auth.signInWithOAuth(provider: google)
 - [x] src/lib/googleAuth.ts: redirectTo mukafaty.com/dashboard في الإنتاج، origin/dashboard في المعاينة
