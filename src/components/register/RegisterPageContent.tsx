@@ -25,7 +25,9 @@ function GoogleMark() {
 export function RegisterPageContent() {
   const navigate = useNavigate({ from: "/register" });
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState<null | "format" | "taken" | "failed">(null);
+  const [checking, setChecking] = useState(false);
+  const checkEmail = useServerFn(checkEmailRegistered);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
 
