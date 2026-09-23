@@ -73,3 +73,8 @@
 - دالة قاعدة بيانات `public.email_is_registered(text)` (SECURITY DEFINER، مصرّحة لـservice_role فقط).
 - Server function `src/lib/emailAvailability.functions.ts` تعيد boolean فقط.
 - /register: تطبيع البريد (trim + lowercase)، تعطيل الزر أثناء الفحص، إطار أحمر ورسائل: مسجل مسبقًا (مع رابط «سجل الدخول» → /login) / فشل تقني / صيغة غير صحيحة.
+
+## إصلاح أرقام العضوية (2026-09-23)
+- [x] إزالة الفجوة: MK0001 / MK0002 / MK0003
+- [x] عدّاد member_number_counter مع قفل صف داخل المعاملة (بلا فجوات، آمن ضد التزامن)
+- [x] الفشل لا يستهلك الرقم؛ التالي MK0004
