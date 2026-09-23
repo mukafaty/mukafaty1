@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PasswordRouteImport } from './routes/password'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProtectRouteImport } from './routes/protect'
 import { Route as RegisterRouteImport } from './routes/register'
@@ -41,6 +42,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PasswordRoute = PasswordRouteImport.update({
+  id: '/password',
+  path: '/password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ProfileRoute = ProfileRouteImport.update({
@@ -123,6 +129,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/password': typeof PasswordRoute
   '/profile': typeof ProfileRoute
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
@@ -142,6 +149,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/password': typeof PasswordRoute
   '/profile': typeof ProfileRoute
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
@@ -163,6 +171,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/login': typeof LoginRoute
+  '/password': typeof PasswordRoute
   '/profile': typeof ProfileRoute
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
@@ -185,6 +194,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/password'
     | '/profile'
     | '/protect'
     | '/register'
@@ -204,6 +214,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/login'
+    | '/password'
     | '/profile'
     | '/protect'
     | '/register'
@@ -224,6 +235,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/password'
     | '/profile'
     | '/protect'
     | '/register'
@@ -245,6 +257,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   LoginRoute: typeof LoginRoute
+  PasswordRoute: typeof PasswordRoute
   ProfileRoute: typeof ProfileRoute
   ProtectRoute: typeof ProtectRoute
   RegisterRoute: typeof RegisterRoute
@@ -272,6 +285,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/password': {
+      id: '/password'
+      path: '/password'
+      fullPath: '/password'
+      preLoaderRoute: typeof PasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/profile': {
@@ -418,6 +438,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRouteWithChildren,
   LoginRoute: LoginRoute,
+  PasswordRoute: PasswordRoute,
   ProfileRoute: ProfileRoute,
   ProtectRoute: ProtectRoute,
   RegisterRoute: RegisterRoute,
