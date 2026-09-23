@@ -43,14 +43,30 @@ export function RegisterPageContent() {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const valid = EMAIL_PATTERN.test(email.trim());
-    setEmailError(!valid);
-    if (!valid) return;
+    if (checking) return;
+    const normalized = email.trim().toLowerCase();
+    if (!EMAIL_PATTERN.test(normalized)) {
+      setEmailError("format");
+      return;
+    }
 
-    saveRegistrationFlow({ email: email.trim() });
-    navigate({ to: "/profile" });
+    setEmailError(null);
+    setChecking(true);
+    try {
+      const result = await checkEmail({ data: { email: normalized } });
+      if (result.registered) {
+        setEmailError("taken");
+        return;
+      }
+      saveRegistrationFlow({ email: normalized });
+      navigate({ to: "/profile" });
+    } catch {
+      setEmailError("failed");
+    } finally {
+      setChecking(false);
+    }
   }
 
   return (
