@@ -1,7 +1,8 @@
 import { FormEvent, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { checkEmailRegistered } from "@/lib/emailAvailability.functions";
+import { saveLoginEmail } from "@/lib/loginFlow";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/lib/googleAuth";
@@ -22,6 +23,7 @@ function GoogleMark() {
 }
 
 export function LoginPageContent() {
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [checkError, setCheckError] = useState<null | "missing" | "failed">(null);
@@ -60,7 +62,8 @@ export function LoginPageContent() {
         setCheckError("missing");
         return;
       }
-      // Registered email: ready for the password sign-in step (next phase).
+      saveLoginEmail(normalized);
+      navigate({ to: "/login/password" });
     } catch {
       setCheckError("failed");
     } finally {
