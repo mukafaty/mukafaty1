@@ -123,29 +123,44 @@ export function LoginPageContent() {
                 autoComplete="email"
                 required
                 value={email}
-                aria-invalid={emailError}
-                aria-describedby={emailError ? "login-email-error" : undefined}
+                aria-invalid={emailError || checkError !== null}
+                aria-describedby={emailError || checkError ? "login-email-error" : undefined}
                 placeholder="مثال: example@gmail.com"
                 onChange={(event) => {
                   setEmail(event.target.value);
                   if (emailError) setEmailError(false);
+                  if (checkError) setCheckError(null);
                 }}
                 onBlur={() => {
                   if (email.length > 0) setEmailError(!EMAIL_PATTERN.test(email.trim()));
                 }}
-                className="h-[54px] w-full rounded-[10px] border border-register-input bg-background pr-11 pl-4 text-right text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-register-primary focus:ring-2 focus:ring-register-primary/10"
+                className={`h-[54px] w-full rounded-[10px] border bg-background pr-11 pl-4 text-right text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground/70 focus:ring-2 focus:ring-register-primary/10 ${emailError || checkError ? "border-destructive focus:border-destructive" : "border-register-input focus:border-register-primary"}`}
               />
             </div>
             <div className="min-h-6 pt-1">
-              {emailError && (
+              {emailError ? (
                 <p id="login-email-error" role="alert" className="text-sm font-medium text-destructive">
                   الرجاء إدخال بريد إلكتروني صحيح.
                 </p>
-              )}
+              ) : checkError === "missing" ? (
+                <p id="login-email-error" role="alert" className="text-sm font-medium text-destructive">
+                  البريد الإلكتروني غير مسجل،{" "}
+                  <Link to="/register" className="font-bold underline underline-offset-2">
+                    أنشئ حسابًا جديدًا
+                  </Link>
+                  .
+                </p>
+              ) : checkError === "failed" ? (
+                <p id="login-email-error" role="alert" className="text-sm font-medium text-destructive">
+                  تعذر التحقق من البريد الإلكتروني، حاول مرة أخرى.
+                </p>
+              ) : null}
             </div>
 
             <Button
               type="submit"
+              disabled={checking}
+              aria-busy={checking}
               className="h-14 w-full rounded-[10px] bg-register-primary text-base font-bold text-primary-foreground shadow-none hover:bg-register-primary-hover"
             >
               متابعة
