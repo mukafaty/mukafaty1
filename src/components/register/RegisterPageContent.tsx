@@ -1,8 +1,10 @@
 import { FormEvent, useState } from "react";
 import { Link, useNavigate } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/lib/googleAuth";
+import { checkEmailRegistered } from "@/lib/emailAvailability.functions";
 import { saveRegistrationFlow } from "@/lib/registrationFlow";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
@@ -23,7 +25,9 @@ function GoogleMark() {
 export function RegisterPageContent() {
   const navigate = useNavigate({ from: "/register" });
   const [email, setEmail] = useState("");
-  const [emailError, setEmailError] = useState(false);
+  const [emailError, setEmailError] = useState<null | "format" | "taken" | "failed">(null);
+  const [checking, setChecking] = useState(false);
+  const checkEmail = useServerFn(checkEmailRegistered);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
 
@@ -39,14 +43,30 @@ export function RegisterPageContent() {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const valid = EMAIL_PATTERN.test(email.trim());
-    setEmailError(!valid);
-    if (!valid) return;
+    if (checking) return;
+    const normalized = email.trim().toLowerCase();
+    if (!EMAIL_PATTERN.test(normalized)) {
+      setEmailError("format");
+      return;
+    }
 
-    saveRegistrationFlow({ email: email.trim() });
-    navigate({ to: "/profile" });
+    setEmailError(null);
+    setChecking(true);
+    try {
+      const result = await checkEmail({ data: { email: normalized } });
+      if (result.registered) {
+        setEmailError("taken");
+        return;
+      }
+      saveRegistrationFlow({ email: normalized });
+      navigate({ to: "/profile" });
+    } catch {
+      setEmailError("failed");
+    } finally {
+      setChecking(false);
+    }
   }
 
   return (
@@ -104,29 +124,45 @@ export function RegisterPageContent() {
                 autoComplete="email"
                 required
                 value={email}
-                aria-invalid={emailError}
+                aria-invalid={emailError !== null}
                 aria-describedby={emailError ? "register-email-error" : undefined}
                 placeholder="مثال: example@gmail.com"
                 onChange={(event) => {
                   setEmail(event.target.value);
-                  if (emailError) setEmailError(false);
+                  if (emailError) setEmailError(null);
                 }}
                 onBlur={() => {
-                  if (email.length > 0) setEmailError(!EMAIL_PATTERN.test(email.trim()));
+                  if (email.length > 0 && !EMAIL_PATTERN.test(email.trim().toLowerCase())) {
+                    setEmailError("format");
+                  }
                 }}
-                className="h-[54px] w-full rounded-[10px] border border-register-input bg-background pr-11 pl-4 text-right text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-register-primary focus:ring-2 focus:ring-register-primary/10"
+                className={`h-[54px] w-full rounded-[10px] border bg-background pr-11 pl-4 text-right text-sm text-navy outline-none transition-colors placeholder:text-muted-foreground/70 focus:border-register-primary focus:ring-2 focus:ring-register-primary/10 ${
+                  emailError ? "border-destructive" : "border-register-input"
+                }`}
               />
             </div>
             <div className="min-h-6 pt-1">
               {emailError && (
                 <p id="register-email-error" role="alert" className="text-sm font-medium text-destructive">
-                  الرجاء إدخال بريد إلكتروني صحيح.
+                  {emailError === "format" && "الرجاء إدخال بريد إلكتروني صحيح."}
+                  {emailError === "taken" && (
+                    <>
+                      هذا البريد الإلكتروني مسجل مسبقًا،{" "}
+                      <Link to="/login" className="font-bold underline underline-offset-2">
+                        سجل الدخول
+                      </Link>{" "}
+                      للمتابعة.
+                    </>
+                  )}
+                  {emailError === "failed" && "تعذّر التحقق من البريد الإلكتروني. حاول مرة أخرى."}
                 </p>
               )}
             </div>
 
             <Button
               type="submit"
+              disabled={checking}
+              aria-busy={checking}
               className="h-14 w-full rounded-[10px] bg-register-primary text-base font-bold text-primary-foreground shadow-none hover:bg-register-primary-hover"
             >
               ابدأ رحلة المكافآت
