@@ -231,7 +231,7 @@ export function LoginPageContent() {
             حوّل تأثيرك إلى مكافآت
           </h2>
           <p className="mt-3 max-w-xl text-base font-medium leading-8 text-navy/75 sm:text-xl">
-            انضم الآن .. وقدم تجربة احترافية لجمهورك
+            انشر .. تابع إنجازاتك .. تزيد أرباحك
           </p>
         </div>
 
