@@ -49,6 +49,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      email_is_registered: { Args: { _email: string }; Returns: boolean }
       next_member_number: { Args: never; Returns: string }
     }
     Enums: {
