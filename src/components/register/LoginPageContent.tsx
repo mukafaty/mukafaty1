@@ -1,5 +1,7 @@
 import { FormEvent, useState } from "react";
 import { Link } from "@tanstack/react-router";
+import { useServerFn } from "@tanstack/react-start";
+import { checkEmailRegistered } from "@/lib/emailAvailability.functions";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/lib/googleAuth";
@@ -22,6 +24,9 @@ function GoogleMark() {
 export function LoginPageContent() {
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
+  const [checkError, setCheckError] = useState<null | "missing" | "failed">(null);
+  const [checking, setChecking] = useState(false);
+  const checkEmail = useServerFn(checkEmailRegistered);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [googleError, setGoogleError] = useState<string | null>(null);
 
@@ -37,13 +42,30 @@ export function LoginPageContent() {
     }
   }
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    const valid = EMAIL_PATTERN.test(email.trim());
-    setEmailError(!valid);
-    if (!valid) return;
-
-    // The validated email is ready for the Email OTP step in the next phase.
+    if (checking) return;
+    const normalized = email.trim().toLowerCase();
+    if (!EMAIL_PATTERN.test(normalized)) {
+      setEmailError(true);
+      setCheckError(null);
+      return;
+    }
+    setEmailError(false);
+    setCheckError(null);
+    setChecking(true);
+    try {
+      const { registered } = await checkEmail({ data: { email: normalized } });
+      if (!registered) {
+        setCheckError("missing");
+        return;
+      }
+      // Registered email: ready for the password sign-in step (next phase).
+    } catch {
+      setCheckError("failed");
+    } finally {
+      setChecking(false);
+    }
   }
 
   return (
