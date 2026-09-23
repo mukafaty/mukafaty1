@@ -14,6 +14,21 @@ export type Database = {
   }
   public: {
     Tables: {
+      member_number_counter: {
+        Row: {
+          id: boolean
+          last_number: number
+        }
+        Insert: {
+          id?: boolean
+          last_number?: number
+        }
+        Update: {
+          id?: boolean
+          last_number?: number
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
