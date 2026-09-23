@@ -123,6 +123,13 @@ export function LoginPasswordPageContent() {
               )}
             </div>
 
+            <div className="pb-4 text-left">
+              <Link to="/forgot-password" className="text-sm font-bold text-register-primary transition-colors">
+                نسيت كلمة المرور؟
+              </Link>
+            </div>
+
+
             <Button
               type="submit"
               disabled={submitting}
