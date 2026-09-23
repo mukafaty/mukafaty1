@@ -1,8 +1,9 @@
 import { FormEvent, useState } from "react";
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { ArrowLeft, Mail } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/lib/googleAuth";
+import { saveRegistrationFlow } from "@/lib/registrationFlow";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
 
@@ -20,6 +21,7 @@ function GoogleMark() {
 }
 
 export function RegisterPageContent() {
+  const navigate = useNavigate({ from: "/register" });
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -43,7 +45,8 @@ export function RegisterPageContent() {
     setEmailError(!valid);
     if (!valid) return;
 
-    // The validated email is ready for the Email OTP step in the next phase.
+    saveRegistrationFlow({ email: email.trim() });
+    navigate({ to: "/profile" });
   }
 
   return (
