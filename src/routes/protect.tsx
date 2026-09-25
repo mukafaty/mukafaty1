@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
 import { Lock, User } from "lucide-react";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
-import { signIn, verifyCredentials } from "@/lib/temp-auth";
+import { signIn, verifyAdminCredentials, verifyCredentials } from "@/lib/temp-auth";
 
 
 export const Route = createFileRoute("/protect")({
@@ -26,7 +26,10 @@ function LoginPage() {
 
   function onSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    if (verifyCredentials(username, password)) {
+    if (verifyAdminCredentials(username, password)) {
+      signIn();
+      navigate({ to: "/admin", replace: true });
+    } else if (verifyCredentials(username, password)) {
       signIn();
       navigate({ to: "/dashboard", replace: true });
     } else {
