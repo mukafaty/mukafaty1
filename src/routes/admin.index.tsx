@@ -143,7 +143,7 @@ function AdminHome() {
         <h2 className="mb-4 flex items-center gap-2 text-xl font-extrabold">
           <AlarmClock className="text-admin-red" size={22} /> يتطلب إجراء
         </h2>
-        <div className="grid gap-4 md:grid-cols-3">
+        <div className="grid gap-4 md:grid-cols-3 [&>*]:min-w-0">
           {actionItems.map((a) => {
             const st = actionStyle[a.key];
             return (
@@ -161,7 +161,7 @@ function AdminHome() {
       </section>
 
       {/* الجداول */}
-      <div className="grid gap-5 xl:grid-cols-2">
+      <div className="grid gap-5 xl:grid-cols-2 [&>*]:min-w-0">
         <section className={`${card} p-4`}>
           <div className="mb-3 flex items-center justify-between">
             <h2 className="flex items-center gap-2 text-lg font-extrabold"><ClipboardList className="text-admin-blue" size={20} /> أحدث تسجيلات الاهتمام</h2>

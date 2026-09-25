@@ -34,7 +34,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       <div className="flex h-[66px] shrink-0 items-center justify-center bg-admin-navy px-4">
         <img src={logo.url} alt="مكافآتي Mukafaty" className="h-11 w-auto object-contain" />
       </div>
-      <nav className="flex-1 space-y-1 overflow-y-auto px-2 py-4">
+      <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-2 py-4">
         {nav.map((item) => {
           const active = item.to ? pathname === item.to || pathname === item.to + "/" : false;
           const cls = `flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-colors ${
@@ -66,8 +66,8 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 export function AdminLayout({ children }: { children: ReactNode }) {
   const [open, setOpen] = useState(false);
   return (
-    <div dir="rtl" className="min-h-screen bg-admin-canvas font-sans text-admin-navy">
-      <aside className="fixed inset-y-0 right-0 z-30 hidden w-[240px] border-l border-admin-navy/5 lg:block">
+    <div dir="rtl" className="min-h-screen w-full overflow-x-clip bg-admin-canvas font-sans text-admin-navy">
+      <aside className="fixed inset-y-0 right-0 z-30 hidden w-[240px] lg:block">
         <SidebarContent />
       </aside>
 
@@ -83,9 +83,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
         </div>
       )}
 
-      <div className="lg:mr-[240px]">
+      <div className="min-w-0 lg:mr-[240px]">
         <header className="sticky top-0 z-20 flex h-[66px] items-center gap-3 bg-admin-navy px-4 text-primary-foreground md:px-6">
-          <button onClick={() => setOpen(true)} aria-label="فتح القائمة" className="rounded-lg p-2 hover:bg-admin-navy-soft">
+          <button onClick={() => setOpen(true)} aria-label="فتح القائمة" className="shrink-0 rounded-lg p-2 lg:hidden hover:bg-admin-navy-soft">
             <Menu size={22} />
           </button>
           <div className="relative hidden w-full max-w-[390px] sm:block">
@@ -104,16 +104,15 @@ export function AdminLayout({ children }: { children: ReactNode }) {
               <Bell size={21} />
               <span className="absolute right-1 top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-admin-red px-1 text-[10px] font-bold">5</span>
             </button>
-            <DropdownMenu>
+            <DropdownMenu modal={false}>
               <DropdownMenuTrigger className="flex items-center gap-3 rounded-xl px-2 py-1 outline-none hover:bg-admin-navy-soft">
                 <img src={avatar.url} alt="أحمد المدير" className="h-10 w-10 rounded-full border-2 border-primary-foreground/80 object-cover" />
                 <div className="hidden text-start leading-tight md:block">
                   <div className="text-sm font-bold">أحمد المدير</div>
-                  <div className="text-xs text-primary-foreground/70">مدير عام</div>
                 </div>
                 <ChevronDown size={16} className="hidden md:block" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="text-right">
+              <DropdownMenuContent align="end" sideOffset={8} dir="rtl" className="z-50 text-right">
                 <DropdownMenuItem>الملف الشخصي</DropdownMenuItem>
                 <DropdownMenuItem>الإعدادات</DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/protect">تسجيل الخروج</Link></DropdownMenuItem>
@@ -121,7 +120,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             </DropdownMenu>
           </div>
         </header>
-        <main className="p-4 md:p-6">{children}</main>
+        <main className="w-full min-w-0 max-w-full p-4 md:p-6">{children}</main>
       </div>
     </div>
   );
