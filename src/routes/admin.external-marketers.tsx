@@ -128,7 +128,12 @@ function ExternalMarketersPage() {
         <FilterSelect value={status} onChange={upd(setStatus)} options={[["all", "جميع الحالات"], ["active", "نشط"], ["pending", "بانتظار التفعيل"], ["suspended", "موقوف"]]} />
         <FilterSelect value={city} onChange={upd(setCity)} options={[["all", "جميع المدن"], ...cities.map((c) => [c, c] as [string, string])]} />
         <FilterSelect value={gender} onChange={upd(setGender)} options={[["all", "الكل"], ["ذكر", "ذكر"], ["أنثى", "أنثى"]]} />
-        <input type="date" aria-label="تاريخ التسجيل" value={date} onChange={(e) => upd(setDate)(e.target.value)} className={field} />
+        <div className="relative">
+          <span aria-hidden className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 whitespace-nowrap text-sm text-muted-foreground">
+            تاريخ التسجيل <span className="mx-1.5 font-light text-admin-navy/25">|</span>
+          </span>
+          <input type="date" aria-label="تاريخ التسجيل" value={date} onChange={(e) => upd(setDate)(e.target.value)} className={`${field} ps-[7.5rem]`} />
+        </div>
         <button type="button" onClick={reset} className="inline-flex h-11 items-center justify-center gap-2 rounded-xl border border-admin-navy/10 px-4 text-sm font-bold text-admin-navy hover:bg-admin-canvas">
           <RotateCcw size={16} /> مسح الفلاتر
         </button>
