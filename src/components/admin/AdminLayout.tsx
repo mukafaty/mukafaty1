@@ -104,7 +104,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
               <Bell size={21} />
               <span className="absolute right-1 top-0.5 grid h-4 min-w-4 place-items-center rounded-full bg-admin-red px-1 text-[10px] font-bold">5</span>
             </button>
-            <DropdownMenu modal={false}>
+            <DropdownMenu modal={false} dir="rtl">
               <DropdownMenuTrigger className="flex items-center gap-3 rounded-xl px-2 py-1 outline-none hover:bg-admin-navy-soft">
                 <img src={avatar.url} alt="أحمد المدير" className="h-10 w-10 rounded-full border-2 border-primary-foreground/80 object-cover" />
                 <div className="hidden text-start leading-tight md:block">
@@ -112,7 +112,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
                 </div>
                 <ChevronDown size={16} className="hidden md:block" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" sideOffset={8} dir="rtl" className="z-50 text-right">
+              <DropdownMenuContent align="end" sideOffset={8} className="z-50 text-right">
                 <DropdownMenuItem>الملف الشخصي</DropdownMenuItem>
                 <DropdownMenuItem>الإعدادات</DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/protect">تسجيل الخروج</Link></DropdownMenuItem>
