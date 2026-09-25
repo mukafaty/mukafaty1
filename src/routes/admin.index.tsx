@@ -168,7 +168,7 @@ function AdminHome() {
             <DetailsLink label="عرض الكل" />
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[560px] text-sm">
+            <table className="whitespace-nowrap w-full min-w-[560px] text-sm">
               <thead><tr className="bg-admin-canvas text-xs font-bold">
                 {["#", "اسم العميل", "البرنامج التدريبي", "المدينة", "المصدر", "تاريخ التسجيل", ""].map((h, i) => <th key={i} className="px-3 py-2.5 text-start">{h}</th>)}
               </tr></thead>
@@ -195,7 +195,7 @@ function AdminHome() {
             <DetailsLink label="عرض الكل" />
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full min-w-[520px] text-sm">
+            <table className="whitespace-nowrap w-full min-w-[520px] text-sm">
               <thead><tr className="bg-admin-canvas text-xs font-bold">
                 {["#", "رقم العضوية", "الاسم", "المدينة", "تاريخ التسجيل", "الحالة", ""].map((h, i) => <th key={i} className="px-3 py-2.5 text-start">{h}</th>)}
               </tr></thead>

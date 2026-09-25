@@ -92,9 +92,9 @@ export function AdminLayout({ children }: { children: ReactNode }) {
             <input
               type="search"
               placeholder="ابحث في النظام..."
-              className="h-10 w-full rounded-xl border border-primary-foreground/10 bg-admin-navy-soft pe-10 ps-4 text-sm text-primary-foreground placeholder:text-primary-foreground/60 outline-none focus:border-primary-foreground/30"
+              className="h-10 w-full rounded-xl border border-primary-foreground/10 bg-admin-navy-soft ps-10 pe-4 text-sm text-primary-foreground placeholder:text-primary-foreground/60 outline-none focus:border-primary-foreground/30"
             />
-            <Search size={18} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-primary-foreground/70" />
+            <Search size={18} className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-primary-foreground/70" />
           </div>
           <div className="ms-auto flex items-center gap-2 md:gap-4">
             <button aria-label="الرسائل" className="rounded-lg p-2 hover:bg-admin-navy-soft">
