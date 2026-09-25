@@ -21,6 +21,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as AdSlugRouteImport } from './routes/ad.$slug'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminExternalMarketersRouteImport } from './routes/admin.external-marketers'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardAboutRouteImport } from './routes/dashboard.about'
 import { Route as DashboardAdsRouteImport } from './routes/dashboard.ads'
@@ -92,6 +93,11 @@ const AdSlugRoute = AdSlugRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminExternalMarketersRoute = AdminExternalMarketersRouteImport.update({
+  id: '/external-marketers',
+  path: '/external-marketers',
   getParentRoute: () => AdminRoute,
 } as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
@@ -167,6 +173,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ad/$slug': typeof AdSlugRoute
+  '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -191,6 +198,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ad/$slug': typeof AdSlugRoute
+  '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -218,6 +226,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
   '/ad/$slug': typeof AdSlugRoute
+  '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -246,6 +255,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/ad/$slug'
+    | '/admin/external-marketers'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -270,6 +280,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/ad/$slug'
+    | '/admin/external-marketers'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -296,6 +307,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/reset-password'
     | '/ad/$slug'
+    | '/admin/external-marketers'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -412,6 +424,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/external-marketers': {
+      id: '/admin/external-marketers'
+      path: '/external-marketers'
+      fullPath: '/admin/external-marketers'
+      preLoaderRoute: typeof AdminExternalMarketersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -500,10 +519,12 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminExternalMarketersRoute: typeof AdminExternalMarketersRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminExternalMarketersRoute: AdminExternalMarketersRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 

@@ -13,7 +13,7 @@ import {
 
 const nav = [
   { title: "الرئيسية", icon: Home, to: "/admin" },
-  { title: "المسوقون (خارجي)", icon: UserRound },
+  { title: "المسوقون (خارجي)", icon: UserRound, to: "/admin/external-marketers" },
   { title: "المسوقون (داخلي)", icon: UserCog },
   { title: "تسجيلات الاهتمام", icon: ClipboardList },
   { title: "المتدربون", icon: GraduationCap },
@@ -47,7 +47,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
             </>
           );
           return item.to ? (
-            <Link key={item.title} to="/admin" onClick={onNavigate} className={cls}>{inner}</Link>
+            <Link key={item.title} to={item.to} onClick={onNavigate} className={cls}>{inner}</Link>
           ) : (
             <button key={item.title} type="button" className={cls}>{inner}</button>
           );
