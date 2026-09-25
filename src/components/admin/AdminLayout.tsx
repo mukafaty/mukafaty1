@@ -113,7 +113,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
                 </div>
                 <ChevronDown size={16} className="hidden md:block" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" dir="rtl">
+              <DropdownMenuContent align="end" className="text-right">
                 <DropdownMenuItem>الملف الشخصي</DropdownMenuItem>
                 <DropdownMenuItem>الإعدادات</DropdownMenuItem>
                 <DropdownMenuItem asChild><Link to="/protect">تسجيل الخروج</Link></DropdownMenuItem>

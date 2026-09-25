@@ -93,7 +93,7 @@ function DetailsLink({ label }: { label: string }) {
 }
 
 function AdminHome() {
-  const [period, setPeriod] = useState(periods[0]);
+  const [period, setPeriod] = useState<string>("جميع الأوقات");
   const [metric, setMetric] = useState<PlatformMetric>("clicks");
   const chartData = platformData.map((p) => ({ ...p, value: p.values[metric] }));
 
