@@ -54,7 +54,7 @@ const emailNames = ["m.otaibi", "a.harbi", "k.ghamdi", "f.qahtani", "s.zahrani",
 
 const marketers: Marketer[] = Array.from({ length: 286 }, (_, i) => {
   const female = i % 3 === 1;
-  const name = (female ? females : males)[(i * 7) % 10];
+  const name = (female ? females : males)[(i * 7) % 10]!;
   const status: Status = i % 22 === 5 ? "suspended" : i % 9 === 4 ? "pending" : "active";
   const d = new Date(Date.UTC(2026, 0, 1) + i * 0.9 * 86400000);
   return {
@@ -63,7 +63,7 @@ const marketers: Marketer[] = Array.from({ length: 286 }, (_, i) => {
     phone: `05${String(50000000 + ((i * 7919) % 49999999)).padStart(8, "0")}`,
     email: `${female ? "user" : emailNames[i % 10]}${i + 1}@mail.com`,
     gender: female ? "أنثى" : "ذكر",
-    city: cities[(i * 5) % 4],
+    city: cities[(i * 5) % 4]!,
     date: d.toISOString().slice(0, 10),
     status,
   };
