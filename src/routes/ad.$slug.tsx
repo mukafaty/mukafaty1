@@ -13,7 +13,8 @@ import {
   Loader2,
   TrendingUp,
 } from "lucide-react";
-import bannerAsset from "@/assets/landing/banner.jpg.asset.json";
+import bannerAsset from "@/assets/landing/banner.png.asset.json";
+import headerBgAsset from "@/assets/landing/header-bg.jpg.asset.json";
 import diplomaAdAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
 import diplomaOgAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
 import { Button } from "@/components/ui/button";
@@ -269,12 +270,16 @@ function AdLandingPage() {
       </header>
 
       <main>
-        <section aria-label="الجهات المعتمدة" className="bg-[#f6fbfe]">
+        <section
+          aria-label="الجهات المعتمدة"
+          className="w-full bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: `url(${headerBgAsset.url})` }}
+        >
           <img
             src={bannerAsset.url}
             alt="شعارات الجهات والمعاهد المعتمدة لبرنامج الدبلوم"
             width={1920}
-            height={480}
+            height={487}
             className="mx-auto block h-auto w-full max-w-[1200px] object-contain"
           />
         </section>
