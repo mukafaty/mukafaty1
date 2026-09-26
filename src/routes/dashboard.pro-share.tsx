@@ -448,9 +448,10 @@ function VideoCard({
 function ProSharePage() {
   const ad = professionalShareData;
   const { shortLink, ready } = useShortLink("hr-diploma");
-  const xText = ready
-    ? ad.xText.replace("mharatcom.com/r/ahmed2487", shortLink)
-    : ad.xText;
+  const xText = ad.xText.replace(
+    "{SHORT_LINK}",
+    ready && shortLink.startsWith("https://") ? shortLink : "https://mukafaty.com/ad/hr-diploma?ref=mk0001",
+  );
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">

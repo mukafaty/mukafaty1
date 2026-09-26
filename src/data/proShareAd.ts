@@ -70,7 +70,7 @@ export const professionalShareData: ProShareData = {
   xText:
     "دبلوم إدارة الموارد البشرية عن بُعد\n" +
     "شهادة معتمدة + تدريب متطور + فرصة مميزة للتعلم من أي مكان في المملكة.\n" +
-    "mharatcom.com/r/ahmed2487",
+    "{SHORT_LINK}",
   mainAdImage: mainAdImageAsset.url,
 };
 
