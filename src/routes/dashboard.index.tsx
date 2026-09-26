@@ -1,13 +1,12 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import {
   Calendar,
   ChevronDown,
+  GraduationCap,
   Info,
   Link2,
   MousePointer2,
-  User,
-  UserRound,
   Users,
   Wallet,
 } from "lucide-react";
