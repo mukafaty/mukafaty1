@@ -284,7 +284,7 @@ function QuickSharePage() {
       {/* رابط الإحالة وكود الخصم */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <CopyField value={ad.baseReferralLink} label="رابط الإحالة" />
-        <CopyField value={ad.discountCode} label="كود الخصم" />
+        <CopyField value="https://mukafaty.com/r/A7K3P" label="رابط الإحالة المختصر" />
       </div>
     </section>
   );
