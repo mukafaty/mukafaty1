@@ -2,8 +2,14 @@ import hrImg from "@/assets/ads-hr.jpg";
 import cyberImg from "@/assets/ads-cyber.jpg";
 import dataImg from "@/assets/ads-data.jpg";
 import devImg from "@/assets/ads-dev.jpg";
-import marketingImg from "@/assets/ads-marketing.jpg";
 import financeImg from "@/assets/ads-finance.jpg";
+import aiImg from "@/assets/ads-ai.jpg";
+import englishImg from "@/assets/ads-english.jpg";
+import businessImg from "@/assets/ads-business.jpg";
+import logisticsImg from "@/assets/ads-logistics.jpg";
+import officeDiplomaImg from "@/assets/ads-office-diploma.jpg";
+import computerOfficeImg from "@/assets/ads-computer-office.jpg";
+import officeCourseImg from "@/assets/ads-office-course.jpg";
 
 export type ProgramType = "دبلوم" | "دورة";
 export type TrainingMode = "عن بُعد" | "حضوري" | "مدمج";
@@ -90,8 +96,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 4,
-    programName: "دبلوم البرمجيات",
-    image: devImg,
+    programName: "دبلوم الإدارة المكتبية",
+    image: officeDiplomaImg,
     city: "جدة",
     programType: "دبلوم",
     mode: "عن بُعد",
@@ -104,8 +110,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 5,
-    programName: "دورة إدخال البيانات ومعالجة النصوص",
-    image: dataImg,
+    programName: "دورة استخدام الحاسب في الأعمال المكتبية",
+    image: computerOfficeImg,
     city: "جدة",
     programType: "دورة",
     mode: "حضوري",
@@ -118,8 +124,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 6,
-    programName: "دبلوم الأمن السيبراني",
-    image: cyberImg,
+    programName: "دبلوم إدارة الأعمال",
+    image: businessImg,
     city: "جدة",
     programType: "دبلوم",
     mode: "مدمج",
@@ -148,8 +154,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 8,
-    programName: "دبلوم التسويق الرقمي",
-    image: marketingImg,
+    programName: "دبلوم الذكاء الاصطناعي",
+    image: aiImg,
     city: "الرياض",
     programType: "دبلوم",
     mode: "عن بُعد",
@@ -162,8 +168,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 9,
-    programName: "دورة إعداد التقارير المالية",
-    image: financeImg,
+    programName: "دورة الإدارة المكتبية",
+    image: officeCourseImg,
     city: "مكة المكرمة",
     programType: "دورة",
     mode: "مدمج",
@@ -176,8 +182,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 10,
-    programName: "دورة اللغة الإنجليزية للأعمال",
-    image: marketingImg,
+    programName: "دورة اللغة الإنجليزية",
+    image: englishImg,
     city: "ينبع",
     programType: "دورة",
     mode: "عن بُعد",
@@ -205,8 +211,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 12,
-    programName: "دبلوم الأمن السيبراني",
-    image: cyberImg,
+    programName: "دبلوم إدارة الخدمات اللوجستية",
+    image: logisticsImg,
     city: "ينبع",
     programType: "دبلوم",
     mode: "مدمج",
