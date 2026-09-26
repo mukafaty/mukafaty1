@@ -47,7 +47,7 @@ export const quickShareAd: AdData = {
   ageRange: "18 إلى 40 عام",
   referralCode: "ahmed2487",
   discountCode: "AHMED15",
-  baseReferralLink: "https://mukafaty.com/ad/hr-diploma?ref=ahmed2487",
+  baseReferralLink: "https://mukafaty.com/ad/hr-diploma?ref=mk0001",
   cashFee: 9500,
   rewardPerRegistration: 475,
   marketingText: `ارتقِ بمهاراتك الإدارية وكن جاهزًا لسوق العمل 💼
