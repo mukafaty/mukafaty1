@@ -165,6 +165,8 @@ function AdLandingPage() {
     };
   }, [refMarketer, manualAttribution, platform, program.slug]);
 
+  // إخفاء مؤقت لقسم كود الخصم في نموذج «سجّل الآن» — أعد القيمة إلى true لإعادة تفعيله.
+  const SHOW_DISCOUNT_CODE_UI = false;
   const discountPercentage = attribution.discountPercentage;
   const finalPrice =
     discountPercentage != null ? calculateFinalPrice(program.cashFee, discountPercentage) : null;
@@ -428,7 +430,7 @@ function AdLandingPage() {
                       ) : null}
                     </div>
 
-                    {!refMarketer ? (
+                    {SHOW_DISCOUNT_CODE_UI && !refMarketer ? (
                       <div>
                         <FieldLabel>لديك كود إحالة أو خصم؟</FieldLabel>
                         <div className="flex gap-2">
