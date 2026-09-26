@@ -13,6 +13,9 @@ import {
   List,
 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
+
+const AD_SLUG = "hr-diploma";
 import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
 import { shareAd, isMobileDevice } from "@/lib/shareAd";
 import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
@@ -109,6 +112,27 @@ function QuickSharePage() {
 
   useEffect(() => {
     setIsMobile(isMobileDevice());
+  }, []);
+
+  const [shortLink, setShortLink] = useState("جارٍ تجهيز الرابط...");
+  useEffect(() => {
+    let active = true;
+    (async () => {
+      const { data: userData } = await supabase.auth.getUser();
+      if (!userData.user) {
+        if (active) setShortLink("سجّل الدخول لإنشاء رابطك المختصر");
+        return;
+      }
+      const { data, error } = await supabase.rpc("get_or_create_short_link", {
+        _ad_slug: AD_SLUG,
+      });
+      if (!active) return;
+      if (error || !data) setShortLink("تعذّر إنشاء الرابط المختصر");
+      else setShortLink(`https://mukafaty.com/r/${data}`);
+    })();
+    return () => {
+      active = false;
+    };
   }, []);
 
   const visiblePlatforms = isMobile
@@ -284,7 +308,7 @@ function QuickSharePage() {
       {/* رابط الإحالة وكود الخصم */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <CopyField value={ad.baseReferralLink} label="رابط الإحالة" />
-        <CopyField value="https://mukafaty.com/r/A7K3P" label="رابط الإحالة المختصر" />
+        <CopyField value={shortLink} label="رابط الإحالة المختصر" />
       </div>
     </section>
   );

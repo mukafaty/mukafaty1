@@ -34,6 +34,7 @@ import { Route as DashboardQuickShareRouteImport } from './routes/dashboard.quic
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settings'
 import { Route as DashboardTopRouteImport } from './routes/dashboard.top'
 import { Route as LoginPasswordRouteImport } from './routes/login_.password'
+import { Route as RShortCodeRouteImport } from './routes/r.$shortCode'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -160,6 +161,11 @@ const LoginPasswordRoute = LoginPasswordRouteImport.update({
   path: '/login/password',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RShortCodeRoute = RShortCodeRouteImport.update({
+  id: '/r/$shortCode',
+  path: '/r/$shortCode',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -185,6 +191,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
   '/login/password': typeof LoginPasswordRoute
+  '/r/$shortCode': typeof RShortCodeRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -210,6 +217,7 @@ export interface FileRoutesByTo {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
   '/login/password': typeof LoginPasswordRoute
+  '/r/$shortCode': typeof RShortCodeRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
 }
@@ -238,6 +246,7 @@ export interface FileRoutesById {
   '/dashboard/settings': typeof DashboardSettingsRoute
   '/dashboard/top': typeof DashboardTopRoute
   '/login_/password': typeof LoginPasswordRoute
+  '/r/$shortCode': typeof RShortCodeRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -267,6 +276,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/top'
     | '/login/password'
+    | '/r/$shortCode'
     | '/admin/'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -292,6 +302,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/top'
     | '/login/password'
+    | '/r/$shortCode'
     | '/admin'
     | '/dashboard'
   id:
@@ -319,6 +330,7 @@ export interface FileRouteTypes {
     | '/dashboard/settings'
     | '/dashboard/top'
     | '/login_/password'
+    | '/r/$shortCode'
     | '/admin/'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
@@ -336,6 +348,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   AdSlugRoute: typeof AdSlugRoute
   LoginPasswordRoute: typeof LoginPasswordRoute
+  RShortCodeRoute: typeof RShortCodeRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -515,6 +528,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/r/$shortCode': {
+      id: '/r/$shortCode'
+      path: '/r/$shortCode'
+      fullPath: '/r/$shortCode'
+      preLoaderRoute: typeof RShortCodeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -575,6 +595,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   AdSlugRoute: AdSlugRoute,
   LoginPasswordRoute: LoginPasswordRoute,
+  RShortCodeRoute: RShortCodeRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
