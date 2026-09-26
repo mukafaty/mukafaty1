@@ -32,6 +32,7 @@ import {
 import type { SharePlatform } from "@/data/quickShareAd";
 import { shareAd } from "@/lib/shareAd";
 import { toast } from "sonner";
+import { useShortLink } from "@/lib/useShortLink";
 import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
@@ -446,6 +447,10 @@ function VideoCard({
 
 function ProSharePage() {
   const ad = professionalShareData;
+  const { shortLink, ready } = useShortLink("hr-diploma");
+  const xText = ready
+    ? ad.xText.replace("mharatcom.com/r/ahmed2487", shortLink)
+    : ad.xText;
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
@@ -586,13 +591,13 @@ function ProSharePage() {
                 نص خاص بمنصة X
               </label>
               <div className="h-[120px] overflow-y-auto rounded-2xl border border-border bg-muted/30 p-4 text-right text-sm leading-7 text-navy break-words lg:h-[160px]">
-                {ad.xText.split("\n").map((line, i) => (
+                {xText.split("\n").map((line, i) => (
                   <p key={i}>{line}</p>
                 ))}
               </div>
               <div className="relative flex items-center justify-center">
                 <CopyButton
-                  value={ad.xText}
+                  value={xText}
                   label="نسخ نص X"
                   className="inline-flex w-40 items-center justify-center gap-2 rounded-2xl bg-brand px-5 py-3 text-sm font-black text-primary-foreground transition-colors hover:bg-[#FF0000] hover:text-white"
                 />
@@ -631,7 +636,11 @@ function ProSharePage() {
       >
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {referralLinks.map((link) => (
-            <ReferralLinkCard key={link.id} title={link.title} value={link.value} />
+            <ReferralLinkCard
+              key={link.id}
+              title={link.title}
+              value={link.id === "referral-link-short" ? shortLink : link.value}
+            />
           ))}
         </div>
       </div>
