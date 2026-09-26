@@ -428,7 +428,7 @@ function AdLandingPage() {
                       ) : null}
                     </div>
 
-                    {!refMarketer ? (
+                    {SHOW_DISCOUNT_CODE_UI && !refMarketer ? (
                       <div>
                         <FieldLabel>لديك كود إحالة أو خصم؟</FieldLabel>
                         <div className="flex gap-2">
