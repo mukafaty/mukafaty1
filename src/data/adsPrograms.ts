@@ -10,6 +10,8 @@ import logisticsImg from "@/assets/ads-logistics.jpg";
 import officeDiplomaImg from "@/assets/ads-office-diploma.jpg";
 import computerOfficeImg from "@/assets/ads-computer-office.jpg";
 import officeCourseImg from "@/assets/ads-office-course.jpg";
+import safetyImg from "@/assets/ads-safety.jpg";
+import englishRemoteImg from "@/assets/ads-english-remote.jpg";
 
 export type ProgramType = "دبلوم" | "دورة";
 export type TrainingMode = "عن بُعد" | "حضوري" | "مدمج";
@@ -57,7 +59,7 @@ const raw: RawProgram[] = [
     image: devImg,
     city: "جدة",
     programType: "دبلوم",
-    mode: "عن بُعد",
+    mode: "حضوري",
     targetAudience: "رجال",
     cashFee: 10755,
     installmentFee: 11755,
@@ -81,8 +83,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 3,
-    programName: "دبلوم الأمن السيبراني",
-    image: cyberImg,
+    programName: "دبلوم السلامة والصحة المهنية",
+    image: safetyImg,
     city: "جدة",
     programType: "دبلوم",
     mode: "مدمج",
@@ -96,7 +98,7 @@ const raw: RawProgram[] = [
   },
   {
     id: 4,
-    programName: "دبلوم الإدارة المكتبية",
+    programName: "دبلوم الإدارة المكتبية عن بُعد",
     image: officeDiplomaImg,
     city: "جدة",
     programType: "دبلوم",
@@ -128,7 +130,7 @@ const raw: RawProgram[] = [
     image: businessImg,
     city: "جدة",
     programType: "دبلوم",
-    mode: "مدمج",
+    mode: "حضوري",
     targetAudience: "رجال",
     cashFee: 10755,
     installmentFee: 11755,
@@ -154,8 +156,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 8,
-    programName: "دبلوم الذكاء الاصطناعي",
-    image: aiImg,
+    programName: "دبلوم إدارة الموارد البشرية عن بُعد",
+    image: hrImg,
     city: "الرياض",
     programType: "دبلوم",
     mode: "عن بُعد",
@@ -172,7 +174,7 @@ const raw: RawProgram[] = [
     image: officeCourseImg,
     city: "مكة المكرمة",
     programType: "دورة",
-    mode: "مدمج",
+    mode: "حضوري",
     targetAudience: "الرجال والنساء",
     cashFee: 3800,
     installmentFee: 4300,
@@ -182,8 +184,8 @@ const raw: RawProgram[] = [
   },
   {
     id: 10,
-    programName: "دورة اللغة الإنجليزية",
-    image: englishImg,
+    programName: "دورة اللغة الإنجليزية عن بُعد",
+    image: englishRemoteImg,
     city: "ينبع",
     programType: "دورة",
     mode: "عن بُعد",
@@ -215,7 +217,7 @@ const raw: RawProgram[] = [
     image: logisticsImg,
     city: "ينبع",
     programType: "دبلوم",
-    mode: "مدمج",
+    mode: "حضوري",
     targetAudience: "الرجال والنساء",
     cashFee: 10755,
     installmentFee: 11755,
