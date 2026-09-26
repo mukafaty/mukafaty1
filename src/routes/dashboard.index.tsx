@@ -116,6 +116,8 @@ function DashboardHome() {
     }).reduce((sum, c) => sum + c.count, 0);
 
     const interested = referrals.filter((r) => r.status === "مهتم").length;
+    // المتدربون: الإحالات التي وصلت إلى حالة "تم الدفع" (تحوّلت فعليًا إلى تسجيل)
+    const trainees = referrals.filter((r) => r.status === "تم الدفع").length;
     const rewards = referrals.reduce((sum, r) => sum + r.reward, 0);
 
     // الرسم البياني: توزيع الإحالات على فترات متساوية
@@ -142,8 +144,8 @@ function DashboardHome() {
     return {
       referrals,
       latest: referrals.slice(0, 3),
-      clients: referrals.length,
       interested,
+      trainees,
       clicks,
       rewards,
       chart,
@@ -188,27 +190,27 @@ function DashboardHome() {
 
       <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
         <StatCard
-          title="إجمالي العملاء"
-          value={stats.clients}
-          unit="عميل"
-          icon={User}
-          iconClass="bg-sky-100 text-sky-600"
-          delay={0}
-        />
-        <StatCard
-          title="المهتمون"
-          value={stats.interested}
-          unit="مهتم"
-          icon={Users}
-          iconClass="bg-violet-100 text-violet-600"
-          delay={80}
-        />
-        <StatCard
           title="عدد النقرات"
           value={stats.clicks}
           unit="نقرة"
           icon={MousePointer2}
           iconClass="bg-brand-soft text-brand"
+          delay={0}
+        />
+        <StatCard
+          title="تسجيلات الاهتمام"
+          value={stats.interested}
+          unit="تسجيل"
+          icon={Users}
+          iconClass="bg-violet-100 text-violet-600"
+          delay={80}
+        />
+        <StatCard
+          title="عدد المتدربين"
+          value={stats.trainees}
+          unit="متدرب"
+          icon={GraduationCap}
+          iconClass="bg-sky-100 text-sky-600"
           delay={160}
         />
         <StatCard
@@ -352,10 +354,13 @@ function DashboardHome() {
             <p className="text-sm leading-7 text-navy/70">
               شارك رابط الإحالة الخاص بك مع زملائك وجمهورك واحصل على مكافآت مميزة.
             </p>
-            <button className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-bold text-primary-foreground transition-colors duration-200 hover:bg-navy">
+            <Link
+              to="/dashboard/ads"
+              className="inline-flex h-11 w-fit items-center justify-center gap-2 rounded-xl bg-brand px-5 text-sm font-bold text-primary-foreground transition-colors duration-200 hover:bg-navy"
+            >
               <Link2 size={17} />
-              شارك الآن
-            </button>
+              ابدأ الآن
+            </Link>
           </div>
         </div>
       </section>
