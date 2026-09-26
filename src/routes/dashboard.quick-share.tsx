@@ -13,7 +13,7 @@ import {
   List,
 } from "lucide-react";
 import { toast } from "sonner";
-import { supabase } from "@/integrations/supabase/client";
+import { useShortLink } from "@/lib/useShortLink";
 
 const AD_SLUG = "hr-diploma";
 import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
@@ -114,26 +114,7 @@ function QuickSharePage() {
     setIsMobile(isMobileDevice());
   }, []);
 
-  const [shortLink, setShortLink] = useState("جارٍ تجهيز الرابط...");
-  useEffect(() => {
-    let active = true;
-    (async () => {
-      const { data: userData } = await supabase.auth.getUser();
-      if (!userData.user) {
-        if (active) setShortLink("سجّل الدخول لإنشاء رابطك المختصر");
-        return;
-      }
-      const { data, error } = await supabase.rpc("get_or_create_short_link", {
-        _ad_slug: AD_SLUG,
-      });
-      if (!active) return;
-      if (error || !data) setShortLink("تعذّر إنشاء الرابط المختصر");
-      else setShortLink(`https://mukafaty.com/r/${data}`);
-    })();
-    return () => {
-      active = false;
-    };
-  }, []);
+  const { shortLink } = useShortLink(AD_SLUG);
 
   const visiblePlatforms = isMobile
     ? platforms
