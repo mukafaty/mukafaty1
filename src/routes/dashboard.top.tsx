@@ -72,6 +72,9 @@ const MY_STANDING = {
 
 const nf = (n: number) => n.toLocaleString("en-US");
 
+// Temporary feature flag: set to true to show the rewards section again.
+const SHOW_TOP_REWARDS_UI = false;
+
 function RankBadge({ rank }: { rank: number }) {
   const tone =
     rank === 1
@@ -207,7 +210,8 @@ function TopPage() {
         ))}
       </div>
 
-      {/* Rewards */}
+      {/* Rewards (temporarily hidden via SHOW_TOP_REWARDS_UI) */}
+      {SHOW_TOP_REWARDS_UI && (
       <div className="space-y-3">
         <div className="flex items-center gap-3">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-brand-soft text-brand">
@@ -225,6 +229,8 @@ function TopPage() {
           <p className="text-sm font-bold text-navy">{TOP_REWARDS_NOTE}</p>
         </div>
       </div>
+      )}
+
 
       {/* Filters */}
       <div className="grid gap-3 rounded-2xl border border-border bg-card p-3 sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_auto]">
