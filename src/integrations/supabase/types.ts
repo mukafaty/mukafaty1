@@ -59,13 +59,48 @@ export type Database = {
         }
         Relationships: []
       }
+      short_links: {
+        Row: {
+          ad_slug: string
+          created_at: string
+          destination_url: string
+          id: string
+          referral_code: string
+          short_code: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          ad_slug: string
+          created_at?: string
+          destination_url: string
+          id?: string
+          referral_code: string
+          short_code: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          ad_slug?: string
+          created_at?: string
+          destination_url?: string
+          id?: string
+          referral_code?: string
+          short_code?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       email_is_registered: { Args: { _email: string }; Returns: boolean }
+      get_or_create_short_link: { Args: { _ad_slug: string }; Returns: string }
       next_member_number: { Args: never; Returns: string }
+      resolve_short_link: { Args: { _code: string }; Returns: string }
     }
     Enums: {
       [_ in never]: never
