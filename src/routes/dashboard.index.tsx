@@ -7,6 +7,7 @@ import {
   Info,
   Link2,
   MousePointer2,
+  User,
   UserRound,
   Users,
   Wallet,
