@@ -78,7 +78,7 @@ export const referralLinks: ReferralLink[] = [
   {
     id: "referral-link",
     title: "رابط الإحالة",
-    value: "https://mukafaty.com/ad/hr-diploma?ref=ahmed2487",
+    value: "https://mukafaty.com/ad/hr-diploma?ref=mk0001",
   },
   {
     id: "referral-link-short",
