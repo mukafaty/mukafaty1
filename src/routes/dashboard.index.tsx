@@ -7,6 +7,7 @@ import {
   Info,
   Link2,
   MousePointer2,
+  UserRound,
   Users,
   Wallet,
 } from "lucide-react";
