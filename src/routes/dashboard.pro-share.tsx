@@ -542,8 +542,8 @@ function ProSharePage() {
             <div id="referral-section" className="space-y-3">
               <ActionCard
                 icon={Link2}
-                title="رابط الإحالة وكود الخصم"
-                description="نسخ رابط الإحالة أو كود الخصم"
+                title="رابط الإحالة"
+                description="نسخ رابط الإحالة أو الرابط المختصر"
                 targetId="referral-links"
               />
               <ActionCard
@@ -634,8 +634,8 @@ function ProSharePage() {
         id="referral-links"
         className="scroll-mt-5 overflow-hidden rounded-3xl border border-border bg-card p-4 shadow-card sm:p-5 lg:p-6"
       >
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {referralLinks.map((link) => (
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          {referralLinks.filter((link) => link.id !== "discount-code").map((link) => (
             <ReferralLinkCard
               key={link.id}
               title={link.title}

@@ -17,14 +17,11 @@ export function platformLink(content: ProShareContent, platform: ProSharePlatfor
   }
 }
 
-/** نص المشاركة الكامل: نص الإعلان + كود الخصم + رابط الإحالة */
+/** نص المشاركة الكامل: نص الإعلان + رابط الإحالة (كود الخصم مخفي مؤقتًا) */
 export function platformText(content: ProShareContent, platform: ProSharePlatformId): string {
   const base = platform === "x" ? content.xShareText : content.shareText;
   const link = platformLink(content, platform);
-  const withCode = base.includes(content.discountCode)
-    ? base
-    : `${base}\n\nكود الخصم: ${content.discountCode}`;
-  return withCode.includes(link) ? withCode : `${withCode}\n\n${link}`;
+  return base.includes(link) ? base : `${base}\n\n${link}`;
 }
 
 function imageFor(content: ProShareContent, platform: ProSharePlatformId): string {
@@ -131,7 +128,7 @@ export async function launchPlatform(
       openWindow(`https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(link)}`);
       return { kind: "opened" };
     case "email": {
-      const body = `${content.shareText}\n\nكود الخصم: ${content.discountCode}\n\n${link}`;
+      const body = `${content.shareText}\n\n${link}`;
       if (typeof window !== "undefined") {
         window.location.href = `mailto:?subject=${encodeURIComponent(content.title)}&body=${encodeURIComponent(body)}`;
       }
