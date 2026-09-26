@@ -2,7 +2,6 @@ import hrImg from "@/assets/ads-hr.jpg";
 import cyberImg from "@/assets/ads-cyber.jpg";
 import dataImg from "@/assets/ads-data.jpg";
 import devImg from "@/assets/ads-dev.jpg";
-import marketingImg from "@/assets/ads-marketing.jpg";
 import financeImg from "@/assets/ads-finance.jpg";
 import aiImg from "@/assets/ads-ai.jpg";
 import englishImg from "@/assets/ads-english.jpg";
