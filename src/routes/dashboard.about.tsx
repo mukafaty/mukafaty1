@@ -37,13 +37,12 @@ function AboutPage() {
         className="animate-in fade-in slide-in-from-bottom-3 overflow-hidden rounded-3xl border border-border bg-card duration-700 fill-mode-backwards"
         style={{ animationDelay: "80ms" }}
       >
-        <div className="grid items-center gap-6 p-6 sm:p-8 lg:grid-cols-2 lg:gap-10">
+        <div className="grid items-center gap-x-6 gap-y-4 p-4 sm:p-5 lg:grid-cols-2 lg:gap-x-10">
           <div className="order-2 min-w-0 text-right lg:order-1">
-            
-            <p className="mt-3 text-lg font-bold text-brand sm:text-xl">
+            <p className="text-lg font-bold text-brand sm:text-xl">
               حوّل علاقاتك ومهاراتك التسويقية إلى دخل إضافي.
             </p>
-            <p className="mt-4 leading-8 text-muted-foreground">
+            <p className="mt-3 leading-8 text-muted-foreground">
               شارك البرامج التدريبية المتاحة، واستفد من المكافآت المالية عند تسجيل العملاء من خلال رابط الإحالة الخاص بك.
             </p>
           </div>
