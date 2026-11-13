@@ -495,12 +495,12 @@ function AdLandingPage() {
                       )}
                     </Button>
                   </form>
+
+                  <a href="#privacy" className="mt-4 block text-center text-xs font-bold text-navy underline underline-offset-4 hover:text-brand">
+                    للاطلاع على سياسة الخصوصية - اضغط هنا
+                  </a>
                 </>
               )}
-
-              <a href="#privacy" className="mt-4 block text-center text-xs font-bold text-navy underline underline-offset-4 hover:text-brand">
-                للاطلاع على سياسة الخصوصية - اضغط هنا
-              </a>
             </section>
           </div>
         </section>
