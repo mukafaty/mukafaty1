@@ -52,12 +52,6 @@ export const Route = createFileRoute("/dashboard/")({
   component: DashboardHome,
 });
 
-const STATUS_TONES: Record<string, string> = {
-  "تم الدفع": "bg-emerald-100 text-emerald-700",
-  مهتم: "bg-amber-100 text-amber-700",
-  جديد: "bg-sky-100 text-sky-700",
-};
-
 const EMPTY_MESSAGE = "لا توجد بيانات خلال الفترة المحددة";
 
 type StatProps = {
@@ -246,8 +240,8 @@ function DashboardHome() {
                 <tr className="text-xs font-bold text-muted-foreground">
                   <th className="pb-2 pr-2 font-bold">الاسم</th>
                   <th className="pb-2 font-bold">البرنامج التدريبي</th>
+                  <th className="pb-2 font-bold">المدينة</th>
                   <th className="pb-2 font-bold">تاريخ الإحالة</th>
-                  <th className="pb-2 font-bold">الحالة</th>
                 </tr>
               </thead>
               <tbody>
@@ -262,14 +256,8 @@ function DashboardHome() {
                       </span>
                     </td>
                     <td className="py-2 text-muted-foreground">{r.program}</td>
+                    <td className="py-2 text-muted-foreground">{r.city}</td>
                     <td className="py-2 text-muted-foreground">{formatArabicDate(r.date)}</td>
-                    <td className="py-2">
-                      <span
-                        className={`inline-flex rounded-lg px-3 py-1 text-xs font-bold ${STATUS_TONES[r.status]}`}
-                      >
-                        {r.status}
-                      </span>
-                    </td>
                   </tr>
                 ))}
               </tbody>

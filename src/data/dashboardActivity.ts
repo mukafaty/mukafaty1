@@ -7,6 +7,8 @@ export type ReferralRecord = {
   id: string;
   name: string;
   program: string;
+  /** مدينة العميل */
+  city: string;
   /** تاريخ الإحالة (ISO) */
   date: string;
   status: ReferralStatus;
@@ -47,6 +49,21 @@ const PROGRAMS = [
   "دبلوم المحاسبة المالية",
 ];
 
+const CITIES = [
+  "الرياض",
+  "جدة",
+  "الدمام",
+  "مكة المكرمة",
+  "المدينة المنورة",
+  "بريدة",
+  "الخبر",
+  "أبها",
+  "تبوك",
+  "الطائف",
+  "حائل",
+  "القطيف",
+];
+
 const STATUSES: ReferralStatus[] = ["تم الدفع", "مهتم", "جديد"];
 
 /** مولّد عشوائي ثابت (حتى تبقى البيانات نفسها بين الخادم والمتصفح) */
@@ -78,6 +95,7 @@ function buildData() {
         id: `r-${i}-${k}`,
         name: NAMES[Math.floor(rand() * NAMES.length)] as string,
         program: PROGRAMS[Math.floor(rand() * PROGRAMS.length)] as string,
+        city: CITIES[Math.floor(rand() * CITIES.length)] as string,
         date: new Date(base - Math.floor(rand() * day * 0.8)).toISOString(),
         status,
         reward: status === "تم الدفع" ? Math.round((rand() * 900 + 300) * 100) / 100 : 0,
