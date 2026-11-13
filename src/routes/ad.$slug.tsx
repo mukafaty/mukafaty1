@@ -167,6 +167,12 @@ function AdLandingPage() {
 
   // إخفاء مؤقت لقسم كود الخصم في نموذج «سجّل الآن» — أعد القيمة إلى true لإعادة تفعيله.
   const SHOW_DISCOUNT_CODE_UI = false;
+
+  // إخفاء مؤقت للشريط العلوي («تواصل معنا») — أعد القيمة إلى true لإعادة إظهاره.
+  const SHOW_TOP_BAR_UI = false;
+
+  // إخفاء مؤقت لروابط الفوتر (الشروط والأحكام / سياسة الخصوصية / تواصل معنا) — أعد القيمة إلى true لإعادة إظهارها.
+  const SHOW_FOOTER_LINKS_UI = false;
   const discountPercentage = attribution.discountPercentage;
   const finalPrice =
     discountPercentage != null ? calculateFinalPrice(program.cashFee, discountPercentage) : null;
@@ -263,13 +269,15 @@ function AdLandingPage() {
   return (
 
     <div dir="rtl" className="min-h-screen overflow-x-hidden bg-brand-soft/35 text-foreground">
-      <header className="border-b border-border/70 bg-brand-soft/55">
-        <div className="mx-auto flex h-14 max-w-7xl items-center px-5 sm:h-16 sm:px-8 lg:px-12">
-          <a href="#contact" className="text-sm font-bold text-navy transition-colors hover:text-brand">
-            تواصل معنا
-          </a>
-        </div>
-      </header>
+      {SHOW_TOP_BAR_UI ? (
+        <header className="border-b border-border/70 bg-brand-soft/55">
+          <div className="mx-auto flex h-14 max-w-7xl items-center px-5 sm:h-16 sm:px-8 lg:px-12">
+            <a href="#contact" className="text-sm font-bold text-navy transition-colors hover:text-brand">
+              تواصل معنا
+            </a>
+          </div>
+        </header>
+      ) : null}
 
       <main>
         <section
@@ -507,13 +515,23 @@ function AdLandingPage() {
       </main>
 
       <footer id="contact" className="bg-navy text-primary-foreground">
-        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-4 px-5 py-7 text-center text-xs sm:grid-cols-[minmax(0,1fr)_auto] sm:items-center sm:px-8 sm:text-right lg:px-12">
-          <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 sm:justify-start">
-            <a href="#terms" className="transition-opacity hover:opacity-75">الشروط والأحكام</a>
-            <a id="privacy" href="#privacy" className="transition-opacity hover:opacity-75">سياسة الخصوصية</a>
-            <a href="#contact" className="transition-opacity hover:opacity-75">تواصل معنا</a>
-          </nav>
-          <p className="font-medium">جميع الحقوق محفوظة © 2026</p>
+        <div
+          className={`mx-auto grid max-w-7xl grid-cols-1 gap-4 px-5 py-7 text-center text-xs sm:items-center sm:px-8 lg:px-12 ${
+            SHOW_FOOTER_LINKS_UI
+              ? "sm:grid-cols-[minmax(0,1fr)_auto] sm:text-right"
+              : "sm:grid-cols-1"
+          }`}
+        >
+          {SHOW_FOOTER_LINKS_UI ? (
+            <nav className="flex flex-wrap justify-center gap-x-6 gap-y-2 sm:justify-start">
+              <a href="#terms" className="transition-opacity hover:opacity-75">الشروط والأحكام</a>
+              <a id="privacy" href="#privacy" className="transition-opacity hover:opacity-75">سياسة الخصوصية</a>
+              <a href="#contact" className="transition-opacity hover:opacity-75">تواصل معنا</a>
+            </nav>
+          ) : null}
+          <p id={SHOW_FOOTER_LINKS_UI ? undefined : "privacy"} className="font-medium">
+            جميع الحقوق محفوظة © 2026
+          </p>
         </div>
       </footer>
     </div>
