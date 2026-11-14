@@ -25,8 +25,8 @@ export type ClickRecord = {
 /** الرصيد الحالي القابل للسحب — لا يتأثر بفلتر الفترة */
 export const AVAILABLE_BALANCE = 2500;
 
-/** إجمالي المكافآت التجريبي المعروض في الصفحة الرئيسية فقط. */
-export const TOTAL_REWARDS = 8290;
+/** إجماليات معايرة سجلات النشاط التجريبية للبطاقات فقط. */
+const STAT_TOTALS = { clicks: 2084, interested: 100, trainees: 30, rewards: 8290 };
 
 /** صفوف العرض التجريبية مستقلة عن السجلات التي تحسب المؤشرات والرسم. */
 export const LATEST_REFERRALS = [
@@ -191,6 +191,25 @@ export function inPeriod(dateIso: string, period: PeriodId, now: Date = new Date
   if (t > now.getTime()) return false;
   const start = periodStart(period, now);
   return start === null ? true : t >= start;
+}
+
+/** مصدر مؤرخ موحد للبطاقات؛ لا يغيّر سجلات الرسم أو صفوف آخر الإحالات. */
+export function getDashboardStats(period: PeriodId, now: Date = new Date()) {
+  const totalActivity = CLICK_RECORDS.reduce((sum, record) => sum + record.count, 0);
+  const selectedActivity = CLICK_RECORDS
+    .filter((record) => inPeriod(record.date, period, now))
+    .reduce((sum, record) => sum + record.count, 0);
+  const share = totalActivity > 0 ? selectedActivity / totalActivity : 0;
+  // نشاط التحويل التجريبي أكثر تركّزًا في الفترات الحديثة، مع الحفاظ على التدرج.
+  const conversionShare = Math.sqrt(share);
+  const interested = Math.round(STAT_TOTALS.interested * conversionShare);
+  return {
+    clicks: Math.round(STAT_TOTALS.clicks * share),
+    interested,
+    trainees: Math.round(interested * STAT_TOTALS.trainees / STAT_TOTALS.interested),
+    rewards: Math.round(STAT_TOTALS.rewards * conversionShare),
+    balance: AVAILABLE_BALANCE,
+  };
 }
 
 /** تنسيق تاريخ عربي مختصر */

@@ -27,9 +27,8 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
 import {
   AVAILABLE_BALANCE,
-  TOTAL_REWARDS,
+  getDashboardStats,
   LATEST_REFERRALS,
-  CLICK_RECORDS,
   PERIOD_OPTIONS,
   REFERRAL_RECORDS,
   formatArabicDate,
@@ -124,14 +123,7 @@ function DashboardHome() {
       const t = +new Date(r.date);
       return t <= nowTs && t >= from;
     });
-    const clicks = CLICK_RECORDS.filter((c) => {
-      const t = +new Date(c.date);
-      return t <= nowTs && t >= from;
-    }).reduce((sum, c) => sum + c.count, 0);
-
-    const interested = referrals.filter((r) => r.status === "مهتم").length;
-    // المتدربون: الإحالات التي وصلت إلى حالة "تم الدفع" (تحوّلت فعليًا إلى تسجيل)
-    const trainees = referrals.filter((r) => r.status === "تم الدفع").length;
+    const cardStats = getDashboardStats(period, now);
 
     // الرسم البياني: توزيع الإحالات على فترات متساوية
     const spanStart =
@@ -157,9 +149,7 @@ function DashboardHome() {
     return {
       referrals,
       latest: LATEST_REFERRALS.filter((r) => inPeriod(r.date, period, now)),
-      interested,
-      trainees,
-      clicks,
+      ...cardStats,
       chart,
     };
   }, [period]);
@@ -240,7 +230,7 @@ function DashboardHome() {
         <StatCard
           title="إجمالي المكافآت"
           explanation={"إجمالي المكافآت التي استحققتها من تسجيلات العملاء المحالين من طرفك، سواء تم صرفها أو كانت لا تزال مستحقة للصرف.\n\nيشمل المكافآت المصروفة وغير المصروفة."}
-          value={TOTAL_REWARDS}
+          value={stats.rewards}
           unit="ريال سعودي"
           icon={UserRound}
           iconClass="bg-emerald-100 text-emerald-600"
