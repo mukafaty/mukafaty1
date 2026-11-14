@@ -22,14 +22,19 @@ import {
   YAxis,
 } from "recharts";
 import { CountUp } from "@/components/dashboard/CountUp";
+import { Button } from "@/components/ui/button";
+import { Tooltip as InfoTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
 import {
   AVAILABLE_BALANCE,
+  TOTAL_REWARDS,
+  LATEST_REFERRALS,
   CLICK_RECORDS,
   PERIOD_OPTIONS,
   REFERRAL_RECORDS,
   formatArabicDate,
   formatChartLabel,
+  inPeriod,
   periodStart,
   type PeriodId,
 } from "@/data/dashboardActivity";
@@ -43,6 +48,8 @@ export const Route = createFileRoute("/dashboard/")({
         content: "تابع أداءك ومكافآتك وإحالاتك ورصيدك المالي في لوحة تحكم مكافآتي للمسوقين.",
       },
       { property: "og:title", content: "لوحة تحكم المسوق | مكافآتي" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "تابع أداءك ومكافآتك وإحالاتك ورصيدك المالي في لوحة تحكم مكافآتي للمسوقين.",
@@ -62,29 +69,40 @@ type StatProps = {
   icon: typeof Users;
   iconClass: string;
   delay: number;
+  explanation: string;
 };
 
-function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay }: StatProps) {
+function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay, explanation }: StatProps) {
+  const [infoOpen, setInfoOpen] = useState(false);
   return (
     <div
-      className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 duration-500 fill-mode-backwards"
+      className="animate-in fade-in slide-in-from-bottom-3 flex min-w-0 flex-col rounded-3xl border border-border bg-card p-4 duration-500 fill-mode-backwards"
       style={{ animationDelay: `${delay}ms` }}
     >
-      <div className="flex items-start justify-between gap-3">
-        <span className="text-[15px] font-bold text-navy">{title}</span>
-        <Info size={16} className="mt-1 shrink-0 text-muted-foreground/60" />
+      <div className="flex min-h-10 items-start justify-between gap-1">
+        <span className="text-sm font-bold text-navy">{title}</span>
+        <InfoTooltip open={infoOpen} onOpenChange={setInfoOpen}>
+          <TooltipTrigger asChild>
+            <Button type="button" variant="ghost" size="icon" aria-label={`معلومات ${title}`} onClick={() => setInfoOpen(true)} className="h-6 w-6 shrink-0 text-muted-foreground/60">
+              <Info size={16} />
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent dir="rtl" side="bottom" collisionPadding={12} className="max-w-[min(320px,calc(100vw-24px))] whitespace-pre-line text-right leading-6">
+            {explanation}
+          </TooltipContent>
+        </InfoTooltip>
       </div>
-      <div className="mt-3 flex items-center justify-between gap-3">
-        <div className="flex min-w-0 items-baseline gap-2">
+      <div className="mt-auto flex items-center justify-between gap-2">
+        <div className="flex min-w-0 flex-col gap-1">
           <CountUp
             key={`${title}-${value}`}
             value={value}
             decimals={decimals}
-            className="text-3xl font-black tracking-tight text-navy sm:text-[34px]"
+            className="text-[26px] font-black text-navy"
           />
-          <span className="truncate text-sm text-muted-foreground">{unit}</span>
+          <span className="text-sm text-muted-foreground">{unit}</span>
         </div>
-        <span className={`grid h-12 w-12 shrink-0 place-items-center rounded-full ${iconClass}`}>
+        <span className={`grid h-10 w-10 shrink-0 place-items-center rounded-full ${iconClass}`}>
           <Icon size={22} />
         </span>
       </div>
@@ -114,7 +132,6 @@ function DashboardHome() {
     const interested = referrals.filter((r) => r.status === "مهتم").length;
     // المتدربون: الإحالات التي وصلت إلى حالة "تم الدفع" (تحوّلت فعليًا إلى تسجيل)
     const trainees = referrals.filter((r) => r.status === "تم الدفع").length;
-    const rewards = referrals.reduce((sum, r) => sum + r.reward, 0);
 
     // الرسم البياني: توزيع الإحالات على فترات متساوية
     const spanStart =
@@ -139,11 +156,10 @@ function DashboardHome() {
 
     return {
       referrals,
-      latest: referrals.slice(0, 3),
+      latest: LATEST_REFERRALS.filter((r) => inPeriod(r.date, period, now)),
       interested,
       trainees,
       clicks,
-      rewards,
       chart,
     };
   }, [period]);
@@ -151,7 +167,8 @@ function DashboardHome() {
   const hasReferrals = stats.referrals.length > 0;
 
   return (
-    <div className="space-y-5">
+    <TooltipProvider delayDuration={150}>
+    <div className="space-y-4">
       <section className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
         <div className="min-w-0 animate-in fade-in slide-in-from-bottom-2 text-right duration-500 sm:order-1">
           <h1 className="text-xl font-black text-navy sm:text-2xl">مرحباً، أحمد السبيعي 👋</h1>
@@ -184,9 +201,10 @@ function DashboardHome() {
         </div>
       </section>
 
-      <section className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+      <section className="grid auto-rows-fr gap-3 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-5">
         <StatCard
           title="عدد النقرات"
+          explanation={"عدد مرات النقر على روابط الإحالة الخاصة بك عبر مختلف منصات النشر خلال الفترة المحددة.\n\nقد ينقر الشخص نفسه أكثر من مرة، لذلك لا يمثل الرقم بالضرورة عدد الأشخاص الفريدين."}
           value={stats.clicks}
           unit="نقرة"
           icon={MousePointer2}
@@ -195,6 +213,7 @@ function DashboardHome() {
         />
         <StatCard
           title="تسجيلات الاهتمام"
+          explanation={"عدد طلبات الاهتمام التي أرسلها العملاء عبر روابط الإحالة الخاصة بك للتسجيل في البرامج التدريبية.\n\nتسجيل الاهتمام لا يعني أن العميل أكمل التسجيل الفعلي أو سدد الرسوم."}
           value={stats.interested}
           unit="تسجيل"
           icon={Users}
@@ -203,6 +222,7 @@ function DashboardHome() {
         />
         <StatCard
           title="عدد المتدربين"
+          explanation={"عدد العملاء المحالين من طرفك الذين أكملوا التسجيل الفعلي في أحد البرامج التدريبية.\n\nلا يُحتسب العميل بمجرد تسجيل اهتمامه؛ يجب تأكيد تسجيله من المعهد."}
           value={stats.trainees}
           unit="متدرب"
           icon={GraduationCap}
@@ -211,6 +231,7 @@ function DashboardHome() {
         />
         <StatCard
           title="الرصيد المتاح"
+          explanation={"إجمالي المكافآت المستحقة لك والمتاحة للصرف، والتي لم يتم صرفها حتى الآن.\n\nلا يشمل المكافآت التي تم صرفها سابقًا أو التي لم تصبح مستحقة بعد."}
           value={AVAILABLE_BALANCE}
           unit="ريال سعودي"
           icon={Wallet}
@@ -219,8 +240,8 @@ function DashboardHome() {
         />
         <StatCard
           title="إجمالي المكافآت"
-          value={stats.rewards}
-          decimals={2}
+          explanation={"إجمالي المكافآت التي استحققتها من تسجيلات العملاء المحالين من طرفك، سواء تم صرفها أو كانت لا تزال مستحقة للصرف.\n\nيشمل المكافآت المصروفة وغير المصروفة."}
+          value={TOTAL_REWARDS}
           unit="ريال سعودي"
           icon={UserRound}
           iconClass="bg-emerald-100 text-emerald-600"
@@ -229,12 +250,12 @@ function DashboardHome() {
       </section>
 
       <section
-        className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-5 duration-700 fill-mode-backwards"
+        className="animate-in fade-in slide-in-from-bottom-3 rounded-3xl border border-border bg-card p-4 duration-700 fill-mode-backwards"
         style={{ animationDelay: "380ms" }}
       >
         <h2 className="text-lg font-black text-navy">آخر الإحالات</h2>
-        {hasReferrals ? (
-          <div className="mt-4 overflow-x-auto">
+        {stats.latest.length > 0 ? (
+          <div className="mt-3 overflow-x-auto">
             <table className="w-full min-w-[560px] text-right">
               <thead>
                 <tr className="text-xs font-bold text-muted-foreground">
@@ -272,7 +293,7 @@ function DashboardHome() {
 
       <section className="grid gap-4 lg:grid-cols-2">
         <div
-          className="animate-in fade-in slide-in-from-bottom-3 order-2 rounded-3xl border border-border bg-card p-5 duration-700 fill-mode-backwards lg:order-1"
+          className="animate-in fade-in slide-in-from-bottom-3 order-2 rounded-3xl border border-border bg-card p-4 duration-700 fill-mode-backwards lg:order-1"
           style={{ animationDelay: "460ms" }}
         >
           <h2 className="text-lg font-black text-navy">أداء الإحالات</h2>
@@ -355,5 +376,6 @@ function DashboardHome() {
         </div>
       </section>
     </div>
+    </TooltipProvider>
   );
 }
