@@ -23,7 +23,7 @@ import {
 } from "recharts";
 import { CountUp } from "@/components/dashboard/CountUp";
 import { Button } from "@/components/ui/button";
-import { Tooltip as InfoTooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import shareAsset from "@/assets/muk-card-dashboard.jpg.asset.json";
 import {
   AVAILABLE_BALANCE,
@@ -81,16 +81,16 @@ function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay, 
     >
       <div className="flex min-h-10 items-start justify-between gap-1">
         <span className="text-sm font-bold text-navy">{title}</span>
-        <InfoTooltip open={infoOpen} onOpenChange={setInfoOpen}>
-          <TooltipTrigger asChild>
-            <Button type="button" variant="ghost" size="icon" aria-label={`معلومات ${title}`} onClick={() => setInfoOpen(true)} className="h-6 w-6 shrink-0 text-muted-foreground/60">
+        <Popover open={infoOpen} onOpenChange={setInfoOpen}>
+          <PopoverTrigger asChild>
+            <Button type="button" variant="ghost" size="icon" aria-label={`معلومات ${title}`} onPointerEnter={(event) => { if (event.pointerType === "mouse") setInfoOpen(true); }} onPointerLeave={(event) => { if (event.pointerType === "mouse") setInfoOpen(false); }} className="h-6 w-6 shrink-0 text-muted-foreground/60">
               <Info size={16} />
             </Button>
-          </TooltipTrigger>
-          <TooltipContent dir="rtl" side="bottom" collisionPadding={12} className="max-w-[min(320px,calc(100vw-24px))] whitespace-pre-line text-right leading-6">
+          </PopoverTrigger>
+          <PopoverContent dir="rtl" side="bottom" collisionPadding={12} onOpenAutoFocus={(event) => event.preventDefault()} onCloseAutoFocus={(event) => event.preventDefault()} className="w-80 max-w-[calc(100vw-24px)] border-0 bg-primary px-3 py-1.5 text-xs text-primary-foreground whitespace-pre-line text-right leading-6 shadow-none">
             {explanation}
-          </TooltipContent>
-        </InfoTooltip>
+          </PopoverContent>
+        </Popover>
       </div>
       <div className="mt-auto flex items-center justify-between gap-2">
         <div className="flex min-w-0 flex-col gap-1">
@@ -167,7 +167,6 @@ function DashboardHome() {
   const hasReferrals = stats.referrals.length > 0;
 
   return (
-    <TooltipProvider delayDuration={150}>
     <div className="space-y-4">
       <section className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-4 sm:flex sm:flex-wrap sm:items-center sm:justify-between">
         <div className="min-w-0 animate-in fade-in slide-in-from-bottom-2 text-right duration-500 sm:order-1">
@@ -376,6 +375,5 @@ function DashboardHome() {
         </div>
       </section>
     </div>
-    </TooltipProvider>
   );
 }
