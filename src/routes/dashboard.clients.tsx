@@ -323,6 +323,10 @@ const STATUSES = [
 ] as const;
 const CITIES = ["كل المدن", "الرياض", "جدة", "مكة المكرمة", "ينبع"] as const;
 const BRANCHES = ["كل الفروع", ...Array.from(new Set(CLIENTS.map((c) => c.branch)))];
+
+// إخفاء مؤقت (قابل للإلغاء) لفلتر «كل الفروع» وعمود «الفرع» — البيانات والمنطق محفوظان.
+const SHOW_BRANCH_FILTER_UI = false;
+const SHOW_BRANCH_COLUMN_UI = false;
 const PERIODS = ["كل الفترات", "آخر 7 أيام", "آخر 30 يومًا", "آخر 90 يومًا"] as const;
 
 function parseDate(d: string) {
@@ -471,7 +475,13 @@ ${rows
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-4 sm:p-5">
-        <div className="grid gap-3 lg:grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))_auto]">
+        <div
+          className={`grid gap-3 ${
+            SHOW_BRANCH_FILTER_UI
+              ? "lg:grid-cols-[minmax(0,1.4fr)_repeat(4,minmax(0,1fr))_auto]"
+              : "lg:grid-cols-[minmax(0,1.4fr)_repeat(3,minmax(0,1fr))_auto]"
+          }`}
+        >
           <div className="relative min-w-0">
             <Search
               size={16}
@@ -508,16 +518,18 @@ ${rows
             icon={MapPin}
             label="كل المدن"
           />
-          <Select
-            value={branch}
-            onChange={(v) => {
-              setBranch(v);
-              reset();
-            }}
-            options={BRANCHES}
-            icon={Building2}
-            label="كل الفروع"
-          />
+          {SHOW_BRANCH_FILTER_UI && (
+            <Select
+              value={branch}
+              onChange={(v) => {
+                setBranch(v);
+                reset();
+              }}
+              options={BRANCHES}
+              icon={Building2}
+              label="كل الفروع"
+            />
+          )}
           <Select
             value={period}
             onChange={(v) => {
@@ -546,7 +558,9 @@ ${rows
                 <th className="px-4 py-3.5 text-sm font-bold">اسم العميل</th>
                 <th className="px-4 py-3.5 text-sm font-bold">البرنامج التدريبي</th>
                 <th className="px-4 py-3.5 text-sm font-bold">المدينة</th>
-                <th className="px-4 py-3.5 text-sm font-bold">الفرع</th>
+                {SHOW_BRANCH_COLUMN_UI && (
+                  <th className="px-4 py-3.5 text-sm font-bold">الفرع</th>
+                )}
                 <th className="px-4 py-3.5 text-sm font-bold">تاريخ الإحالة</th>
                 <th className="px-4 py-3.5 text-sm font-bold">حالة التسجيل</th>
                 <th className="px-4 py-3.5 text-sm font-bold">المسوق الداخلي</th>
@@ -560,7 +574,9 @@ ${rows
                   <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
                   <td className="px-4 py-3 text-sm text-navy">{row.program}</td>
                   <td className="px-4 py-3 text-sm text-muted-foreground">{row.city}</td>
-                  <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
+                  {SHOW_BRANCH_COLUMN_UI && (
+                    <td className="px-4 py-3 text-sm text-muted-foreground">{row.branch}</td>
+                  )}
                   <td className="px-4 py-3 text-sm text-muted-foreground" dir="ltr">
                     {row.date}
                   </td>
@@ -579,7 +595,7 @@ ${rows
               ))}
               {visible.length === 0 && (
                 <tr>
-                  <td colSpan={9} className="px-4 py-10 text-center text-sm text-muted-foreground">
+                  <td colSpan={SHOW_BRANCH_COLUMN_UI ? 9 : 8} className="px-4 py-10 text-center text-sm text-muted-foreground">
                     لا توجد نتائج مطابقة للبحث أو الفلاتر المحددة.
                   </td>
                 </tr>
