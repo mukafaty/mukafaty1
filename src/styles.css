@@ -96,6 +96,8 @@
   --color-register-primary-hover: var(--register-primary-hover);
   --color-register-input: var(--register-input);
   --color-register-danger: var(--register-danger);
+  --color-dashboard-stat-info: var(--dashboard-stat-info);
+  --color-dashboard-stat-info-foreground: var(--dashboard-stat-info-foreground);
 }
 
 :root {
@@ -148,6 +150,8 @@
   --register-primary-hover: oklch(0.65 0.17 250);
   --register-input: oklch(0.9 0.02 255);
   --register-danger: #ff0000;
+  --dashboard-stat-info: #cbe3fd;
+  --dashboard-stat-info-foreground: #000000;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);

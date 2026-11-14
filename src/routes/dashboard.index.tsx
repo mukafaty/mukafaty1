@@ -87,7 +87,7 @@ function StatCard({ title, value, unit, decimals, icon: Icon, iconClass, delay, 
               <Info size={16} />
             </Button>
           </PopoverTrigger>
-          <PopoverContent dir="rtl" side="bottom" collisionPadding={12} onOpenAutoFocus={(event) => event.preventDefault()} onCloseAutoFocus={(event) => event.preventDefault()} className="w-80 max-w-[calc(100vw-24px)] border-0 bg-primary px-3 py-1.5 text-xs text-primary-foreground whitespace-pre-line text-right leading-6 shadow-none">
+          <PopoverContent dir="rtl" side="bottom" collisionPadding={12} onOpenAutoFocus={(event) => event.preventDefault()} onCloseAutoFocus={(event) => event.preventDefault()} className="w-80 max-w-[calc(100vw-24px)] border-0 bg-dashboard-stat-info px-3 py-1.5 text-xs text-dashboard-stat-info-foreground whitespace-pre-line text-right leading-6 shadow-none">
             {explanation}
           </PopoverContent>
         </Popover>
