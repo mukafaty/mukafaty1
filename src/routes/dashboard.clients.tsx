@@ -417,11 +417,11 @@ td{padding:7px 8px;border-bottom:1px solid #e5e7eb;text-align:right}
 tr:nth-child(even) td{background:#f1f6ff}
 </style></head><body>
 <h1>عملائي</h1><p>قائمة العملاء والإحالات الخاصة بك.</p>
-<table><thead><tr><th>الرقم</th><th>اسم العميل</th><th>البرنامج التدريبي</th><th>المدينة</th><th>الفرع</th><th>تاريخ الإحالة</th><th>حالة التسجيل</th><th>المسوق الداخلي</th><th>المكافأة المالية</th></tr></thead><tbody>
+<table><thead><tr><th>الرقم</th><th>اسم العميل</th><th>البرنامج التدريبي</th><th>المدينة</th><th>تاريخ الإحالة</th><th>حالة التسجيل</th><th>المسوق الداخلي</th><th>المكافأة المالية</th></tr></thead><tbody>
 ${rows
   .map(
     (c) =>
-      `<tr><td>${c.id}</td><td>${c.name}</td><td>${c.program}</td><td>${c.city}</td><td>${c.branch}</td><td>${c.date}</td><td>${c.status}</td><td>${c.agent}</td><td>${c.reward ? c.reward + " ريال" : "—"}</td></tr>`,
+      `<tr><td>${c.id}</td><td>${c.name}</td><td>${c.program}</td><td>${c.city}</td><td>${c.date}</td><td>${c.status}</td><td>${c.agent}</td><td>${c.reward ? c.reward + " ريال" : "—"}</td></tr>`,
   )
   .join("")}
 </tbody></table></body></html>`;
