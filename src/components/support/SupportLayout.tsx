@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
-import { Link, useNavigate } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
-  Home, LogOut, Search, Bell,
+  Home, UserCog, ClipboardList, GraduationCap, MonitorPlay, Megaphone,
+  MapPin, CircleDollarSign, Star, FileText, Users, LogOut, Search, Bell,
   MessageSquareText, ChevronDown, Menu, X,
 } from "lucide-react";
 import { useServerFn } from "@tanstack/react-start";
@@ -13,16 +14,37 @@ import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+const nav = [
+  { title: "المسوقون (داخلي)", icon: UserCog },
+  { title: "تسجيلات الاهتمام", icon: ClipboardList },
+  { title: "المتدربون", icon: GraduationCap },
+  { title: "البرامج التدريبية", icon: MonitorPlay },
+  { title: "إدارة الإعلانات", icon: Megaphone },
+  { title: "الفروع والمدن", icon: MapPin },
+  { title: "المكافآت والمالية", icon: CircleDollarSign },
+  { title: "المتميزون والجوائز", icon: Star },
+  { title: "التقارير", icon: FileText },
+  { title: "المستخدمون والصلاحيات", icon: Users },
+];
+
 function SidebarContent({ onNavigate, onLogout, pending }: { onNavigate?: () => void; onLogout: () => void; pending: boolean }) {
+  const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const active = pathname === "/support" || pathname === "/support/";
   return (
     <div className="flex h-full flex-col bg-admin-sidebar">
       <div className="flex h-[66px] shrink-0 items-center justify-center bg-admin-navy px-4">
         <img src={logo.url} alt="مكافآتي Mukafaty" className="h-11 w-auto object-contain" />
       </div>
       <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-2 py-4">
-        <Button asChild variant="ghost" className="flex h-auto w-full justify-start gap-3 rounded-xl bg-card px-4 py-3 text-[15px] font-bold text-admin-blue shadow-sm hover:bg-card/70">
+        <Button asChild variant="ghost" className={`flex h-auto w-full justify-start gap-3 rounded-xl px-4 py-3 text-[15px] font-bold ${active ? "bg-card text-admin-blue shadow-sm" : "text-admin-navy"} hover:bg-card/70`}>
           <Link to="/support" onClick={onNavigate}><Home size={21} /><span>الرئيسية</span></Link>
         </Button>
+        {nav.map((item) => (
+          <Button key={item.title} type="button" variant="ghost" className="flex h-auto w-full justify-start gap-3 whitespace-normal rounded-xl px-4 py-3 text-[15px] font-bold text-admin-navy transition-colors hover:bg-card/70 [&_svg]:size-[21px]">
+            <item.icon size={21} className="text-admin-navy/80" />
+            <span className="text-start">{item.title}</span>
+          </Button>
+        ))}
       </nav>
       <div className="border-t border-admin-navy/10 px-2 py-4">
         <Button variant="ghost" disabled={pending} onClick={onLogout} className="flex h-auto w-full justify-start gap-3 rounded-xl px-4 py-3 text-[15px] font-bold text-admin-navy hover:bg-card/70">

@@ -1,8 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Home, UserRound, UserCog, ClipboardList, GraduationCap, MonitorPlay, Megaphone,
-  MapPin, CircleDollarSign, Star, FileText, Users, Settings, LogOut, Search, Bell,
+  Home, UserRound, Settings, LogOut, Search, Bell,
   MessageSquareText, ChevronDown, Menu, X,
 } from "lucide-react";
 import logo from "@/assets/admin/mukafaty-logo-white.png.asset.json";
@@ -14,16 +13,6 @@ import {
 const nav = [
   { title: "الرئيسية", icon: Home, to: "/admin" },
   { title: "المسوقون (خارجي)", icon: UserRound, to: "/admin/external-marketers" },
-  { title: "المسوقون (داخلي)", icon: UserCog },
-  { title: "تسجيلات الاهتمام", icon: ClipboardList },
-  { title: "المتدربون", icon: GraduationCap },
-  { title: "البرامج التدريبية", icon: MonitorPlay },
-  { title: "إدارة الإعلانات", icon: Megaphone },
-  { title: "الفروع والمدن", icon: MapPin },
-  { title: "المكافآت والمالية", icon: CircleDollarSign },
-  { title: "المتميزون والجوائز", icon: Star },
-  { title: "التقارير", icon: FileText },
-  { title: "المستخدمون والصلاحيات", icon: Users },
   { title: "الإعدادات", icon: Settings },
 ];
 
