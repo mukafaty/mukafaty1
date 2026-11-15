@@ -11,3 +11,4 @@
 
 - Keep homepage presentation-only referral samples separate from activity records so updating its table does not alter statistics or chart data.
 - Calculate dashboard mock card totals by calibrating the existing dated click activity to one all-time baseline; keep chart records unchanged to isolate card-only adjustments.
+- Keep support authentication independent of Supabase and temporary admin/marketer gates; validate server-only credentials and protect every support payload with a dedicated encrypted HttpOnly session so existing accounts never confer support access.

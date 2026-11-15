@@ -19,6 +19,8 @@ import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as ProtectRouteImport } from './routes/protect'
 import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as SupportRouteImport } from './routes/support'
+import { Route as SupportLoginRouteImport } from './routes/support-login'
 import { Route as AdSlugRouteImport } from './routes/ad.$slug'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminExternalMarketersRouteImport } from './routes/admin.external-marketers'
@@ -84,6 +86,16 @@ const RegisterRoute = RegisterRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportRoute = SupportRouteImport.update({
+  id: '/support',
+  path: '/support',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SupportLoginRoute = SupportLoginRouteImport.update({
+  id: '/support-login',
+  path: '/support-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdSlugRoute = AdSlugRouteImport.update({
@@ -178,6 +190,8 @@ export interface FileRoutesByFullPath {
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
+  '/support-login': typeof SupportLoginRoute
   '/ad/$slug': typeof AdSlugRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -204,6 +218,8 @@ export interface FileRoutesByTo {
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
+  '/support-login': typeof SupportLoginRoute
   '/ad/$slug': typeof AdSlugRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -233,6 +249,8 @@ export interface FileRoutesById {
   '/protect': typeof ProtectRoute
   '/register': typeof RegisterRoute
   '/reset-password': typeof ResetPasswordRoute
+  '/support': typeof SupportRoute
+  '/support-login': typeof SupportLoginRoute
   '/ad/$slug': typeof AdSlugRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -263,6 +281,8 @@ export interface FileRouteTypes {
     | '/protect'
     | '/register'
     | '/reset-password'
+    | '/support'
+    | '/support-login'
     | '/ad/$slug'
     | '/admin/external-marketers'
     | '/dashboard/about'
@@ -289,6 +309,8 @@ export interface FileRouteTypes {
     | '/protect'
     | '/register'
     | '/reset-password'
+    | '/support'
+    | '/support-login'
     | '/ad/$slug'
     | '/admin/external-marketers'
     | '/dashboard/about'
@@ -317,6 +339,8 @@ export interface FileRouteTypes {
     | '/protect'
     | '/register'
     | '/reset-password'
+    | '/support'
+    | '/support-login'
     | '/ad/$slug'
     | '/admin/external-marketers'
     | '/dashboard/about'
@@ -346,6 +370,8 @@ export interface RootRouteChildren {
   ProtectRoute: typeof ProtectRoute
   RegisterRoute: typeof RegisterRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
+  SupportRoute: typeof SupportRoute
+  SupportLoginRoute: typeof SupportLoginRoute
   AdSlugRoute: typeof AdSlugRoute
   LoginPasswordRoute: typeof LoginPasswordRoute
   RShortCodeRoute: typeof RShortCodeRoute
@@ -421,6 +447,20 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support': {
+      id: '/support'
+      path: '/support'
+      fullPath: '/support'
+      preLoaderRoute: typeof SupportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/support-login': {
+      id: '/support-login'
+      path: '/support-login'
+      fullPath: '/support-login'
+      preLoaderRoute: typeof SupportLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ad/$slug': {
@@ -593,6 +633,8 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectRoute: ProtectRoute,
   RegisterRoute: RegisterRoute,
   ResetPasswordRoute: ResetPasswordRoute,
+  SupportRoute: SupportRoute,
+  SupportLoginRoute: SupportLoginRoute,
   AdSlugRoute: AdSlugRoute,
   LoginPasswordRoute: LoginPasswordRoute,
   RShortCodeRoute: RShortCodeRoute,
