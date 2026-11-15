@@ -250,6 +250,10 @@ const WITHDRAWAL_STATUSES = [
 
 const CITIES = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
 
+/** مفاتيح إخفاء مؤقت لبيانات الفروع في الواجهة (true = إظهارها مجددًا) */
+const SHOW_BRANCH_FILTER_UI = false;
+const SHOW_BRANCH_COLUMN_UI = false;
+
 /** ربط كل فرع بمدينته بمعرّف ثابت بدل مطابقة النصوص الحرة */
 const BRANCH_CITY: Record<string, string> = {
   "جدة الصالحية": "جدة",
@@ -526,11 +530,11 @@ td{padding:7px 8px;border-bottom:1px solid #e5e7eb;text-align:right}
 tr:nth-child(even) td{background:#f1f6ff}
 </style></head><body>
 <h1>رصيدي المالي</h1><p>تابع مكافآتك المالية الناتجة عن تسجيل عملائك.</p>
- <table><thead><tr><th>الرقم</th><th>اسم المتدرب</th><th>البرنامج التدريبي</th><th>الفرع</th><th>إجمالي الرسوم</th><th>المبلغ المسدد</th><th>المبلغ المتبقي</th><th>المكافأة المالية</th></tr></thead><tbody>
+ <table><thead><tr><th>الرقم</th><th>اسم المتدرب</th><th>البرنامج التدريبي</th><th>إجمالي الرسوم</th><th>المبلغ المسدد</th><th>المبلغ المتبقي</th><th>المكافأة المالية</th></tr></thead><tbody>
 ${rows
   .map(
     (r) =>
-       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${r.branch}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(sumPaid(r))}</td><td>${typeof r.fee === "number" ? formatMoney(r.fee - sumPaid(r)) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
+       `<tr><td>${r.id}</td><td>${r.name}</td><td>${r.program}</td><td>${formatMoney(r.fee)}</td><td>${formatMoney(sumPaid(r))}</td><td>${typeof r.fee === "number" ? formatMoney(r.fee - sumPaid(r)) : "—"}</td><td>${formatMoney(r.reward)}</td></tr>`,
   )
   .join("")}
 </tbody></table></body></html>`;
@@ -589,7 +593,13 @@ ${rows
       </div>
 
       <div className="rounded-3xl border border-border bg-card p-4 sm:p-5">
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-[minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(130px,0.9fr)_minmax(130px,0.9fr)_auto] 2xl:items-end">
+        <div
+          className={`grid gap-3 sm:grid-cols-2 lg:grid-cols-3 2xl:items-end ${
+            SHOW_BRANCH_FILTER_UI
+              ? "2xl:grid-cols-[minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(130px,0.9fr)_minmax(130px,0.9fr)_auto]"
+              : "2xl:grid-cols-[minmax(120px,0.85fr)_minmax(150px,1fr)_minmax(120px,0.85fr)_minmax(130px,0.9fr)_minmax(130px,0.9fr)_auto]"
+          }`}
+        >
           <div className="min-w-0 space-y-1.5">
             <label htmlFor="balance-search" className="block text-xs font-bold text-navy">
               بحث عن عميل
@@ -631,16 +641,18 @@ ${rows
               updateFilters({ city, branch: branchStillValid ? filters.branch : "all" });
             }}
           />
-          <FilterSelect
-            id="balance-branch"
-            label="الفرع"
-            value={filters.branch}
-            options={[
-              { value: "all", label: "جميع الفروع" },
-              ...branches.map((branch) => ({ value: branch, label: branch })),
-            ]}
-            onChange={(branch) => updateFilters({ branch })}
-          />
+          {SHOW_BRANCH_FILTER_UI && (
+            <FilterSelect
+              id="balance-branch"
+              label="الفرع"
+              value={filters.branch}
+              options={[
+                { value: "all", label: "جميع الفروع" },
+                ...branches.map((branch) => ({ value: branch, label: branch })),
+              ]}
+              onChange={(branch) => updateFilters({ branch })}
+            />
+          )}
           <DateFilter
             id="paid-from"
             label="السداد من"
@@ -656,7 +668,11 @@ ${rows
             error={invalidRange ? "يجب أن يكون تاريخ النهاية مساويًا لتاريخ البداية أو بعده." : undefined}
             onChange={(paidTo) => updateFilters({ paidTo })}
           />
-          <div className="flex items-end gap-2 sm:col-span-2 lg:col-span-3 2xl:col-span-1 2xl:justify-end">
+          <div
+            className={`flex items-end gap-2 2xl:col-span-1 2xl:justify-end ${
+              SHOW_BRANCH_FILTER_UI ? "sm:col-span-2 lg:col-span-3" : "sm:col-span-1 lg:col-span-1"
+            }`}
+          >
             <Button
               type="button"
               variant="outline"
@@ -679,13 +695,19 @@ ${rows
         </div>
 
         <div className="mt-5 max-w-full overflow-x-auto">
-          <table className="w-full min-w-[1180px] border-collapse overflow-hidden rounded-2xl text-right">
+          <table
+            className={`w-full border-collapse overflow-hidden rounded-2xl text-right ${
+              SHOW_BRANCH_COLUMN_UI ? "min-w-[1180px]" : "min-w-[1060px]"
+            }`}
+          >
             <thead>
               <tr className="bg-navy-deep text-primary-foreground">
                 <th className="px-4 py-3.5 text-sm font-bold">الرقم</th>
                 <th className="px-4 py-3.5 text-sm font-bold">اسم المتدرب</th>
                 <th className="px-4 py-3.5 text-sm font-bold">البرنامج التدريبي</th>
-                <th className="px-4 py-3.5 text-sm font-bold">الفرع</th>
+                {SHOW_BRANCH_COLUMN_UI && (
+                  <th className="px-4 py-3.5 text-sm font-bold">الفرع</th>
+                )}
                 <th className="px-4 py-3.5 text-sm font-bold">إجمالي الرسوم</th>
                 <th className="px-4 py-3.5 text-sm font-bold">المبلغ المسدد</th>
                 <th className="px-4 py-3.5 text-sm font-bold">المبلغ المتبقي</th>
@@ -712,7 +734,9 @@ ${rows
                       <td className="px-4 py-3 text-sm font-bold text-navy">{row.id}</td>
                       <td className="px-4 py-3 text-sm font-bold text-navy">{row.name}</td>
                       <td className="px-4 py-3 text-sm font-bold text-navy">{row.program}</td>
-                      <td className="px-4 py-3 text-sm font-bold text-navy">{row.branch}</td>
+                      {SHOW_BRANCH_COLUMN_UI && (
+                        <td className="px-4 py-3 text-sm font-bold text-navy">{row.branch}</td>
+                      )}
                       <td className="px-4 py-3 text-sm font-bold text-navy">
                         {formatMoney(row.fee)}
                       </td>
@@ -741,7 +765,11 @@ ${rows
                     </tr>
                     {isOpen ? (
                       <tr className="bg-balance-detail">
-                        <td id={panelId} colSpan={9} className="px-0 pb-4 pt-0">
+                        <td
+                          id={panelId}
+                          colSpan={SHOW_BRANCH_COLUMN_UI ? 9 : 8}
+                          className="px-0 pb-4 pt-0"
+                        >
                           <PaymentsTable
                             payments={
                               paymentFilterActive ? row.payments.filter(matchPayment) : row.payments
@@ -756,7 +784,10 @@ ${rows
               })}
               {visible.length === 0 ? (
                 <tr className="bg-card">
-                  <td colSpan={9} className="px-4 py-10 text-center text-sm font-bold text-navy">
+                  <td
+                    colSpan={SHOW_BRANCH_COLUMN_UI ? 9 : 8}
+                    className="px-4 py-10 text-center text-sm font-bold text-navy"
+                  >
                     لا توجد نتائج مطابقة للفلاتر المحددة
                   </td>
                 </tr>
