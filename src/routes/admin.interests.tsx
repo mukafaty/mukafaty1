@@ -83,7 +83,7 @@ function InterestsPage() {
       const ws = wb.addWorksheet("تسجيلات الاهتمام", { views: [{ rightToLeft: true }] });
       ws.addRow(HEADERS).font = { bold: true };
       rows.forEach((r: InterestRecord, i) => ws.addRow([i + 1, r.name, r.phone, r.program, r.city, r.marketer, fmt(r.date), INTEREST_STATUS_LABEL[r.status]]));
-      ws.columns.forEach((c, i) => { c.width = [6, 26, 14, 26, 14, 22, 18, 16][i]; c.alignment = { horizontal: "right" }; });
+      ws.columns.forEach((c, i) => { c.width = [6, 26, 14, 26, 14, 22, 18, 16][i] ?? 16; c.alignment = { horizontal: "right" }; });
       const buf = await wb.xlsx.writeBuffer();
       const url = URL.createObjectURL(new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }));
       const a = document.createElement("a");
