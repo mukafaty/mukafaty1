@@ -1,7 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
-  Home, UserRound, Settings, LogOut, Search, Bell,
+  Home, UserRound, ClipboardList, LogOut, Search, Bell,
   MessageSquareText, ChevronDown, Menu, X,
 } from "lucide-react";
 import logo from "@/assets/admin/mukafaty-logo-white.png.asset.json";
@@ -13,7 +13,7 @@ import {
 const nav = [
   { title: "الرئيسية", icon: Home, to: "/admin" },
   { title: "المسوقون (خارجي)", icon: UserRound, to: "/admin/external-marketers" },
-  { title: "الإعدادات", icon: Settings },
+  { title: "تسجيلات الاهتمام", icon: ClipboardList, to: "/admin/interests" },
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
