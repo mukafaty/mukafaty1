@@ -23,6 +23,7 @@ import { Route as SupportRouteImport } from './routes/support'
 import { Route as SupportLoginRouteImport } from './routes/support-login'
 import { Route as AdSlugRouteImport } from './routes/ad.$slug'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
+import { Route as AdminAdsRouteImport } from './routes/admin.ads'
 import { Route as AdminExternalMarketersRouteImport } from './routes/admin.external-marketers'
 import { Route as AdminInterestsRouteImport } from './routes/admin.interests'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
@@ -107,6 +108,11 @@ const AdSlugRoute = AdSlugRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminAdsRoute = AdminAdsRouteImport.update({
+  id: '/ads',
+  path: '/ads',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminExternalMarketersRoute = AdminExternalMarketersRouteImport.update({
@@ -199,6 +205,7 @@ export interface FileRoutesByFullPath {
   '/support': typeof SupportRoute
   '/support-login': typeof SupportLoginRoute
   '/ad/$slug': typeof AdSlugRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/admin/interests': typeof AdminInterestsRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -228,6 +235,7 @@ export interface FileRoutesByTo {
   '/support': typeof SupportRoute
   '/support-login': typeof SupportLoginRoute
   '/ad/$slug': typeof AdSlugRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/admin/interests': typeof AdminInterestsRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -260,6 +268,7 @@ export interface FileRoutesById {
   '/support': typeof SupportRoute
   '/support-login': typeof SupportLoginRoute
   '/ad/$slug': typeof AdSlugRoute
+  '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/admin/interests': typeof AdminInterestsRoute
   '/dashboard/about': typeof DashboardAboutRoute
@@ -293,6 +302,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/support-login'
     | '/ad/$slug'
+    | '/admin/ads'
     | '/admin/external-marketers'
     | '/admin/interests'
     | '/dashboard/about'
@@ -322,6 +332,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/support-login'
     | '/ad/$slug'
+    | '/admin/ads'
     | '/admin/external-marketers'
     | '/admin/interests'
     | '/dashboard/about'
@@ -353,6 +364,7 @@ export interface FileRouteTypes {
     | '/support'
     | '/support-login'
     | '/ad/$slug'
+    | '/admin/ads'
     | '/admin/external-marketers'
     | '/admin/interests'
     | '/dashboard/about'
@@ -489,6 +501,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/ads': {
+      id: '/admin/ads'
+      path: '/ads'
+      fullPath: '/admin/ads'
+      preLoaderRoute: typeof AdminAdsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/external-marketers': {
       id: '/admin/external-marketers'
       path: '/external-marketers'
@@ -598,12 +617,14 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminAdsRoute: typeof AdminAdsRoute
   AdminExternalMarketersRoute: typeof AdminExternalMarketersRoute
   AdminInterestsRoute: typeof AdminInterestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminAdsRoute: AdminAdsRoute,
   AdminExternalMarketersRoute: AdminExternalMarketersRoute,
   AdminInterestsRoute: AdminInterestsRoute,
   AdminIndexRoute: AdminIndexRoute,
