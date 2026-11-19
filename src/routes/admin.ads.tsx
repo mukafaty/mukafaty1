@@ -1,5 +1,8 @@
 import { useEffect, useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button } from '@/components/ui/button';
+import { useMockAds } from '@/data/adminAdsStore';
+import { AdPreview } from '@/components/admin/AdPreview';
 import {
   Megaphone, CheckCircle2, PauseCircle, CalendarClock, CalendarDays, Search, RotateCcw, Download, Plus,
   ChevronsLeft, ChevronsRight, ChevronUp, ChevronDown, MoreHorizontal, Eye, Pencil, Copy, PlayCircle, BarChart3,
@@ -9,7 +12,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { INTEREST_PERIODS, type InterestPeriod } from "@/data/adminInterests";
 import {
-  AD_CITIES, AD_MODES, AD_STATUS_LABEL, AD_TYPES, adStats, adsInPeriod, buildAdRecords, duplicateAd, moveAd, toggleAd,
+  AD_CITIES, AD_MODES, AD_STATUS_LABEL, AD_TYPES, adStats, adsInPeriod, duplicateAd, moveAd, toggleAd,
   type AdRecord,
 } from "@/data/adminAds";
 
@@ -42,8 +45,8 @@ const citiesText = (c: string[]) => (c.length === AD_CITIES.length ? "جميع �
 
 function AdsPage() {
   const [now, setNow] = useState<Date | null>(null);
-  const [ads, setAds] = useState<AdRecord[]>([]);
-  useEffect(() => { const d = new Date(); setNow(d); setAds(buildAdRecords(d)); }, []);
+  const [ads, setAds] = useMockAds();
+  useEffect(() => { setNow(new Date()); }, []);
 
   const [period, setPeriod] = useState<InterestPeriod>("all");
   const [pFrom, setPFrom] = useState("");
@@ -158,9 +161,7 @@ function AdsPage() {
         <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
           <h2 className="flex items-center gap-2 text-lg font-extrabold"><Megaphone size={20} className="text-admin-navy/70" /> قائمة الإعلانات ({rows.length})</h2>
           <div className="flex items-center gap-2">
-            <button type="button" disabled title="قريبًا" className="inline-flex h-10 cursor-not-allowed items-center gap-2 rounded-xl bg-admin-blue px-4 text-sm font-bold text-primary-foreground opacity-60">
-              <Plus size={16} /> إضافة إعلان جديد <span className="rounded-full bg-primary-foreground/20 px-2 text-[11px]">قريبًا</span>
-            </button>
+            <Button asChild className="h-10 rounded-xl bg-admin-blue font-bold text-primary-foreground hover:bg-admin-blue/90"><Link to="/admin/ads/new"><Plus size={16} /> إضافة إعلان جديد</Link></Button>
             <button type="button" onClick={exportXlsx} disabled={exporting || !rows.length} className="inline-flex h-10 items-center gap-2 rounded-xl border border-admin-navy/15 px-4 text-sm font-bold hover:bg-admin-canvas disabled:opacity-50">
               <Download size={16} /> تصدير
             </button>
@@ -177,7 +178,7 @@ function AdsPage() {
               {visible.map((a, i) => (
                 <tr key={a.id} className="border-b border-admin-navy/5">
                   <td className="px-3 py-3">{start + i + 1}</td>
-                  <td className="px-3 py-2"><img src={a.image} alt={a.name} className="h-11 w-11 rounded-lg object-cover" loading="lazy" /></td>
+                  <td className="px-3 py-2">{a.image ? <img src={a.image} alt={a.name} className="h-11 w-11 rounded-lg object-contain" loading="lazy" /> : <span className="grid h-11 w-11 place-items-center rounded-lg bg-muted text-xs">بلا صورة</span>}</td>
                   <td className="whitespace-nowrap px-3 py-3 font-bold">{a.name}</td>
                   <td className="whitespace-nowrap px-3 py-3">{a.program}</td>
                   <td className="whitespace-nowrap px-3 py-3" title={a.cities.join("، ")}>{citiesText(a.cities)}</td>
@@ -242,20 +243,7 @@ function AdsPage() {
       <Dialog open={!!preview} onOpenChange={(o) => !o && setPreview(null)}>
         <DialogContent dir="rtl" className="max-w-md text-right">
           <DialogHeader><DialogTitle className="pe-8 text-right">معاينة الإعلان</DialogTitle></DialogHeader>
-          {preview && (
-            <div className="space-y-3 text-sm">
-              <img src={preview.image} alt={preview.name} className="aspect-square w-full rounded-xl object-cover" />
-              <div className="text-lg font-extrabold">{preview.name}</div>
-              <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1.5">
-                <dt className="text-muted-foreground">البرنامج</dt><dd>{preview.program}</dd>
-                <dt className="text-muted-foreground">النوع / النمط</dt><dd>{preview.type} — {preview.mode}</dd>
-                <dt className="text-muted-foreground">المدن</dt><dd>{preview.cities.join("، ")}</dd>
-                <dt className="text-muted-foreground">الرسوم</dt><dd>كاش {money(preview.cash)} — أقساط {money(preview.installments)}</dd>
-                <dt className="text-muted-foreground">تاريخ الإنشاء</dt><dd>{fmtDate(preview.createdAt)}</dd>
-                <dt className="text-muted-foreground">الحالة</dt><dd>{AD_STATUS_LABEL[preview.status]}</dd>
-              </dl>
-            </div>
-          )}
+          {preview && <AdPreview ad={preview} />}
         </DialogContent>
       </Dialog>
     </div>

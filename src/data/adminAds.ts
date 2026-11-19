@@ -17,6 +17,17 @@ export type TrainingMode = "حضوري" | "عن بُعد" | "مدمج";
 export type AdRecord = {
   id: string; name: string; programId: string; program: string; type: ProgramType; mode: TrainingMode;
   cities: string[]; cash: number; installments: number; image: string; createdAt: Date; status: AdStatus; order: number;
+  details?: AdDetails;
+};
+
+export type LocalMedia = { url: string; name: string; size: number; width: number; height: number; duration?: number; title?: string; description?: string };
+export type AdDetails = {
+  audience: string; ageFrom: string; ageTo: string; duration: string; durationUnit: string;
+  description: string; tagline: string; installmentsEnabled: boolean; monthly: string; discount: string;
+  images: Partial<Record<'square' | 'portrait' | 'x' | 'a5', LocalMedia>> & Record<string, LocalMedia | undefined>;
+  videos: Partial<Record<'private' | 'public', LocalMedia>> & Record<string, LocalMedia | undefined>;
+  marketing: string; xText: string; benefits: string[]; startsAt: string; endsAt: string;
+  visibility: string[]; badges: string[];
 };
 
 export const AD_STATUS_LABEL: Record<AdStatus, string> = { active: "نشط", paused: "موقوف", scheduled: "مجدول", draft: "مسودة" };
@@ -33,6 +44,7 @@ const P = {
   en: { programId: "P-EN", program: "دورات اللغة الإنجليزية", type: "لغة إنجليزية", cash: 4500 },
   sc: { programId: "P-SC", program: "دورات تدريبية قصيرة", type: "دورة تدريبية", cash: 1900 },
 } as const;
+export const AD_PROGRAMS = Object.values(P);
 
 // [program, name, image, mode, cities, dayOffset, status]
 const SEED: [keyof typeof P, string, string, TrainingMode, string[], number, AdStatus][] = [
@@ -94,14 +106,15 @@ export function moveAd(ads: AdRecord[], id: string, dir: -1 | 1): AdRecord[] {
   const i = sorted.findIndex((a) => a.id === id);
   const j = i + dir;
   if (i < 0 || j < 0 || j >= sorted.length) return ads;
-  const [a, b] = [sorted[i]!, sorted[j]!];
+  const a = sorted[i]; const b = sorted[j];
+  if (!a || !b) return ads;
   return ads.map((x) => (x.id === a.id ? { ...x, order: b.order } : x.id === b.id ? { ...x, order: a.order } : x));
 }
 
 export function duplicateAd(ads: AdRecord[], id: string, now: Date): AdRecord[] {
   const src = ads.find((a) => a.id === id);
   if (!src) return ads;
-  const max = Math.max(...ads.map((a) => Number(a.id.slice(3))));
+  const max = Math.max(0, ...ads.map((a) => Number(a.id.slice(3))).filter(Number.isFinite));
   const order = Math.max(...ads.map((a) => a.order)) + 1;
   return [...ads, { ...src, id: `AD-${String(max + 1).padStart(3, "0")}`, name: `${src.name} (نسخة)`, status: "draft", createdAt: now, order }];
 }

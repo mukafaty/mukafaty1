@@ -39,6 +39,7 @@ import { Route as DashboardSettingsRouteImport } from './routes/dashboard.settin
 import { Route as DashboardTopRouteImport } from './routes/dashboard.top'
 import { Route as LoginPasswordRouteImport } from './routes/login_.password'
 import { Route as RShortCodeRouteImport } from './routes/r.$shortCode'
+import { Route as AdminAdsNewRouteImport } from './routes/admin.ads_.new'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -190,6 +191,11 @@ const RShortCodeRoute = RShortCodeRouteImport.update({
   path: '/r/$shortCode',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminAdsNewRoute = AdminAdsNewRouteImport.update({
+  id: '/ads_/new',
+  path: '/ads/new',
+  getParentRoute: () => AdminRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/r/$shortCode': typeof RShortCodeRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/admin/ads/new': typeof AdminAdsNewRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -252,6 +259,7 @@ export interface FileRoutesByTo {
   '/r/$shortCode': typeof RShortCodeRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/admin/ads/new': typeof AdminAdsNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -285,6 +293,7 @@ export interface FileRoutesById {
   '/r/$shortCode': typeof RShortCodeRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/admin/ads_/new': typeof AdminAdsNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -319,6 +328,7 @@ export interface FileRouteTypes {
     | '/r/$shortCode'
     | '/admin/'
     | '/dashboard/'
+    | '/admin/ads/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -349,6 +359,7 @@ export interface FileRouteTypes {
     | '/r/$shortCode'
     | '/admin'
     | '/dashboard'
+    | '/admin/ads/new'
   id:
     | '__root__'
     | '/'
@@ -381,6 +392,7 @@ export interface FileRouteTypes {
     | '/r/$shortCode'
     | '/admin/'
     | '/dashboard/'
+    | '/admin/ads_/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -613,6 +625,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof RShortCodeRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin/ads_/new': {
+      id: '/admin/ads_/new'
+      path: '/ads/new'
+      fullPath: '/admin/ads/new'
+      preLoaderRoute: typeof AdminAdsNewRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -621,6 +640,7 @@ interface AdminRouteChildren {
   AdminExternalMarketersRoute: typeof AdminExternalMarketersRoute
   AdminInterestsRoute: typeof AdminInterestsRoute
   AdminIndexRoute: typeof AdminIndexRoute
+  AdminAdsNewRoute: typeof AdminAdsNewRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -628,6 +648,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminExternalMarketersRoute: AdminExternalMarketersRoute,
   AdminInterestsRoute: AdminInterestsRoute,
   AdminIndexRoute: AdminIndexRoute,
+  AdminAdsNewRoute: AdminAdsNewRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

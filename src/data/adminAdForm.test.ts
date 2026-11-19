@@ -1,0 +1,26 @@
+import { test } from 'node:test';
+import { strict as assert } from 'node:assert';
+import { emptyAdForm, createMockAd, insertMockAd, validateAdForm, validateMediaFile, PLATFORM_REWARD_RATE } from './adminAdForm';
+import { adStats, adsInPeriod, buildAdRecords } from './adminAds';
+const now = new Date('2026-11-19T22:37:00Z');
+function valid() { const f = emptyAdForm(1); f.name = 'حملة نوفمبر'; f.programId = 'P-HR'; f.cities = ['جدة','الرياض']; f.cash = '9500'; f.installments = '10900'; f.details.images.square = {url:'blob:local',name:'square.png',size:100,width:1080,height:1080}; return f; }
+test('central reward rate is 5%', () => assert.equal(PLATFORM_REWARD_RATE,0.05));
+test('incomplete drafts are allowed', () => assert.deepEqual(validateAdForm(emptyAdForm(1),false),{}));
+test('publish requires ad name', () => { const f = valid(); f.name=''; assert.ok(validateAdForm(f,true).name); });
+test('publish requires program id', () => { const f=valid();f.programId='';assert.ok(validateAdForm(f,true).programId); });
+test('publish requires city', () => { const f=valid();f.cities=[];assert.ok(validateAdForm(f,true).cities); });
+test('publish requires square image', () => { const f=valid();f.details.images={};assert.ok(validateAdForm(f,true).square); });
+test('negative cash cannot be saved even as draft', () => {const f=valid();f.cash='-1';assert.ok(validateAdForm(f,false).cash);});
+test('installment fees must be positive', () => {const f=valid();f.installments='0';assert.ok(validateAdForm(f,true).installments);});
+test('discount accepts 0 and 100 but not 101', () => {const f=valid();for(const v of ['0','100']) {f.details.discount=v;assert.equal(validateAdForm(f,true).discount,undefined);}f.details.discount='101';assert.ok(validateAdForm(f,true).discount);});
+test('end date cannot precede start', () => {const f=valid();f.details.startsAt='2026-12-01T10:00';f.details.endsAt='2026-11-01T10:00';assert.ok(validateAdForm(f,true).endsAt);});
+test('future publication is scheduled', () => {const f=valid();f.details.startsAt='2027-01-01T10:00';assert.equal(createMockAd(f,true,now,'new').status,'scheduled');});
+test('publish without future date is active', () => assert.equal(createMockAd(valid(),true,now,'new').status,'active'));
+test('save as draft forces draft regardless of selector', () => {const f=valid();f.status='active';assert.equal(createMockAd(f,false,now,'new').status,'draft');});
+test('cash and installments remain independent', () => {const a=createMockAd(valid(),true,now,'new');assert.equal(a.cash,9500);assert.equal(a.installments,10900);});
+test('multiple cities and same program across ads are supported', () => {const a=createMockAd(valid(),true,now,'a');const b=createMockAd(valid(),true,now,'b');assert.deepEqual(a.cities,['جدة','الرياض']);assert.equal(a.programId,b.programId);assert.notEqual(a.name,a.program);});
+test('disabled installments are excluded', () => {const f=valid();f.details.installmentsEnabled=false;f.installments='-1';assert.deepEqual(validateAdForm(f,true),{});assert.equal(createMockAd(f,true,now,'new').installments,0);});
+test('insert shifts orders without duplicate and updates cards and period', () => {const initial=buildAdRecords(now);const next=insertMockAd(initial,createMockAd(valid(),true,now,'new'));assert.equal(new Set(next.map(a=>a.order)).size,25);assert.equal(next[0]?.id,'new');assert.equal(adStats(next).active,19);assert.ok(adsInPeriod(next,'today',now).some(a=>a.id==='new'));});
+test('discount badge requires a positive valid discount', () => {const f=valid();f.details.badges=['جديد','خصم'];f.details.discount='0';assert.deepEqual(createMockAd(f,true,now,'new').details?.badges,['جديد']);});
+test('uploaded image types are restricted to JPG PNG WebP', () => {assert.ok(validateMediaFile({type:'image/gif',size:100},false));for(const type of ['image/jpeg','image/png','image/webp']) assert.equal(validateMediaFile({type,size:100},false),'');});
+test('videos accept MP4 and WebM only', () => {assert.equal(validateMediaFile({type:'video/mp4',size:100},true),'');assert.equal(validateMediaFile({type:'video/webm',size:100},true),'');assert.ok(validateMediaFile({type:'video/avi',size:100},true));});
