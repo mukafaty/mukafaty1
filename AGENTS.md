@@ -13,3 +13,4 @@
 - Calculate dashboard mock card totals by calibrating the existing dated click activity to one all-time baseline; keep chart records unchanged to isolate card-only adjustments.
 - Keep support authentication independent of Supabase and temporary admin/marketer gates; validate server-only credentials and protect every support payload with a dedicated encrypted HttpOnly session so existing accounts never confer support access.
 - Admin ad creation and management use one browser-only mock store with locally persisted metadata; local media URLs stay session-only to avoid implying uploaded files or changing real marketer ads.
+- Admin program management uses an isolated in-memory mock dataset and pure filter, statistics, pagination, and status helpers; this keeps trial actions independent of real programs and other pages.

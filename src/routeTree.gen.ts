@@ -26,6 +26,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAdsRouteImport } from './routes/admin.ads'
 import { Route as AdminExternalMarketersRouteImport } from './routes/admin.external-marketers'
 import { Route as AdminInterestsRouteImport } from './routes/admin.interests'
+import { Route as AdminProgramsRouteImport } from './routes/admin.programs'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard.index'
 import { Route as DashboardAboutRouteImport } from './routes/dashboard.about'
 import { Route as DashboardAdsRouteImport } from './routes/dashboard.ads'
@@ -126,6 +127,11 @@ const AdminInterestsRoute = AdminInterestsRouteImport.update({
   path: '/interests',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminProgramsRoute = AdminProgramsRouteImport.update({
+  id: '/programs',
+  path: '/programs',
+  getParentRoute: () => AdminRoute,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -214,6 +220,7 @@ export interface FileRoutesByFullPath {
   '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/admin/interests': typeof AdminInterestsRoute
+  '/admin/programs': typeof AdminProgramsRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -245,6 +252,7 @@ export interface FileRoutesByTo {
   '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/admin/interests': typeof AdminInterestsRoute
+  '/admin/programs': typeof AdminProgramsRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -279,6 +287,7 @@ export interface FileRoutesById {
   '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
   '/admin/interests': typeof AdminInterestsRoute
+  '/admin/programs': typeof AdminProgramsRoute
   '/dashboard/about': typeof DashboardAboutRoute
   '/dashboard/ads': typeof DashboardAdsRoute
   '/dashboard/balance': typeof DashboardBalanceRoute
@@ -314,6 +323,7 @@ export interface FileRouteTypes {
     | '/admin/ads'
     | '/admin/external-marketers'
     | '/admin/interests'
+    | '/admin/programs'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -345,6 +355,7 @@ export interface FileRouteTypes {
     | '/admin/ads'
     | '/admin/external-marketers'
     | '/admin/interests'
+    | '/admin/programs'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -378,6 +389,7 @@ export interface FileRouteTypes {
     | '/admin/ads'
     | '/admin/external-marketers'
     | '/admin/interests'
+    | '/admin/programs'
     | '/dashboard/about'
     | '/dashboard/ads'
     | '/dashboard/balance'
@@ -534,6 +546,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminInterestsRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/programs': {
+      id: '/admin/programs'
+      path: '/programs'
+      fullPath: '/admin/programs'
+      preLoaderRoute: typeof AdminProgramsRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
@@ -639,6 +658,7 @@ interface AdminRouteChildren {
   AdminAdsRoute: typeof AdminAdsRoute
   AdminExternalMarketersRoute: typeof AdminExternalMarketersRoute
   AdminInterestsRoute: typeof AdminInterestsRoute
+  AdminProgramsRoute: typeof AdminProgramsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminAdsNewRoute: typeof AdminAdsNewRoute
 }
@@ -647,6 +667,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminAdsRoute: AdminAdsRoute,
   AdminExternalMarketersRoute: AdminExternalMarketersRoute,
   AdminInterestsRoute: AdminInterestsRoute,
+  AdminProgramsRoute: AdminProgramsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminAdsNewRoute: AdminAdsNewRoute,
 }
