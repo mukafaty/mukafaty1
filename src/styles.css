@@ -98,6 +98,7 @@
   --color-register-danger: var(--register-danger);
   --color-dashboard-stat-info: var(--dashboard-stat-info);
   --color-dashboard-stat-info-foreground: var(--dashboard-stat-info-foreground);
+  --color-marketer-tab: var(--marketer-tab);
 }
 
 :root {
@@ -152,6 +153,7 @@
   --register-danger: #ff0000;
   --dashboard-stat-info: #cbe3fd;
   --dashboard-stat-info-foreground: #000000;
+  --marketer-tab: #006BFE;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);

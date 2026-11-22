@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   UserRound, Users, UserCheck, Clock, UserX, Search, MoreHorizontal, RotateCcw,
 } from "lucide-react";
@@ -9,6 +9,11 @@ import {
 import {
   DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import { Button } from "@/components/ui/button";
+import { MembershipConfirmation } from "@/components/admin/MembershipConfirmation";
+import { useMockMarketers } from "@/data/adminMarketersStore";
+import { marketerCities as cities, marketerName, statusMap, toggleMembership, type Marketer } from "@/data/adminMarketers";
 
 export const Route = createFileRoute("/admin/external-marketers")({
   head: () => ({
@@ -25,49 +30,8 @@ export const Route = createFileRoute("/admin/external-marketers")({
   component: ExternalMarketersPage,
 });
 
-type Status = "active" | "pending" | "suspended";
-type Marketer = {
-  id: string; name: string; phone: string; email: string;
-  gender: "ذكر" | "أنثى"; city: string; date: string; status: Status;
-};
-
-const card = "rounded-2xl border border-admin-navy/5 bg-card shadow-[0_2px_10px_-4px_rgb(15_30_70/0.12)]";
+const card = "rounded-2xl border border-admin-navy/5 bg-card shadow-sm";
 const field = "h-11 w-full rounded-xl border border-admin-navy/10 bg-card px-3 text-sm outline-none focus:border-admin-blue";
-
-const stats = [
-  { title: "إجمالي المسوقين", value: 286, icon: Users, cls: "bg-admin-blue/10 text-admin-blue" },
-  { title: "المسوقون النشطون", value: 241, icon: UserCheck, cls: "bg-admin-green/10 text-admin-green" },
-  { title: "بانتظار التفعيل", value: 32, icon: Clock, cls: "bg-admin-amber/15 text-admin-amber" },
-  { title: "الموقوفون", value: 13, icon: UserX, cls: "bg-admin-red/10 text-admin-red" },
-];
-
-const statusMap: Record<Status, { label: string; cls: string }> = {
-  active: { label: "نشط", cls: "bg-admin-green/10 text-admin-green" },
-  pending: { label: "بانتظار التفعيل", cls: "bg-admin-amber/15 text-admin-amber" },
-  suspended: { label: "موقوف", cls: "bg-admin-red/10 text-admin-red" },
-};
-
-const males = ["محمد العتيبي", "عبدالله الحربي", "خالد الغامدي", "فهد القحطاني", "سعد الزهراني", "عمر الشهري", "ياسر المطيري", "نايف الدوسري", "بندر السبيعي", "ماجد الشمري"];
-const females = ["نورة العنزي", "سارة المالكي", "ريم الجهني", "هيا البقمي", "لمى الرشيدي", "أمل الثبيتي", "منى الحارثي", "دانة السلمي", "جود العمري", "رهف اليامي"];
-const cities = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
-const emailNames = ["m.otaibi", "a.harbi", "k.ghamdi", "f.qahtani", "s.zahrani", "o.shehri", "y.mutairi", "n.dosari", "b.subaie", "m.shammari"];
-
-const marketers: Marketer[] = Array.from({ length: 286 }, (_, i) => {
-  const female = i % 3 === 1;
-  const name = (female ? females : males)[(i * 7) % 10]!;
-  const status: Status = i % 22 === 5 ? "suspended" : i % 9 === 4 ? "pending" : "active";
-  const d = new Date(Date.UTC(2026, 0, 1) + i * 0.9 * 86400000);
-  return {
-    id: `MK${String(i + 1).padStart(4, "0")}`,
-    name,
-    phone: `05${String(50000000 + ((i * 7919) % 49999999)).padStart(8, "0")}`,
-    email: `${female ? "user" : emailNames[i % 10]}${i + 1}@mail.com`,
-    gender: female ? "أنثى" : "ذكر",
-    city: cities[(i * 5) % 4]!,
-    date: d.toISOString().slice(0, 10),
-    status,
-  };
-});
 
 function ExternalMarketersPage() {
   const [q, setQ] = useState("");
@@ -77,20 +41,31 @@ function ExternalMarketersPage() {
   const [date, setDate] = useState("");
   const [perPage, setPerPage] = useState(10);
   const [page, setPage] = useState(1);
-  const [overrides, setOverrides] = useState<Record<string, Status>>({});
+  const { marketers, update } = useMockMarketers();
+  const [confirm, setConfirm] = useState<Marketer | null>(null);
+  const [notice, setNotice] = useState("");
+  const stats = [
+    { title: "إجمالي المسوقين", value: marketers.length, icon: Users, cls: "bg-admin-blue/10 text-admin-blue" },
+    { title: "المسوقون النشطون", value: marketers.filter(m => m.status === "active").length, icon: UserCheck, cls: "bg-admin-green/10 text-admin-green" },
+    { title: "بانتظار التفعيل", value: marketers.filter(m => m.status === "pending").length, icon: Clock, cls: "bg-admin-amber/15 text-admin-amber" },
+    { title: "الموقوفون", value: marketers.filter(m => m.status === "suspended").length, icon: UserX, cls: "bg-admin-red/10 text-admin-red" },
+  ];
+  function changeStatus(m: Marketer) {
+    try { update(records => toggleMembership(records, m.id)); setNotice("تم تحديث حالة العضوية"); }
+    catch { setNotice("تعذر حفظ الحالة محليًا، حاول مجددًا"); }
+  }
 
   const rows = useMemo(() => {
     const t = q.trim().toLowerCase();
     return marketers
-      .map((m) => ({ ...m, status: overrides[m.id] ?? m.status }))
       .filter((m) =>
-        (!t || [m.name, m.id, m.email, m.phone].some((v) => v.toLowerCase().includes(t))) &&
+        (!t || [marketerName(m), m.id, m.email, m.phone].some((v) => v.toLowerCase().includes(t))) &&
         (status === "all" || m.status === status) &&
         (city === "all" || m.city === city) &&
         (gender === "all" || m.gender === gender) &&
         (!date || m.date === date),
       );
-  }, [q, status, city, gender, date, overrides]);
+  }, [q, status, city, gender, date, marketers]);
 
   const pages = Math.max(1, Math.ceil(rows.length / perPage));
   const cur = Math.min(page, pages);
@@ -101,6 +76,8 @@ function ExternalMarketersPage() {
 
   return (
     <div className="space-y-5">
+      {notice && <p role="status" className="text-sm font-bold text-admin-blue">{notice}</p>}
+      <MembershipConfirmation open={!!confirm} onOpenChange={open => { if (!open) setConfirm(null); }} name={confirm ? marketerName(confirm) : ""} onConfirm={() => { if (confirm) changeStatus(confirm); setConfirm(null); }} />
       <div>
         <h1 className="flex items-center gap-2 text-2xl font-extrabold md:text-3xl">
           <UserRound className="text-admin-blue" size={28} /> المسوقون (خارجي)
@@ -155,7 +132,7 @@ function ExternalMarketersPage() {
                 <tr key={m.id} className="border-b border-admin-navy/5 last:border-0">
                   <td className="px-3 py-3">{start + i + 1}</td>
                   <td className="px-3 py-3 font-bold" dir="ltr">{m.id}</td>
-                  <td className="whitespace-nowrap px-3 py-3 font-bold">{m.name}</td>
+                  <td className="whitespace-nowrap px-3 py-3 font-bold">{marketerName(m)}</td>
                   <td className="px-3 py-3" dir="ltr">{m.phone}</td>
                   <td className="px-3 py-3" dir="ltr">{m.email}</td>
                   <td className="px-3 py-3">{m.gender}</td>
@@ -166,13 +143,10 @@ function ExternalMarketersPage() {
                   </td>
                   <td className="px-3 py-3">
                     <DropdownMenu modal={false} dir="rtl">
-                      <DropdownMenuTrigger aria-label="الإجراءات" className="rounded-lg p-1.5 outline-none hover:bg-admin-canvas">
-                        <MoreHorizontal size={18} />
-                      </DropdownMenuTrigger>
+                      <DropdownMenuTrigger asChild><Button variant="ghost" size="icon" aria-label={`الإجراءات ${m.id}`}><MoreHorizontal size={18} /></Button></DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="text-right">
-                        <DropdownMenuItem>عرض الملف</DropdownMenuItem>
-                        <DropdownMenuItem>تعديل البيانات</DropdownMenuItem>
-                        <DropdownMenuItem onSelect={() => setOverrides((o) => ({ ...o, [m.id]: m.status === "active" ? "suspended" : "active" }))}>
+                        <DropdownMenuItem asChild><Link to="/admin/external-marketers/$id" params={{ id: m.id }}>عرض ملف المسوق</Link></DropdownMenuItem>
+                        <DropdownMenuItem onSelect={() => m.status === "active" ? setConfirm(m) : changeStatus(m)}>
                           {m.status === "active" ? "إيقاف العضوية" : "تفعيل العضوية"}
                         </DropdownMenuItem>
                       </DropdownMenuContent>

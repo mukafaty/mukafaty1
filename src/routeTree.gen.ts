@@ -41,6 +41,7 @@ import { Route as DashboardTopRouteImport } from './routes/dashboard.top'
 import { Route as LoginPasswordRouteImport } from './routes/login_.password'
 import { Route as RShortCodeRouteImport } from './routes/r.$shortCode'
 import { Route as AdminAdsNewRouteImport } from './routes/admin.ads_.new'
+import { Route as AdminExternalMarketersIdRouteImport } from './routes/admin.external-marketers_.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -202,6 +203,12 @@ const AdminAdsNewRoute = AdminAdsNewRouteImport.update({
   path: '/ads/new',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminExternalMarketersIdRoute =
+  AdminExternalMarketersIdRouteImport.update({
+    id: '/external-marketers_/$id',
+    path: '/external-marketers/$id',
+    getParentRoute: () => AdminRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -236,6 +243,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/admin/ads/new': typeof AdminAdsNewRoute
+  '/admin/external-marketers/$id': typeof AdminExternalMarketersIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -268,6 +276,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/admin/ads/new': typeof AdminAdsNewRoute
+  '/admin/external-marketers/$id': typeof AdminExternalMarketersIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -303,6 +312,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/admin/ads_/new': typeof AdminAdsNewRoute
+  '/admin/external-marketers_/$id': typeof AdminExternalMarketersIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -339,6 +349,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/admin/ads/new'
+    | '/admin/external-marketers/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -371,6 +382,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/admin/ads/new'
+    | '/admin/external-marketers/$id'
   id:
     | '__root__'
     | '/'
@@ -405,6 +417,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/admin/ads_/new'
+    | '/admin/external-marketers_/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -651,6 +664,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminAdsNewRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/external-marketers_/$id': {
+      id: '/admin/external-marketers_/$id'
+      path: '/external-marketers/$id'
+      fullPath: '/admin/external-marketers/$id'
+      preLoaderRoute: typeof AdminExternalMarketersIdRouteImport
+      parentRoute: typeof AdminRoute
+    }
   }
 }
 
@@ -661,6 +681,7 @@ interface AdminRouteChildren {
   AdminProgramsRoute: typeof AdminProgramsRoute
   AdminIndexRoute: typeof AdminIndexRoute
   AdminAdsNewRoute: typeof AdminAdsNewRoute
+  AdminExternalMarketersIdRoute: typeof AdminExternalMarketersIdRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
@@ -670,6 +691,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminProgramsRoute: AdminProgramsRoute,
   AdminIndexRoute: AdminIndexRoute,
   AdminAdsNewRoute: AdminAdsNewRoute,
+  AdminExternalMarketersIdRoute: AdminExternalMarketersIdRoute,
 }
 
 const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)

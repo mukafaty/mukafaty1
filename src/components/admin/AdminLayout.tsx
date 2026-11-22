@@ -27,7 +27,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
       </div>
       <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto px-2 py-4">
         {nav.map((item) => {
-          const active = item.to ? pathname === item.to || pathname === item.to + "/" : false;
+          const active = item.to ? pathname === item.to || pathname === item.to + "/" || (item.to === "/admin/external-marketers" && pathname.startsWith(item.to + "/")) : false;
           const cls = `flex w-full items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold transition-colors ${
             active ? "bg-card text-admin-blue shadow-sm" : "text-admin-navy hover:bg-card/70"
           }`;
