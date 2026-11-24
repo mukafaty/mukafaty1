@@ -9,6 +9,8 @@ import {
   UsersRound,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { CityCombobox } from "@/components/landing/CityCombobox";
+import topBgAsset from "@/assets/landing/top-bg.jpg.asset.json";
 import {
   findActiveDiscountForMarketer,
   findMarketerByReferralCode,
@@ -147,9 +149,11 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
   };
 
   return (
-    <div dir="rtl" className="min-h-screen overflow-x-hidden bg-landing-v2-canvas text-foreground">
+    <div dir="rtl" className="landing-v2-font min-h-screen overflow-x-hidden bg-landing-v2-canvas text-foreground">
       <main>
-        <section className="landing-v2-hero px-5 py-12 text-center sm:px-8 sm:py-14 lg:py-16">
+        <section
+          style={{ ["--landing-v2-hero-image" as string]: `url("${topBgAsset.url}")` }}
+          className="landing-v2-hero px-5 py-12 text-center sm:px-8 sm:py-14 lg:py-16">
           <div className="mx-auto max-w-6xl">
             <h1 className="text-[clamp(1.65rem,3.25vw,3.35rem)] font-black leading-[1.35] tracking-tight text-landing-v2-navy">
               {program.title}
@@ -181,7 +185,7 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
           <div className="mx-auto grid w-full max-w-[1000px] overflow-hidden rounded-[28px] border border-landing-v2-border bg-card shadow-[0_10px_35px_-28px_var(--landing-v2-navy)] lg:min-h-[815px] lg:grid-cols-2">
             <section
               aria-labelledby="registration-v2-title"
-              className="flex min-w-0 flex-col border-b border-landing-v2-border px-5 py-8 sm:px-9 sm:py-10 lg:border-b-0 lg:border-l lg:px-10"
+              className="flex min-w-0 flex-col border-b border-landing-v2-border px-5 py-8 sm:px-9 sm:py-10 lg:border-b-0 lg:px-10"
             >
               <img
                 src={program.providerLogo}
@@ -242,26 +246,16 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
                       <FieldLabel htmlFor="landing-v2-city" required>
                         المدينة
                       </FieldLabel>
-                      <select
+                      <CityCombobox
                         id="landing-v2-city"
-                        name="city"
-                        className={`${inputClass} ${errors.city ? inputErrorClass : ""}`}
                         value={city}
-                        aria-invalid={Boolean(errors.city)}
-                        onChange={(event) => {
-                          setCity(event.target.value);
-                          if (event.target.value) clearError("city");
+                        invalid={Boolean(errors.city)}
+                        inputClassName={`${inputClass} ${errors.city ? inputErrorClass : ""}`}
+                        onChange={(value) => {
+                          setCity(value);
+                          if (value.trim()) clearError("city");
                         }}
-                      >
-                        <option value="" disabled>
-                          اختر المدينة
-                        </option>
-                        <option>الرياض</option>
-                        <option>جدة</option>
-                        <option>مكة المكرمة</option>
-                        <option>المدينة المنورة</option>
-                        <option>مدينة أخرى</option>
-                      </select>
+                      />
                       {errors.city ? (
                         <p className="mt-2 text-xs font-bold text-destructive">{errors.city}</p>
                       ) : null}
@@ -338,13 +332,15 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
             </section>
 
             <div className="flex min-w-0 items-center justify-center p-5 sm:p-8 lg:p-10">
-              <img
-                src={program.adImage}
-                alt={program.adImageAlt}
-                width={1080}
-                height={1920}
-                className="block h-auto max-h-[730px] w-full max-w-[410px] border border-landing-v2-border object-contain"
-              />
+              <div className="w-full max-w-[410px] lg:max-w-[450px] lg:border-r lg:border-landing-v2-sky/60 lg:pr-10">
+                <img
+                  src={program.adImage}
+                  alt={program.adImageAlt}
+                  width={1080}
+                  height={1920}
+                  className="block h-auto max-h-[730px] w-full border border-landing-v2-border object-contain"
+                />
+              </div>
             </div>
           </div>
         </section>

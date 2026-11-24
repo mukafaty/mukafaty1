@@ -159,7 +159,7 @@
   --dashboard-stat-info: #cbe3fd;
   --dashboard-stat-info-foreground: #000000;
   --marketer-tab: #006BFE;
-  --landing-v2-canvas: oklch(0.978 0.009 230);
+  --landing-v2-canvas: #f7fbff;
   --landing-v2-navy: oklch(0.275 0.105 275);
   --landing-v2-sky: oklch(0.77 0.115 225);
   --landing-v2-border: oklch(0.86 0.035 220);
@@ -267,11 +267,20 @@
 
 @utility landing-v2-hero {
   background-color: var(--landing-v2-canvas);
-  background-image:
-    radial-gradient(ellipse at 8% 18%, oklch(1 0 0 / 72%) 0%, transparent 25%),
-    radial-gradient(ellipse at 82% 4%, oklch(1 0 0 / 68%) 0%, transparent 25%),
-    radial-gradient(ellipse at 52% 100%, oklch(0.9 0.045 225 / 55%) 0%, transparent 48%),
-    linear-gradient(115deg, oklch(0.94 0.035 225) 0%, oklch(0.89 0.055 225) 48%, oklch(0.95 0.025 225) 100%);
+  background-image: var(--landing-v2-hero-image);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* GE SS Two Medium: يُحمَّل ملف الخط الفعلي عبر @font-face عند إضافته للمشروع. */
+@utility landing-v2-font {
+  font-family: "GE SS Two", var(--font-sans);
+  font-weight: 500;
+  & * {
+    font-family: inherit;
+    font-weight: 500 !important;
+  }
 }
 
 @utility tech-dots {
