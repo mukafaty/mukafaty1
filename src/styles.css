@@ -104,6 +104,8 @@
   --color-landing-v2-sky: var(--landing-v2-sky);
   --color-landing-v2-border: var(--landing-v2-border);
   --color-landing-v2-copy: var(--landing-v2-copy);
+  --color-landing-v2-subtitle: var(--landing-v2-subtitle);
+  --color-landing-v2-detail: var(--landing-v2-detail);
 }
 
 :root {
@@ -164,6 +166,8 @@
   --landing-v2-sky: oklch(0.77 0.115 225);
   --landing-v2-border: oklch(0.86 0.035 220);
   --landing-v2-copy: oklch(0.57 0.035 245);
+  --landing-v2-subtitle: #5C6578;
+  --landing-v2-detail: #0072BC;
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);

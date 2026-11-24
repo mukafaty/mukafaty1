@@ -68,10 +68,10 @@ function HeroDetail({
         <Icon className="size-5 sm:size-6" strokeWidth={1.9} aria-hidden="true" />
       </span>
       <div className="min-w-0 text-right">
-        <p className="text-[10px] font-medium leading-4 text-landing-v2-copy sm:text-xs lg:text-sm">
+        <p className="text-[10px] font-medium leading-4 text-landing-v2-detail sm:text-xs lg:text-sm">
           {label}
         </p>
-        <p className="mt-0.5 text-[11px] font-bold leading-4 text-landing-v2-navy sm:text-xs lg:text-[15px]">
+        <p className="mt-0.5 text-[11px] font-bold leading-4 text-landing-v2-detail sm:text-xs lg:text-[15px]">
           {value}
         </p>
       </div>
@@ -158,7 +158,7 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
             <h1 className="text-[clamp(1.65rem,3.25vw,3.35rem)] font-black leading-[1.35] tracking-tight text-landing-v2-navy">
               {program.title}
             </h1>
-            <p className="mx-auto mt-5 w-fit max-w-full rounded-full border border-card/80 bg-card/45 px-5 py-2.5 text-[clamp(0.95rem,1.85vw,1.85rem)] font-medium leading-relaxed text-landing-v2-navy shadow-sm sm:px-8">
+            <p className="mx-auto mt-5 w-fit max-w-full rounded-full border border-card/80 bg-card/45 px-5 py-2.5 text-[clamp(0.95rem,1.85vw,1.85rem)] font-medium leading-relaxed text-landing-v2-subtitle shadow-sm sm:px-8">
               {program.subtitle}
             </p>
 
@@ -182,10 +182,10 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
         </section>
 
         <section className="px-4 py-10 sm:px-6 sm:py-14 lg:px-8 lg:pb-20 lg:pt-16">
-          <div className="mx-auto grid w-full max-w-[1000px] overflow-hidden rounded-[28px] border border-landing-v2-border bg-card shadow-[0_10px_35px_-28px_var(--landing-v2-navy)] lg:min-h-[815px] lg:grid-cols-2">
+          <div className="mx-auto grid w-full max-w-[1000px] overflow-hidden rounded-[28px] border border-landing-v2-border bg-card shadow-[0_10px_35px_-28px_var(--landing-v2-navy)] lg:min-h-[815px] lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
             <section
               aria-labelledby="registration-v2-title"
-              className="flex min-w-0 flex-col border-b border-landing-v2-border px-5 py-8 sm:px-9 sm:py-10 lg:border-b-0 lg:px-10"
+              className="flex min-w-0 flex-col justify-center border-b border-landing-v2-border px-5 py-8 sm:px-9 sm:py-10 lg:border-b-0 lg:px-12"
             >
               <img
                 src={program.providerLogo}
@@ -331,8 +331,10 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
               )}
             </section>
 
-            <div className="flex min-w-0 items-center justify-center p-5 sm:p-8 lg:p-10">
-              <div className="w-full max-w-[410px] lg:max-w-[450px] lg:border-r lg:border-landing-v2-sky/60 lg:pr-10">
+            <div className="flex min-w-0 items-center justify-center p-5 sm:p-8 lg:px-0 lg:py-10">
+              <div className="relative flex w-full justify-center lg:px-12">
+                <span aria-hidden="true" className="absolute inset-y-0 right-0 hidden w-px bg-landing-v2-sky/60 lg:block" />
+                <div className="w-full max-w-[410px] lg:max-w-[450px]">
                 <img
                   src={program.adImage}
                   alt={program.adImageAlt}
@@ -340,6 +342,7 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
                   height={1920}
                   className="block h-auto max-h-[730px] w-full border border-landing-v2-border object-contain"
                 />
+                </div>
               </div>
             </div>
           </div>
