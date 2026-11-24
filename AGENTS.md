@@ -15,3 +15,4 @@
 - Admin ad creation and management use one browser-only mock store with locally persisted metadata; local media URLs stay session-only to avoid implying uploaded files or changing real marketer ads.
 - Admin program management uses an isolated in-memory mock dataset and pure filter, statistics, pagination, and status helpers; this keeps trial actions independent of real programs and other pages.
 - External marketer list and profiles share a validated browser-local mock store; immutable membership IDs and pure reward/validation helpers keep edits isolated from real accounts.
+- Commercial font files are uploaded as Lovable Assets and declared with real @font-face rules in src/styles.css; never reference a font family whose file is not loaded, and keep font-specific weights scoped to the page that asked for them.

@@ -273,7 +273,34 @@
   background-repeat: no-repeat;
 }
 
-/* GE SS Two Medium: يُحمَّل ملف الخط الفعلي عبر @font-face عند إضافته للمشروع. */
+/* GE SS Two: ملفات الخط الفعلية المحمّلة من مخزن الأصول (OTF). */
+@font-face {
+  font-family: "GE SS Two";
+  src: url("/__l5e/assets-v1/d0e8de0e-0195-431a-b455-b81bd65c76a8/GE_SS_Two_Light.otf")
+    format("opentype");
+  font-weight: 300;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GE SS Two";
+  src: url("/__l5e/assets-v1/37fd7559-24b2-4494-88fe-fad98749f730/GE_SS_Two_Medium.otf")
+    format("opentype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "GE SS Two";
+  src: url("/__l5e/assets-v1/510325c5-47dd-4ddd-b373-b725bb256fb4/GE_SS_Two_Bold.otf")
+    format("opentype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @utility landing-v2-font {
   font-family: "GE SS Two", var(--font-sans);
   font-weight: 500;
