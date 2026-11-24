@@ -99,6 +99,11 @@
   --color-dashboard-stat-info: var(--dashboard-stat-info);
   --color-dashboard-stat-info-foreground: var(--dashboard-stat-info-foreground);
   --color-marketer-tab: var(--marketer-tab);
+  --color-landing-v2-canvas: var(--landing-v2-canvas);
+  --color-landing-v2-navy: var(--landing-v2-navy);
+  --color-landing-v2-sky: var(--landing-v2-sky);
+  --color-landing-v2-border: var(--landing-v2-border);
+  --color-landing-v2-copy: var(--landing-v2-copy);
 }
 
 :root {
@@ -154,6 +159,11 @@
   --dashboard-stat-info: #cbe3fd;
   --dashboard-stat-info-foreground: #000000;
   --marketer-tab: #006BFE;
+  --landing-v2-canvas: oklch(0.978 0.009 230);
+  --landing-v2-navy: oklch(0.275 0.105 275);
+  --landing-v2-sky: oklch(0.77 0.115 225);
+  --landing-v2-border: oklch(0.86 0.035 220);
+  --landing-v2-copy: oklch(0.57 0.035 245);
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.28 0.09 265);
@@ -253,6 +263,15 @@
 
 @utility hero-surface {
   background: var(--gradient-hero);
+}
+
+@utility landing-v2-hero {
+  background-color: var(--landing-v2-canvas);
+  background-image:
+    radial-gradient(ellipse at 8% 18%, oklch(1 0 0 / 72%) 0%, transparent 25%),
+    radial-gradient(ellipse at 82% 4%, oklch(1 0 0 / 68%) 0%, transparent 25%),
+    radial-gradient(ellipse at 52% 100%, oklch(0.9 0.045 225 / 55%) 0%, transparent 48%),
+    linear-gradient(115deg, oklch(0.94 0.035 225) 0%, oklch(0.89 0.055 225) 48%, oklch(0.95 0.025 225) 100%);
 }
 
 @utility tech-dots {

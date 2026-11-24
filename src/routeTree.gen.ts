@@ -21,6 +21,7 @@ import { Route as RegisterRouteImport } from './routes/register'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as SupportRouteImport } from './routes/support'
 import { Route as SupportLoginRouteImport } from './routes/support-login'
+import { Route as AdPreviewHrDiplomaRouteImport } from './routes/ad-preview.hr-diploma'
 import { Route as AdSlugRouteImport } from './routes/ad.$slug'
 import { Route as AdminIndexRouteImport } from './routes/admin.index'
 import { Route as AdminAdsRouteImport } from './routes/admin.ads'
@@ -101,6 +102,11 @@ const SupportRoute = SupportRouteImport.update({
 const SupportLoginRoute = SupportLoginRouteImport.update({
   id: '/support-login',
   path: '/support-login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdPreviewHrDiplomaRoute = AdPreviewHrDiplomaRouteImport.update({
+  id: '/ad-preview/hr-diploma',
+  path: '/ad-preview/hr-diploma',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AdSlugRoute = AdSlugRouteImport.update({
@@ -223,6 +229,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/support-login': typeof SupportLoginRoute
+  '/ad-preview/hr-diploma': typeof AdPreviewHrDiplomaRoute
   '/ad/$slug': typeof AdSlugRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/support-login': typeof SupportLoginRoute
+  '/ad-preview/hr-diploma': typeof AdPreviewHrDiplomaRoute
   '/ad/$slug': typeof AdSlugRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
@@ -292,6 +300,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/support': typeof SupportRoute
   '/support-login': typeof SupportLoginRoute
+  '/ad-preview/hr-diploma': typeof AdPreviewHrDiplomaRoute
   '/ad/$slug': typeof AdSlugRoute
   '/admin/ads': typeof AdminAdsRoute
   '/admin/external-marketers': typeof AdminExternalMarketersRoute
@@ -329,6 +338,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/support-login'
+    | '/ad-preview/hr-diploma'
     | '/ad/$slug'
     | '/admin/ads'
     | '/admin/external-marketers'
@@ -362,6 +372,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/support-login'
+    | '/ad-preview/hr-diploma'
     | '/ad/$slug'
     | '/admin/ads'
     | '/admin/external-marketers'
@@ -397,6 +408,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/support'
     | '/support-login'
+    | '/ad-preview/hr-diploma'
     | '/ad/$slug'
     | '/admin/ads'
     | '/admin/external-marketers'
@@ -433,6 +445,7 @@ export interface RootRouteChildren {
   ResetPasswordRoute: typeof ResetPasswordRoute
   SupportRoute: typeof SupportRoute
   SupportLoginRoute: typeof SupportLoginRoute
+  AdPreviewHrDiplomaRoute: typeof AdPreviewHrDiplomaRoute
   AdSlugRoute: typeof AdSlugRoute
   LoginPasswordRoute: typeof LoginPasswordRoute
   RShortCodeRoute: typeof RShortCodeRoute
@@ -522,6 +535,13 @@ declare module '@tanstack/react-router' {
       path: '/support-login'
       fullPath: '/support-login'
       preLoaderRoute: typeof SupportLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ad-preview/hr-diploma': {
+      id: '/ad-preview/hr-diploma'
+      path: '/ad-preview/hr-diploma'
+      fullPath: '/ad-preview/hr-diploma'
+      preLoaderRoute: typeof AdPreviewHrDiplomaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ad/$slug': {
@@ -741,6 +761,7 @@ const rootRouteChildren: RootRouteChildren = {
   ResetPasswordRoute: ResetPasswordRoute,
   SupportRoute: SupportRoute,
   SupportLoginRoute: SupportLoginRoute,
+  AdPreviewHrDiplomaRoute: AdPreviewHrDiplomaRoute,
   AdSlugRoute: AdSlugRoute,
   LoginPasswordRoute: LoginPasswordRoute,
   RShortCodeRoute: RShortCodeRoute,
