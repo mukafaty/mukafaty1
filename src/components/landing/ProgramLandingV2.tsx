@@ -275,8 +275,9 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
                       <input
                         id="landing-v2-phone"
                         name="phone"
+                        lang="en"
                         autoComplete="tel"
-                        className={`${inputClass} text-left ${errors.phone ? inputErrorClass : ""}`}
+                        className={`${inputClass} landing-v2-arial-field text-left ${errors.phone ? inputErrorClass : ""}`}
                         type="tel"
                         inputMode="numeric"
                         pattern="[0-9]*"
@@ -371,7 +372,10 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
       <footer id="contact" className="bg-landing-v2-navy text-primary-foreground">
         <div className="mx-auto flex min-h-28 w-full max-w-[1000px] flex-col items-center justify-center gap-5 px-5 py-7 text-center text-sm sm:flex-row sm:justify-between sm:px-8 sm:text-right">
           <p id="privacy" className="font-medium">
-            جميع الحقوق محفوظة © <span dir="ltr" lang="en" className="inline-block">2026</span>
+            جميع الحقوق محفوظة ©{" "}
+            <span dir="ltr" lang="en" className="landing-v2-year inline-block">
+              2026
+            </span>
           </p>
           <nav aria-label="روابط قانونية" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
             <a href="#privacy" className="transition-opacity hover:opacity-75">

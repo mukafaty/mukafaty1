@@ -318,6 +318,20 @@
   font-weight: 300 !important;
 }
 
+/* حقل رقم الجوال: Arial داخل الحقل فقط، بلاتجاه LTR ومحاذاة يسار. */
+@utility landing-v2-arial-field {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+  direction: ltr;
+  text-align: left;
+}
+
+/* سنة الفوتر: Arial مع عزل اتجاهي حتى تظهر 2026 بالأرقام الإنجليزية. */
+@utility landing-v2-year {
+  font-family: Arial, "Helvetica Neue", Helvetica, sans-serif !important;
+  direction: ltr;
+  unicode-bidi: isolate;
+}
+
 @utility tech-dots {
   background-image: radial-gradient(
     color-mix(in oklab, var(--brand) 35%, transparent) 1px,

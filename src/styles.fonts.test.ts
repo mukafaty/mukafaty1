@@ -58,3 +58,43 @@ test("عناوين مزايا الهبوط وحدها تستخدم وزن GE SS 
   assert.ok(utility, "لا يوجد تعريف landing-v2-light");
   assert.match(utility as string, /font-weight:\s*300\s*!important/);
 });
+
+test("حقل رقم الجوال وسنة الفوتر يستخدمان Arial باتجاه LTR", () => {
+  const field = css.match(/@utility landing-v2-arial-field\s*\{[\s\S]*?\n\}/)?.[0];
+  assert.ok(field, "لا يوجد تعريف landing-v2-arial-field");
+  assert.match(field as string, /font-family:\s*Arial/);
+  assert.match(field as string, /direction:\s*ltr/);
+  assert.match(field as string, /text-align:\s*left/);
+
+  const year = css.match(/@utility landing-v2-year\s*\{[\s\S]*?\n\}/)?.[0];
+  assert.ok(year, "لا يوجد تعريف landing-v2-year");
+  assert.match(year as string, /font-family:\s*Arial/);
+  assert.match(year as string, /direction:\s*ltr/);
+  assert.match(year as string, /unicode-bidi:\s*isolate/);
+});
+
+test("صفحة الهبوط تربط حقل الجوال وسنة الفوتر بأدواتي Arial", () => {
+  const page = readFileSync(
+    new URL("./components/landing/ProgramLandingV2.tsx", import.meta.url),
+    "utf8",
+  );
+  const phoneBlock = page.match(/id="landing-v2-phone"[\s\S]*?placeholder="05XXXXXXXX"/)?.[0];
+  assert.ok(phoneBlock, "حقل رقم الجوال غير موجود");
+  assert.match(phoneBlock as string, /landing-v2-arial-field/);
+  assert.match(phoneBlock as string, /lang="en"/);
+  assert.match(phoneBlock as string, /type="tel"/);
+  assert.match(phoneBlock as string, /inputMode="numeric"/);
+  assert.match(phoneBlock as string, /dir="ltr"/);
+
+  const yearBlock = page.match(/<span[^>]*className="[^"]*landing-v2-year[^"]*"[^>]*>\s*2026/)?.[0];
+  assert.ok(yearBlock, "سنة الفوتر ليست داخل span مستقل بأداة landing-v2-year");
+  assert.match(yearBlock as string, /lang="en"/);
+  assert.match(yearBlock as string, /dir="ltr"/);
+});
+
+test("أرقام الجوال العربية تتحول إلى أرقام إنجليزية", async () => {
+  const { normalizeLandingV2Phone } = await import("./data/landingV2.ts");
+  assert.equal(normalizeLandingV2Phone("٠٥٠١٢٣٤٥٦٧"), "0501234567");
+  assert.equal(normalizeLandingV2Phone("۰۵۰۱۲۳۴۵۶۷"), "0501234567");
+  assert.equal(normalizeLandingV2Phone("+٩٦٦ ٥٠ ١٢٣ ٤٥٦٧"), "966501234567");
+});
