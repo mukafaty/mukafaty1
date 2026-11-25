@@ -43,13 +43,13 @@ export const quickShareAd: AdData = {
   status: "available",
   trainingMode: "عن بُعد",
   location: "جميع مدن المملكة",
-  targetAudience: "رجال",
+  targetAudience: "الرجال والنساء",
   ageRange: "18 إلى 40 عام",
   referralCode: "ahmed2487",
   discountCode: "AHMED15",
   baseReferralLink: "https://mukafaty.com/ad/hr-diploma?ref=mk0001",
-  cashFee: 9500,
-  rewardPerRegistration: 475,
+  cashFee: 8055,
+  rewardPerRegistration: 402.75,
   marketingText: `ارتقِ بمهاراتك الإدارية وكن جاهزًا لسوق العمل 💼
 
 سجّل في دبلوم إدارة الموارد البشرية بنمط التدريب الإلكتروني المدمج 🎓

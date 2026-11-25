@@ -2,14 +2,19 @@ import { MapPin, Rocket, Share2, User } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import type { Program } from "@/data/adsPrograms";
 
-const fmt = (n: number) => n.toLocaleString("en-US");
+const fmt = (n: number) =>
+  n.toLocaleString("en-US", Number.isInteger(n) ? undefined : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
-function FeeRow({ label, fee, commission }: { label: string; fee: number | null; commission: number | null }) {
+function FeeRow({ label, fee, commission, originalFee, unit }: { label: string; fee: number | null; commission: number | null; originalFee?: number | undefined; unit?: string | undefined }) {
   return (
     <div className="flex items-stretch gap-2">
       <div className="flex flex-1 items-center justify-between gap-2 rounded-xl bg-[#F7F8FD] px-3 py-2">
         <span className="text-xs font-bold text-muted-foreground">{label}</span>
-        <span className="text-sm font-black text-brand">{fee === null ? "—" : `${fmt(fee)} ريال`}</span>
+        <span className="flex flex-col items-end text-sm font-black text-brand">
+          {originalFee !== undefined && <span className="text-[11px] font-bold text-muted-foreground line-through">{fmt(originalFee)} ريال</span>}
+          <span>{fee === null ? "—" : `${fmt(fee)} ريال`}</span>
+          {unit && <span className="text-[10px] font-bold text-muted-foreground">{unit}</span>}
+        </span>
       </div>
       <div className="flex flex-1 items-center justify-between gap-2 rounded-xl bg-[#FDF9F0] px-3 py-2">
         <span className="text-xs font-bold text-muted-foreground">عمولتك لكل تسجيل</span>
@@ -75,7 +80,7 @@ export function SquareProgramCard({ program }: { program: Program }) {
       <div className="flex flex-1 flex-col gap-3 p-4 text-right">
         <h3 className="text-base font-black text-navy">{program.programName}</h3>
 
-        <FeeRow label="الرسوم كـاش" fee={program.cashFee} commission={program.cashCommission} />
+        <FeeRow label="الرسوم كـاش" fee={program.cashFee} commission={program.cashCommission} originalFee={program.originalFee} unit={program.feeUnit} />
 
         {program.marketingText && (
           <p className="text-sm font-bold text-navy">{program.marketingText}</p>

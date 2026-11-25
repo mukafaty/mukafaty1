@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Megaphone } from "lucide-react";
 import {
   adsPrograms,
-  ALL_CITIES,
+  matchesCity,
   AUDIENCES,
   CITY_OPTIONS,
   KINDS,
@@ -58,7 +58,7 @@ function AdsPage() {
     const list = adsPrograms.filter(
       (p) =>
         (!q || p.programName.includes(q)) &&
-        (!filters.city || filters.city === ALL_CITIES || p.city === filters.city) &&
+        matchesCity(p.city, filters.city) &&
         (!filters.kind || p.programType === filters.kind) &&
         (!filters.mode || p.mode === filters.mode) &&
         (!filters.audience || p.targetAudience === filters.audience),
