@@ -213,7 +213,9 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
                 <div className="mt-10 lg:mt-16">
                   <div className="text-right">
                     <div className="flex items-center justify-start gap-2.5">
-                      <Award className="size-8 shrink-0 text-landing-v2-navy lg:size-9" strokeWidth={1.6} aria-hidden="true" />
+                      <span className="grid size-10 shrink-0 place-items-center rounded-full bg-landing-v2-detail/10 text-landing-v2-detail lg:size-11">
+                        <Award className="size-6 lg:size-7" strokeWidth={1.8} aria-hidden="true" />
+                      </span>
                       <h2 id="registration-v2-title" className="text-3xl font-black text-landing-v2-navy lg:text-4xl">
                         سجّل الآن
                       </h2>
