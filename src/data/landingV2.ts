@@ -20,6 +20,14 @@ export interface LandingV2FormErrors {
 const PHONE_REGEX = /^(\+?\d[\d\s-]{7,14})$/;
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+/** يحوّل الأرقام العربية والفارسية إلى إنجليزية ويبقي الأرقام فقط. */
+export function normalizeLandingV2Phone(value: string): string {
+  return value
+    .replace(/[٠-٩]/g, (digit) => String(digit.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (digit) => String(digit.charCodeAt(0) - 0x06f0))
+    .replace(/[^0-9]/g, "");
+}
+
 /** نفس قواعد التحقق المستخدمة في صفحة الهبوط الحالية. */
 export function validateLandingV2Form(values: LandingV2FormValues): LandingV2FormErrors {
   const errors: LandingV2FormErrors = {};

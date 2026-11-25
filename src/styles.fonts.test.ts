@@ -52,3 +52,9 @@ test("صفحة الهبوط تستخدم GE SS Two بوزن متوسط بلا خ
   assert.match(utility as string, /font-weight:\s*500/);
   assert.match(utility as string, /font-weight:\s*500\s*!important/);
 });
+
+test("عناوين مزايا الهبوط وحدها تستخدم وزن GE SS Two Light الفعلي", () => {
+  const utility = css.match(/@utility landing-v2-light\s*\{[\s\S]*?\n\}/)?.[0];
+  assert.ok(utility, "لا يوجد تعريف landing-v2-light");
+  assert.match(utility as string, /font-weight:\s*300\s*!important/);
+});

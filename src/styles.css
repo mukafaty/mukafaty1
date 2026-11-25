@@ -314,6 +314,10 @@
   }
 }
 
+@utility landing-v2-light {
+  font-weight: 300 !important;
+}
+
 @utility tech-dots {
   background-image: radial-gradient(
     color-mix(in oklab, var(--brand) 35%, transparent) 1px,

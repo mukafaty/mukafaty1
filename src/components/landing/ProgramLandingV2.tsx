@@ -1,6 +1,7 @@
 import { useMemo, useState, type FormEvent, type ReactNode } from "react";
 import {
   ArrowLeft,
+  Award,
   BadgeCheck,
   CalendarDays,
   CheckCircle2,
@@ -18,6 +19,7 @@ import {
   type AttributionState,
 } from "@/data/adReferral";
 import {
+  normalizeLandingV2Phone,
   validateLandingV2Form,
   type LandingProgramConfig,
   type LandingV2FormErrors,
@@ -68,7 +70,7 @@ function HeroDetail({
         <Icon className="size-5 sm:size-6" strokeWidth={1.9} aria-hidden="true" />
       </span>
       <div className="min-w-0 text-right">
-        <p className="text-[10px] font-medium leading-4 text-landing-v2-detail sm:text-xs lg:text-sm">
+        <p className="landing-v2-light text-[10px] leading-4 text-landing-v2-detail sm:text-xs lg:text-sm">
           {label}
         </p>
         <p className="mt-0.5 text-[11px] font-bold leading-4 text-landing-v2-detail sm:text-xs lg:text-[15px]">
@@ -209,11 +211,14 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
                 </div>
               ) : (
                 <div className="mt-10 lg:mt-16">
-                  <div className="text-center">
-                    <h2 id="registration-v2-title" className="text-3xl font-black text-landing-v2-navy lg:text-4xl">
-                      سجّل الآن
-                    </h2>
-                    <p className="mt-2 text-xs font-medium leading-6 text-landing-v2-copy sm:text-sm">
+                  <div className="text-right">
+                    <div className="flex items-center justify-start gap-2.5">
+                      <Award className="size-8 shrink-0 text-landing-v2-navy lg:size-9" strokeWidth={1.6} aria-hidden="true" />
+                      <h2 id="registration-v2-title" className="text-3xl font-black text-landing-v2-navy lg:text-4xl">
+                        سجّل الآن
+                      </h2>
+                    </div>
+                    <p className="mt-2 text-[11px] font-medium leading-6 text-landing-v2-copy sm:text-xs lg:whitespace-nowrap">
                       أدخل بياناتك وسوف يتم التواصل معك لاستكمال إجراءات التسجيل.
                     </p>
                   </div>
@@ -269,16 +274,18 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
                         id="landing-v2-phone"
                         name="phone"
                         autoComplete="tel"
-                        className={`${inputClass} text-right ${errors.phone ? inputErrorClass : ""}`}
+                        className={`${inputClass} text-left ${errors.phone ? inputErrorClass : ""}`}
                         type="tel"
-                        inputMode="tel"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         dir="ltr"
-                        placeholder="05xxxxxxxx"
+                        placeholder="05XXXXXXXX"
                         value={phone}
                         aria-invalid={Boolean(errors.phone)}
                         onChange={(event) => {
-                          setPhone(event.target.value);
-                          if (PHONE_REGEX.test(event.target.value.trim())) clearError("phone");
+                          const value = normalizeLandingV2Phone(event.target.value);
+                          setPhone(value);
+                          if (PHONE_REGEX.test(value)) clearError("phone");
                         }}
                       />
                       {errors.phone ? (
@@ -348,13 +355,13 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
           </div>
         </section>
 
-        <section aria-label="الجهات المشاركة" className="border-t border-landing-v2-border bg-card px-5 py-8 sm:px-8">
+        <section aria-label="الجهات المشاركة" className="bg-card px-5 py-4 sm:px-8">
           <img
             src={program.partnerLogos}
             alt={program.partnerLogosAlt}
             width={1049}
             height={82}
-            className="mx-auto block h-auto w-full max-w-[1049px] object-contain"
+            className="mx-auto block aspect-[906/86] h-auto w-full max-w-[906px] object-contain"
           />
         </section>
       </main>
@@ -362,12 +369,13 @@ export function ProgramLandingV2({ program, referralCode, platform }: ProgramLan
       <footer id="contact" className="bg-landing-v2-navy text-primary-foreground">
         <div className="mx-auto flex min-h-28 w-full max-w-[1000px] flex-col items-center justify-center gap-5 px-5 py-7 text-center text-sm sm:flex-row sm:justify-between sm:px-8 sm:text-right">
           <p id="privacy" className="font-medium">
-            جميع الحقوق محفوظة © 2026
+            جميع الحقوق محفوظة © <span dir="ltr" lang="en" className="inline-block">2026</span>
           </p>
-          <nav aria-label="روابط قانونية" className="flex flex-wrap justify-center gap-x-9 gap-y-3">
+          <nav aria-label="روابط قانونية" className="flex flex-wrap items-center justify-center gap-x-5 gap-y-3">
             <a href="#privacy" className="transition-opacity hover:opacity-75">
               سياسة الخصوصية
             </a>
+            <span aria-hidden="true" className="h-4 w-px bg-primary-foreground/40" />
             <a id="terms" href="#terms" className="transition-opacity hover:opacity-75">
               الشروط والأحكام
             </a>

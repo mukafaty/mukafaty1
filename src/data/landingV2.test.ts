@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { validateLandingV2Form } from "./landingV2";
+import { normalizeLandingV2Phone, validateLandingV2Form } from "./landingV2";
 
 const validValues = {
   fullName: "مستخدم تجريبي",
@@ -25,4 +25,13 @@ test("الجوال والبريد المدخلان يجب أن يكونا صحي
 test("البريد اختياري وتقبل البيانات المكتملة دون أخطاء", () => {
   assert.deepEqual(validateLandingV2Form(validValues), {});
   assert.deepEqual(validateLandingV2Form({ ...validValues, email: "test@example.com" }), {});
+});
+
+test("حقل الجوال يحوّل الأرقام العربية والفارسية إلى أرقام إنجليزية", () => {
+  assert.equal(normalizeLandingV2Phone("٠٥١٢٣٤٥٦٧٨"), "0512345678");
+  assert.equal(normalizeLandingV2Phone("۰۵۱۲۳۴۵۶۷۸"), "0512345678");
+});
+
+test("حقل الجوال يستبعد الحروف والرموز ويُبقي الأرقام الإنجليزية فقط", () => {
+  assert.equal(normalizeLandingV2Phone("05a12-34 ٥"), "0512345");
 });
