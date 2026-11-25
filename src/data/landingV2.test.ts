@@ -1,6 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { hrDiplomaLanding, normalizeLandingV2Phone, validateLandingV2Form } from "./landingV2";
+import {
+  getLandingProgram,
+  hrDiplomaLanding,
+  normalizeLandingV2Phone,
+  validateLandingV2Form,
+} from "./landingV2";
 
 const validValues = {
   fullName: "مستخدم تجريبي",
@@ -39,4 +44,13 @@ test("حقل الجوال يستبعد الحروف والرموز ويُبقي 
 test("قيمة عدد الوحدات بلا كلمة تدريبية وفي سطر واحد", () => {
   assert.equal(hrDiplomaLanding.details.units, "79 وحدة معتمدة");
   assert.equal(hrDiplomaLanding.details.units.includes("\n"), false);
+});
+
+test("المسار /ad/:slug يستدعي قالب الهبوط الجديد حسب الـ slug", () => {
+  assert.equal(getLandingProgram("hr-diploma"), hrDiplomaLanding);
+  assert.equal(getLandingProgram("HR-Diploma"), hrDiplomaLanding);
+});
+
+test("أي slug غير معروف يرجع لأول قالب هبوط بدل الفشل", () => {
+  assert.equal(getLandingProgram("unknown-program"), hrDiplomaLanding);
 });

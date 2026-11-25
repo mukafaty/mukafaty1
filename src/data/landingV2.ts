@@ -80,3 +80,12 @@ export const hrDiplomaLanding: LandingProgramConfig = {
   partnerLogos: footerLogosAsset.url,
   partnerLogosAlt: "شعارات الجهات المشاركة: معهد جدة الدولي العالي للتدريب، جدارات، بنك التنمية الاجتماعية، والمعهد السعودي العالي للتدريب",
 };
+
+/** قوالب الهبوط المتاحة، مرتّبة حسب مسار الإعلان. */
+export const landingPrograms: readonly LandingProgramConfig[] = [hrDiplomaLanding];
+
+/** يحلّ قالب الهبوط حسب الـ slug، ويرجع لأول قالب عند عدم التطابق — نفس سلوك getAdProgram. */
+export function getLandingProgram(slug: string): LandingProgramConfig {
+  const found = landingPrograms.find((program) => program.slug.toLowerCase() === slug.toLowerCase());
+  return found ?? landingPrograms[0]!;
+}
