@@ -6,7 +6,6 @@ import {
   ALL_CITIES,
   AUDIENCES,
   CITY_OPTIONS,
-  commissionOf,
   KINDS,
   MODES,
   SORTS,
@@ -72,7 +71,7 @@ function AdsPage() {
       return [...list].sort((a, b) => b.createdAt.localeCompare(a.createdAt));
     }
     if (filters.sort === "الأعلى عمولة") {
-      return [...list].sort((a, b) => commissionOf(b.cashFee) - commissionOf(a.cashFee));
+      return [...list].sort((a, b) => (b.cashCommission ?? -1) - (a.cashCommission ?? -1));
     }
     return list;
   }, [filters]);

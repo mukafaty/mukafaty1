@@ -16,3 +16,5 @@
 - Admin program management uses an isolated in-memory mock dataset and pure filter, statistics, pagination, and status helpers; this keeps trial actions independent of real programs and other pages.
 - External marketer list and profiles share a validated browser-local mock store; immutable membership IDs and pure reward/validation helpers keep edits isolated from real accounts.
 - Commercial font files are uploaded as Lovable Assets and declared with real @font-face rules in src/styles.css; never reference a font family whose file is not loaded, and keep font-specific weights scoped to the page that asked for them.
+
+- Represent unconfirmed advertising catalog fees, commissions, cities and training modes as null; render a neutral dash and sort unknown commissions last instead of fabricating values.

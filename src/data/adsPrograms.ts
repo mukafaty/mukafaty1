@@ -1,32 +1,33 @@
-import hrImg from "@/assets/ads-hr.jpg";
+import hrImg from "@/assets/program-hr.webp.asset.json";
 import dataImg from "@/assets/ads-data.jpg";
-import devImg from "@/assets/ads-dev.jpg";
-import financeImg from "@/assets/ads-finance.jpg";
-import businessImg from "@/assets/ads-business.jpg";
-import logisticsImg from "@/assets/ads-logistics.jpg";
-import officeDiplomaImg from "@/assets/ads-office-diploma.jpg";
-import computerOfficeImg from "@/assets/ads-computer-office.jpg";
-import officeCourseImg from "@/assets/ads-office-course.jpg";
-import safetyImg from "@/assets/ads-safety.jpg";
-import englishRemoteImg from "@/assets/ads-english-remote.jpg";
+import devImg from "@/assets/program-dev.webp.asset.json";
+import financeImg from "@/assets/program-ins.webp.asset.json";
+import businessImg from "@/assets/program-business.webp.asset.json";
+import logisticsImg from "@/assets/program-logistics.webp.asset.json";
+import officeDiplomaImg from "@/assets/program-office-diploma.webp.asset.json";
+import officeCourseImg from "@/assets/program-photo.webp.asset.json";
+import safetyImg from "@/assets/program-safety.webp.asset.json";
+import englishRemoteImg from "@/assets/program-english-remote.webp.asset.json";
 
 export type ProgramType = "دبلوم" | "دورة";
 export type TrainingMode = "عن بُعد" | "حضوري" | "مدمج";
 export type Audience = "رجال" | "نساء" | "الرجال والنساء";
 export type City = "جدة" | "الرياض" | "مكة المكرمة" | "ينبع";
 
+import ecommImg from "@/assets/program-ecomm.webp.asset.json";
+
 export type Program = {
   id: number;
   programName: string;
   programType: ProgramType;
-  city: City;
+  city: City | null;
   targetAudience: Audience;
-  mode: TrainingMode;
+  mode: TrainingMode | null;
   image: string;
-  cashFee: number;
-  cashCommission: number;
-  installmentFee: number;
-  installmentCommission: number;
+  cashFee: number | null;
+  cashCommission: number | null;
+  installmentFee: number | null;
+  installmentCommission: number | null;
   discount?: number;
   isNew: boolean;
   marketingText?: string;
@@ -53,7 +54,7 @@ const raw: RawProgram[] = [
   {
     id: 1,
     programName: "دبلوم البرمجيات",
-    image: devImg,
+    image: devImg.url,
     city: "جدة",
     programType: "دبلوم",
     mode: "حضوري",
@@ -81,7 +82,7 @@ const raw: RawProgram[] = [
   {
     id: 3,
     programName: "دبلوم السلامة والصحة المهنية",
-    image: safetyImg,
+    image: safetyImg.url,
     city: "جدة",
     programType: "دبلوم",
     mode: "مدمج",
@@ -96,7 +97,7 @@ const raw: RawProgram[] = [
   {
     id: 4,
     programName: "دبلوم الإدارة المكتبية عن بُعد",
-    image: officeDiplomaImg,
+    image: officeDiplomaImg.url,
     city: "جدة",
     programType: "دبلوم",
     mode: "عن بُعد",
@@ -108,23 +109,9 @@ const raw: RawProgram[] = [
     marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
   },
   {
-    id: 5,
-    programName: "دورة استخدام الحاسب في الأعمال المكتبية",
-    image: computerOfficeImg,
-    city: "جدة",
-    programType: "دورة",
-    mode: "حضوري",
-    targetAudience: "رجال",
-    cashFee: 1550,
-    installmentFee: 1950,
-    isNew: false,
-    createdAt: "2026-07-30",
-    marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
-  },
-  {
     id: 6,
     programName: "دبلوم إدارة الأعمال",
-    image: businessImg,
+    image: businessImg.url,
     city: "جدة",
     programType: "دبلوم",
     mode: "حضوري",
@@ -139,7 +126,7 @@ const raw: RawProgram[] = [
   {
     id: 8,
     programName: "دبلوم إدارة الموارد البشرية عن بُعد",
-    image: hrImg,
+    image: hrImg.url,
     city: "الرياض",
     programType: "دبلوم",
     mode: "عن بُعد",
@@ -152,22 +139,21 @@ const raw: RawProgram[] = [
   },
   {
     id: 9,
-    programName: "دورة الإدارة المكتبية",
-    image: officeCourseImg,
-    city: "مكة المكرمة",
+    programName: "دورة التصوير الفوتوغرافي",
+    image: officeCourseImg.url,
+    city: null,
     programType: "دورة",
-    mode: "حضوري",
+    mode: null,
     targetAudience: "الرجال والنساء",
-    cashFee: 3800,
-    installmentFee: 4300,
+    cashFee: null,
+    installmentFee: null,
     isNew: false,
     createdAt: "2026-07-10",
-    marketingText: "أقساط شهرية ميسرة تبدأ من 400 ريال فقط",
   },
   {
     id: 10,
     programName: "دورة اللغة الإنجليزية عن بُعد",
-    image: englishRemoteImg,
+    image: englishRemoteImg.url,
     city: "ينبع",
     programType: "دورة",
     mode: "عن بُعد",
@@ -180,23 +166,21 @@ const raw: RawProgram[] = [
   },
   {
     id: 11,
-    programName: "دبلوم المحاسبة",
-    image: financeImg,
-    city: "مكة المكرمة",
+    programName: "دبلوم التأمين",
+    image: financeImg.url,
+    city: null,
     programType: "دبلوم",
-    mode: "حضوري",
-    targetAudience: "رجال",
-    cashFee: 6500,
-    installmentFee: 7100,
+    mode: null,
+    targetAudience: "الرجال والنساء",
+    cashFee: null,
+    installmentFee: null,
     isNew: false,
     createdAt: "2026-06-28",
-    marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
-    promotionalText: "شهادات معتمدة من المؤسسة العامة للتدريب التقني والمهني",
   },
   {
     id: 12,
     programName: "دبلوم إدارة الخدمات اللوجستية",
-    image: logisticsImg,
+    image: logisticsImg.url,
     city: "ينبع",
     programType: "دبلوم",
     mode: "حضوري",
@@ -208,10 +192,23 @@ const raw: RawProgram[] = [
     createdAt: "2026-06-20",
     marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
   },
+  {
+    id: 13,
+    programName: "دبلوم التجارة الإلكترونية",
+    image: ecommImg.url,
+    city: null,
+    programType: "دبلوم",
+    mode: null,
+    targetAudience: "الرجال والنساء",
+    cashFee: null,
+    installmentFee: null,
+    isNew: true,
+    createdAt: "2026-11-25",
+  },
 ];
 
 export const adsPrograms: Program[] = raw.map((p) => ({
   ...p,
-  cashCommission: commissionOf(p.cashFee),
-  installmentCommission: commissionOf(p.installmentFee),
+  cashCommission: p.cashFee === null ? null : commissionOf(p.cashFee),
+  installmentCommission: p.installmentFee === null ? null : commissionOf(p.installmentFee),
 }));
