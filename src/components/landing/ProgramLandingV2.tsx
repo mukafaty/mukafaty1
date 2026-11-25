@@ -73,7 +73,7 @@ function HeroDetail({
         <p className="landing-v2-light text-[10px] leading-4 text-landing-v2-detail sm:text-xs lg:text-sm">
           {label}
         </p>
-        <p className="mt-0.5 text-[11px] font-bold leading-4 text-landing-v2-detail sm:text-xs lg:text-[15px]">
+        <p className="mt-0.5 whitespace-nowrap text-[11px] font-bold leading-4 text-landing-v2-detail sm:text-xs lg:text-[15px]">
           {value}
         </p>
       </div>

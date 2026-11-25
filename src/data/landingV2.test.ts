@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { normalizeLandingV2Phone, validateLandingV2Form } from "./landingV2";
+import { hrDiplomaLanding, normalizeLandingV2Phone, validateLandingV2Form } from "./landingV2";
 
 const validValues = {
   fullName: "مستخدم تجريبي",
@@ -34,4 +34,9 @@ test("حقل الجوال يحوّل الأرقام العربية والفار�
 
 test("حقل الجوال يستبعد الحروف والرموز ويُبقي الأرقام الإنجليزية فقط", () => {
   assert.equal(normalizeLandingV2Phone("05a12-34 ٥"), "0512345");
+});
+
+test("قيمة عدد الوحدات بلا كلمة تدريبية وفي سطر واحد", () => {
+  assert.equal(hrDiplomaLanding.details.units, "79 وحدة معتمدة");
+  assert.equal(hrDiplomaLanding.details.units.includes("\n"), false);
 });

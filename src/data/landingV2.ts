@@ -67,7 +67,7 @@ export const hrDiplomaLanding: LandingProgramConfig = {
   subtitle: "انتقل بمستواك المهني إلى مستويات جديدة من الإدارة والتميز",
   details: {
     mode: "عن بُعد",
-    units: "79 وحدة تدريبية معتمدة",
+    units: "79 وحدة معتمدة",
     audience: "للرجال والنساء",
     duration: "عامان ونصف",
   },
