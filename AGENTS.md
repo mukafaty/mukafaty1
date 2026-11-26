@@ -18,3 +18,4 @@
 - Commercial font files are uploaded as Lovable Assets and declared with real @font-face rules in src/styles.css; never reference a font family whose file is not loaded, and keep font-specific weights scoped to the page that asked for them.
 
 - Represent unconfirmed advertising catalog fees, commissions, cities and training modes as null; render a neutral dash and sort unknown commissions last instead of fabricating values.
+- Keep quick-share-only mock overrides separate from the shared ad data; its mock short link is display/copy-only so pro-share and full-link referral tracking remain unchanged.

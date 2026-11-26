@@ -1,5 +1,6 @@
 import portraitAsset from "@/assets/ad-portrait.jpg.asset.json";
 import squareAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
+import quickSharePortraitAsset from "@/assets/hr-ad2.jpg.asset.json";
 
 /** المنصات المدعومة — قيم ثابتة موحدة */
 export const SHARE_PLATFORMS = [
@@ -64,3 +65,17 @@ export const quickShareAd: AdData = {
   imagePortraitUrl: portraitAsset.url,
   imageSquareUrl: squareAsset.url,
 };
+
+/** Overrides are exclusive to quick-share; pro-share keeps its existing data. */
+export const quickSharePageAd: AdData = {
+  ...quickShareAd,
+  location: "جميع أنحاء المملكة",
+  imagePortraitUrl: quickSharePortraitAsset.url,
+};
+
+/** Display/copy example only: never used for referral tracking or sharing. */
+export const quickSharePageShortLink = "https://bit.ly/4xK8mQ";
+
+export function quickShareDisplayedReward(reward: number): number {
+  return Math.round(reward);
+}

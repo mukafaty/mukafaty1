@@ -13,10 +13,12 @@ import {
   List,
 } from "lucide-react";
 import { toast } from "sonner";
-import { useShortLink } from "@/lib/useShortLink";
-
-const AD_SLUG = "hr-diploma";
-import { quickShareAd, type SharePlatform } from "@/data/quickShareAd";
+import {
+  quickSharePageAd,
+  quickSharePageShortLink,
+  quickShareDisplayedReward,
+  type SharePlatform,
+} from "@/data/quickShareAd";
 import { shareAd, isMobileDevice } from "@/lib/shareAd";
 import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
@@ -72,7 +74,7 @@ const platforms: PlatformItem[] = [
 /** منصات تُخفى في نسخة الكمبيوتر فقط */
 const mobileOnlyPlatforms: SharePlatform[] = ["instagram", "tiktok", "snapchat"];
 
-const ad = quickShareAd;
+const ad = quickSharePageAd;
 
 function CopyField({ value, label }: { value: string; label: string }) {
   const handleCopy = async () => {
@@ -113,8 +115,6 @@ function QuickSharePage() {
   useEffect(() => {
     setIsMobile(isMobileDevice());
   }, []);
-
-  const { shortLink } = useShortLink(AD_SLUG);
 
   const visiblePlatforms = isMobile
     ? platforms
@@ -194,17 +194,17 @@ function QuickSharePage() {
               </div>
 
               <h2 className="text-lg font-black leading-snug text-navy">
-                دبلوم إدارة الموارد البشرية عن بُعد
+                {ad.title}
               </h2>
 
               <div className="space-y-3 text-sm font-bold text-navy">
                 <span className="flex items-center gap-2">
                   <Globe size={18} className="shrink-0 text-brand" />
-                  عن بُعد - جميع أرجاء المملكة
+                  {ad.trainingMode} - {ad.location}
                 </span>
                 <span className="flex items-center gap-2">
                   <User size={18} className="shrink-0 text-brand" />
-                  الفئة المستهدفة رجال
+                  الفئة المستهدفة {ad.targetAudience}
                 </span>
                 <span className="flex items-center gap-2">
                   <Users size={18} className="shrink-0 text-brand" />
@@ -221,7 +221,7 @@ function QuickSharePage() {
                   الرسوم كاش
                 </div>
                 <p className="text-base font-black text-navy sm:text-lg">
-                  9,500 ريال
+                  {ad.cashFee.toLocaleString("en-US")} ريال
                 </p>
               </div>
               <div className="rounded-2xl border border-border bg-muted/40 p-3 text-center">
@@ -230,7 +230,7 @@ function QuickSharePage() {
                   المكافأة لكل تسجيل
                 </div>
                 <p className="text-base font-black text-red-600 sm:text-lg">
-                  475 ريال
+                  {quickShareDisplayedReward(ad.rewardPerRegistration)} ريال
                 </p>
               </div>
             </div>
@@ -241,10 +241,9 @@ function QuickSharePage() {
             <img
               src={ad.imagePortraitUrl}
               alt={`إعلان ${ad.title}`}
-              width={619}
-              height={1100}
+              width={1080}
+              height={1920}
               className="h-auto max-h-[520px] w-auto max-w-full rounded-xl object-contain sm:max-h-[640px] lg:max-h-[560px]"
-              style={{ aspectRatio: "619 / 1100" }}
             />
           </div>
 
@@ -289,7 +288,7 @@ function QuickSharePage() {
       {/* رابط الإحالة وكود الخصم */}
       <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
         <CopyField value={ad.baseReferralLink} label="رابط الإحالة" />
-        <CopyField value={shortLink} label="رابط الإحالة المختصر" />
+        <CopyField value={quickSharePageShortLink} label="رابط الإحالة المختصر" />
       </div>
     </section>
   );
