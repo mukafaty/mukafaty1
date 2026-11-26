@@ -21,6 +21,11 @@ test("pro-share main ad image is the new portrait asset", () => {
   );
 });
 
+test("reward per registration is shown as a whole number without decimals", () => {
+  assert.equal(professionalShareData.commission, "403 ريال");
+  assert.equal(/\d*\.\d/.test(professionalShareData.commission), false);
+});
+
 test("mock short link is the only short link shown, with no placeholder left", () => {
   assert.equal(proSharePageShortLink, "https://m.k/4xK8mQ");
 
