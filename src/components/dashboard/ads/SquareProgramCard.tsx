@@ -1,6 +1,6 @@
 import { MapPin, Rocket, Share2, User } from "lucide-react";
 import { Link } from "@tanstack/react-router";
-import type { Program } from "@/data/adsPrograms";
+import { displayedCommission, type Program } from "@/data/adsPrograms";
 
 const fmt = (n: number) =>
   n.toLocaleString("en-US", Number.isInteger(n) ? undefined : { minimumFractionDigits: 2, maximumFractionDigits: 2 });
@@ -18,7 +18,7 @@ function FeeRow({ label, fee, commission, originalFee, unit }: { label: string; 
       </div>
       <div className="flex flex-1 items-center justify-between gap-2 rounded-xl bg-[#FDF9F0] px-3 py-2">
         <span className="text-xs font-bold text-muted-foreground">عمولتك لكل تسجيل</span>
-        <span className="text-sm font-black text-destructive">{commission === null ? "—" : `${fmt(commission)} ريال`}</span>
+        <span className="text-sm font-black text-destructive">{commission === null ? "—" : `${fmt(displayedCommission(commission))} ريال`}</span>
       </div>
     </div>
   );
@@ -54,7 +54,7 @@ export function SquareProgramCard({ program }: { program: Program }) {
         )}
 
         {/* خصم — أعلى يسار */}
-        {program.discount && (
+        {!program.isNew && program.discount && (
           <span className="absolute left-3 top-3 rounded-full bg-destructive px-3 py-1.5 text-xs font-black text-primary-foreground shadow-sm">
             خصم {program.discount}%
           </span>

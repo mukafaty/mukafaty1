@@ -8,6 +8,7 @@ import officeDiplomaImg from "@/assets/program-office-diploma.webp.asset.json";
 import officeCourseImg from "@/assets/program-photo.webp.asset.json";
 import safetyImg from "@/assets/program-safety.webp.asset.json";
 import englishRemoteImg from "@/assets/program-english-remote.webp.asset.json";
+import cyberImg from "@/assets/ads-cyber.webp.asset.json";
 
 export type ProgramType = "دبلوم" | "دورة";
 export type TrainingMode = "عن بُعد" | "حضوري" | "مدمج";
@@ -43,6 +44,9 @@ export const COMMISSION_RATE = 0.05;
 
 /** عمولة 5% من الرسوم الفعلية بعد الخصم، بدقة منزلتين عشريتين دون تقريب لعدد صحيح. */
 export const commissionOf = (fee: number) => Math.round(fee * COMMISSION_RATE * 100) / 100;
+
+/** تقريب مخصص للعرض فقط؛ تبقى العمولة الداخلية محسوبة بدقة 5%. */
+export const displayedCommission = (commission: number) => Math.round(commission);
 
 export const CITIES: City[] = ["جدة", "مكة المكرمة", "الرياض", "ينبع"];
 /** برنامج متاح لجميع المدن يظهر عند اختيار أي مدينة. */
@@ -101,10 +105,9 @@ const raw: RawProgram[] = [
     targetAudience: "رجال",
     cashFee: 8055,
     installmentFee: 8055,
-    isNew: false,
+    isNew: true,
     createdAt: "2026-07-22",
     originalFee: 8950,
-    discount: 10,
     marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
   },
   {
@@ -180,7 +183,7 @@ const raw: RawProgram[] = [
     createdAt: "2026-06-28",
     originalFee: 11950,
     discount: 10,
-    marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
+    marketingText: "أقساط شهرية ميسرة تبدأ من 375 ريال فقط",
   },
   {
     id: 13,
@@ -192,7 +195,7 @@ const raw: RawProgram[] = [
     targetAudience: "الرجال والنساء",
     cashFee: 6750,
     installmentFee: 6750,
-    isNew: true,
+    isNew: false,
     createdAt: "2026-11-25",
     originalFee: 7500,
     discount: 10,
@@ -224,7 +227,23 @@ const raw: RawProgram[] = [
     targetAudience: "الرجال والنساء",
     cashFee: 10755,
     installmentFee: 10755,
-    isNew: true,
+    isNew: false,
+    createdAt: "2026-11-26",
+    originalFee: 11950,
+    discount: 10,
+    marketingText: "أقساط شهرية ميسرة تبدأ من 500 ريال فقط",
+  },
+  {
+    id: 15,
+    programName: "دبلوم الأمن السيبراني",
+    image: cyberImg.url,
+    city: "جدة",
+    programType: "دبلوم",
+    mode: null,
+    targetAudience: "الرجال والنساء",
+    cashFee: 10755,
+    installmentFee: 10755,
+    isNew: false,
     createdAt: "2026-11-26",
     originalFee: 11950,
     discount: 10,

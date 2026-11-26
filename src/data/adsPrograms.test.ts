@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
-import { adsPrograms, commissionOf, matchesCity } from "./adsPrograms";
+import { adsPrograms, commissionOf, displayedCommission, matchesCity } from "./adsPrograms";
 
 const byName = (n: string) => adsPrograms.find((p) => p.programName === n);
 
-test("عمولة 5% من الرسوم بعد الخصم بدقة منزلتين", () => {
+test("عمولة 5% من الرسوم بعد الخصم بدقة منزلتين داخليًا", () => {
   assert.equal(commissionOf(8055), 402.75);
   assert.equal(commissionOf(10755), 537.75);
   assert.equal(commissionOf(6750), 337.5);
@@ -13,13 +13,32 @@ test("عمولة 5% من الرسوم بعد الخصم بدقة منزلتين"
   assert.equal(commissionOf(390), 19.5);
 });
 
-test("حذف دورة إدخال البيانات وإضافة الذكاء الاصطناعي", () => {
-  assert.equal(byName("دورة إدخال البيانات ومعالجة النصوص"), undefined);
-  const ai = byName("دبلوم الذكاء الاصطناعي");
-  assert.equal(ai?.city, "جدة");
-  assert.equal(ai?.originalFee, 11950);
-  assert.equal(ai?.cashCommission, 537.75);
-  assert.equal(adsPrograms.length, 11);
+test("العمولة المعروضة عدد صحيح دون تغيير الحساب الداخلي", () => {
+  assert.equal(displayedCommission(537.75), 538);
+  assert.equal(displayedCommission(402.75), 403);
+  assert.equal(byName("دبلوم الأمن السيبراني")?.cashCommission, 537.75);
+  assert.equal(displayedCommission(byName("دبلوم الأمن السيبراني")!.cashCommission!), 538);
+});
+
+test("بطاقة دبلوم الأمن السيبراني بالبيانات المعتمدة", () => {
+  const cyber = byName("دبلوم الأمن السيبراني");
+  assert.equal(cyber?.programType, "دبلوم");
+  assert.equal(cyber?.city, "جدة");
+  assert.equal(cyber?.targetAudience, "الرجال والنساء");
+  assert.equal(cyber?.originalFee, 11950);
+  assert.equal(cyber?.cashFee, 10755);
+  assert.equal(cyber?.discount, 10);
+  assert.equal(cyber?.marketingText, "أقساط شهرية ميسرة تبدأ من 500 ريال فقط");
+  assert.match(cyber?.image ?? "", /ads-cyber\.webp$/);
+  assert.equal(adsPrograms.length, 12);
+});
+
+test("شارة جديد لإدارة الأعمال فقط ولا تجتمع مع شارة الخصم", () => {
+  assert.deepEqual(adsPrograms.filter((p) => p.isNew).map((p) => p.programName), ["دبلوم إدارة الأعمال"]);
+  assert.equal(byName("دبلوم إدارة الأعمال")?.discount, undefined);
+  assert.equal(byName("دبلوم إدارة الأعمال")?.cashFee, 8055);
+  assert.equal(byName("دبلوم إدارة الأعمال")?.originalFee, 8950);
+  assert.equal(adsPrograms.every((p) => !(p.isNew && p.discount)), true);
 });
 
 test("بيانات البطاقات المحددة", () => {
@@ -28,6 +47,7 @@ test("بيانات البطاقات المحددة", () => {
   assert.equal(byName("دبلوم السلامة والصحة المهنية")?.discount, 10);
   assert.equal(byName("دبلوم إدارة الخدمات اللوجستية")?.city, "جدة");
   assert.equal(byName("دبلوم التجارة الإلكترونية عن بُعد")?.cashCommission, 337.5);
+  assert.equal(byName("دبلوم التأمين عن بُعد")?.marketingText, "أقساط شهرية ميسرة تبدأ من 375 ريال فقط");
   const photo = byName("دورة التصوير الفوتوغرافي");
   assert.equal(photo?.targetAudience, "رجال");
   assert.equal(photo?.installmentCommission, 150);
