@@ -31,9 +31,11 @@ function Index() {
         <Header />
         <main>
           <HeroSection />
-          <StepsSection />
+          <div className="flex flex-col md:min-h-dvh">
+            <StepsSection />
+            <Footer />
+          </div>
         </main>
-        <Footer />
       </div>
     </RequireAuth>
   );

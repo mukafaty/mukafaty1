@@ -33,10 +33,10 @@ export function StepsSection() {
   return (
     <section
       id="steps"
-      className="relative overflow-hidden bg-navy-deep py-16 md:py-20 lg:py-24"
+      className="relative overflow-hidden bg-navy-deep py-16 md:flex md:min-h-0 md:flex-col md:flex-1 md:py-6 lg:py-8"
     >
       <div className="tech-dots pointer-events-none absolute inset-0 opacity-10" aria-hidden />
-      <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-10">
+      <div className="relative mx-auto w-full max-w-7xl px-4 sm:px-6 md:flex md:flex-1 md:flex-col md:justify-center lg:px-10">
         <header className="text-center">
           <h2 className="text-3xl font-black text-primary-foreground sm:text-4xl md:text-5xl">
             ابدأ في أربع خطوات
@@ -46,13 +46,13 @@ export function StepsSection() {
           </p>
         </header>
 
-        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-12 grid grid-cols-1 gap-6 sm:grid-cols-2 md:mt-10 lg:grid-cols-4">
           {steps.map((step) => (
             <StepCard key={step.number} {...step} />
           ))}
         </div>
 
-        <div className="mt-[30px] flex justify-center">
+        <div className="mt-[60px] flex justify-center">
           <Link
             to="/register"
             className="inline-flex h-[65px] w-[500px] max-w-full origin-center items-center justify-center rounded-full bg-register-blue text-[26px] font-bold text-primary-foreground transition-[background-color,transform] duration-300 ease-in-out hover:bg-register-gold sm:hover:[transform:scale(1.10)]"
