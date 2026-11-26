@@ -30,7 +30,7 @@ export const Route = createFileRoute("/dashboard/clients")({
   component: ClientsPage,
 });
 
-type Status = "جاري المعالجة" | "تم التسجيل";
+type Status = "جاري المعالجة" | "تم التسجيل" | "لا يرغب";
 
 type Client = {
   id: number;
@@ -47,6 +47,7 @@ type Client = {
 const STATUS_TONE: Record<Status, string> = {
   "جاري المعالجة": "bg-sky-50 text-sky-700 ring-1 ring-sky-100",
   "تم التسجيل": "bg-emerald-50 text-emerald-700 ring-1 ring-emerald-200",
+  "لا يرغب": "bg-destructive/10 text-destructive ring-1 ring-destructive/20",
 };
 
 const CLIENTS: Client[] = [
@@ -68,7 +69,7 @@ const CLIENTS: Client[] = [
     city: "ينبع",
     branch: "ينبع",
     date: "10-09-2026",
-    status: "جاري المعالجة",
+    status: "لا يرغب",
     agent: "سرمد خالد",
     reward: null,
   },
@@ -112,8 +113,8 @@ const CLIENTS: Client[] = [
     city: "الرياض",
     branch: "الرياض الربوة",
     date: "09-09-2026",
-    status: "جاري المعالجة",
-    agent: "حسن سرور",
+    status: "لا يرغب",
+    agent: "أحمد يوسف",
     reward: null,
   },
   {
@@ -135,7 +136,7 @@ const CLIENTS: Client[] = [
     branch: "جدة الحمراء",
     date: "08-09-2026",
     status: "تم التسجيل",
-    agent: "حسن سرور",
+    agent: "أحمد يوسف",
     reward: 200,
   },
   {
@@ -168,7 +169,7 @@ const CLIENTS: Client[] = [
     branch: "الرياض الربوة",
     date: "03-09-2026",
     status: "جاري المعالجة",
-    agent: "حسن سرور",
+    agent: "أحمد يوسف",
     reward: null,
   },
   {
@@ -189,7 +190,7 @@ const CLIENTS: Client[] = [
     city: "ينبع",
     branch: "ينبع",
     date: "01-09-2026",
-    status: "جاري المعالجة",
+    status: "لا يرغب",
     agent: "سرمد خالد",
     reward: null,
   },
@@ -234,7 +235,7 @@ const CLIENTS: Client[] = [
     branch: "جدة الحمراء",
     date: "27-08-2026",
     status: "تم التسجيل",
-    agent: "حسن سرور",
+    agent: "أحمد يوسف",
     reward: 200,
   },
   {
@@ -266,7 +267,7 @@ const CLIENTS: Client[] = [
     city: "ينبع",
     branch: "ينبع",
     date: "24-08-2026",
-    status: "جاري المعالجة",
+    status: "لا يرغب",
     agent: "سرمد خالد",
     reward: null,
   },
@@ -311,7 +312,7 @@ const CLIENTS: Client[] = [
     branch: "جدة الحمراء",
     date: "20-08-2026",
     status: "تم التسجيل",
-    agent: "حسن سرور",
+    agent: "أحمد يوسف",
     reward: 200,
   },
 ];
@@ -320,6 +321,7 @@ const STATUSES = [
   "كل الحالات",
   "جاري المعالجة",
   "تم التسجيل",
+  "لا يرغب",
 ] as const;
 const CITIES = ["كل المدن", "الرياض", "جدة", "مكة المكرمة", "ينبع"] as const;
 const BRANCHES = ["كل الفروع", ...Array.from(new Set(CLIENTS.map((c) => c.branch)))];
@@ -435,7 +437,7 @@ ${rows
 
   const stats = [
     { title: "إجمالي العملاء", value: 24, unit: "عميل", icon: Users, tone: "bg-brand-soft text-brand" },
-    { title: "قيد المتابعة", value: 8, unit: "عملاء", icon: UserRound, tone: "bg-amber-50 text-amber-600" },
+    { title: "قيد المتابعة", value: 4, unit: "عملاء", icon: UserRound, tone: "bg-amber-50 text-amber-600" },
     { title: "تم تسجيل", value: 12, unit: "عميل", icon: UserCheck, tone: "bg-emerald-50 text-emerald-600" },
     {
       title: "إجمالي المكافآت",
