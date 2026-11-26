@@ -407,32 +407,48 @@ function ClientsPage() {
 
   const reset = () => setPage(1);
 
-  const exportPdf = () => {
-    const html = `<!doctype html><html dir="rtl" lang="ar"><head><meta charset="utf-8">
-<title>عملائي - مكافآتي</title>
-<style>
-body{font-family:Tajawal,system-ui,sans-serif;padding:24px;color:#06143F}
-h1{font-size:20px;margin:0 0 4px}p{margin:0 0 16px;color:#64748b;font-size:12px}
-table{width:100%;border-collapse:collapse;font-size:11px}
-th{background:#00194F;color:#fff;padding:8px;text-align:right}
-td{padding:7px 8px;border-bottom:1px solid #e5e7eb;text-align:right}
-tr:nth-child(even) td{background:#f1f6ff}
-</style></head><body>
-<h1>عملائي</h1><p>قائمة العملاء والإحالات الخاصة بك.</p>
-<table><thead><tr><th>الرقم</th><th>اسم العميل</th><th>البرنامج التدريبي</th><th>المدينة</th><th>تاريخ الإحالة</th><th>حالة التسجيل</th><th>المسوق الداخلي</th><th>المكافأة المالية</th></tr></thead><tbody>
-${rows
-  .map(
-    (c) =>
-      `<tr><td>${c.id}</td><td>${c.name}</td><td>${c.program}</td><td>${c.city}</td><td>${c.date}</td><td>${c.status}</td><td>${c.agent}</td><td>${c.reward ? c.reward + " ريال" : "—"}</td></tr>`,
-  )
-  .join("")}
-</tbody></table></body></html>`;
-    const w = window.open("", "_blank");
-    if (!w) return;
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 400);
+  const exportExcel = async () => {
+    const ExcelJS = (await import("exceljs")).default;
+    const wb = new ExcelJS.Workbook();
+    const ws = wb.addWorksheet("عملائي", { views: [{ rightToLeft: true, state: "frozen", ySplit: 1 }] });
+    const headers = ["الرقم", "اسم العميل", "البرنامج التدريبي", "المدينة", "تاريخ الإحالة", "حالة التسجيل", "المسوق الداخلي", "المكافأة المالية"];
+    ws.addRow(headers);
+    rows.forEach((c) =>
+      ws.addRow([c.id, c.name, c.program, c.city, c.date, c.status, c.agent, c.reward ? `${c.reward} ريال` : "—"]),
+    );
+    const head = ws.getRow(1);
+    head.height = 24;
+    head.eachCell((cell) => {
+      cell.font = { name: "Arial", bold: true, color: { argb: "FFFFFFFF" } };
+      cell.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF00194F" } };
+      cell.alignment = { horizontal: "center", vertical: "middle" };
+    });
+    ws.eachRow((r, i) => {
+      if (i === 1) return;
+      r.eachCell((cell) => {
+        cell.font = { name: "Arial" };
+        cell.alignment = { horizontal: "right", vertical: "middle" };
+      });
+    });
+    ws.columns.forEach((col, i) => {
+      let max = headers[i]!.length;
+      col.eachCell?.({ includeEmpty: false }, (cell) => {
+        max = Math.max(max, String(cell.value ?? "").length);
+      });
+      col.width = Math.min(60, max + 6);
+    });
+    const buf = await wb.xlsx.writeBuffer();
+    const blob = new Blob([buf], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    const d = new Date();
+    const pad = (n: number) => String(n).padStart(2, "0");
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = `عملائي-${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 30_000);
   };
 
   const stats = [
@@ -544,7 +560,7 @@ ${rows
           />
 
           <button
-            onClick={exportPdf}
+            onClick={() => void exportExcel()}
             className="inline-flex h-11 items-center justify-center gap-2 rounded-2xl bg-brand px-5 text-sm font-bold text-primary-foreground transition-colors hover:bg-navy"
           >
             <Download size={17} />
