@@ -4,6 +4,7 @@ import { quickShareAd, type AdData } from "@/data/quickShareAd";
  * تُستخدم حاليًا لوضع الهيكل البصري فقط، ويمكن استبدالها لاحقًا ببيانات حقيقية.
  */
 import mainAdImageAsset from "@/assets/landing/HR-diploma-ad.jpg.asset.json";
+import proMainAdImageAsset from "@/assets/hr-ad2-pro.jpg.asset.json";
 import portraitAdAsset from "@/assets/ad-portrait.jpg.asset.json";
 import squareAdAsset from "@/assets/landing/HR-diploma-1to1.png.asset.json";
 import wideAdAsset from "@/assets/ad-square.png.asset.json";
@@ -54,6 +55,9 @@ export interface VideoDownload {
 }
 
 
+/** رابط مختصر تجريبي للعرض والنسخ فقط — لا يُستخدم في التتبع. */
+export const proSharePageShortLink = "https://m.k/4xK8mQ";
+
 export const professionalShareData: ProShareData = {
   programName: "دبلوم إدارة الموارد البشرية عن بُعد",
   location: "جميع أنحاء المملكة",
@@ -70,8 +74,8 @@ export const professionalShareData: ProShareData = {
   xText:
     "دبلوم إدارة الموارد البشرية عن بُعد\n" +
     "شهادة معتمدة + تدريب متطور + فرصة مميزة للتعلم من أي مكان في المملكة.\n" +
-    "{SHORT_LINK}",
-  mainAdImage: mainAdImageAsset.url,
+    proSharePageShortLink,
+  mainAdImage: proMainAdImageAsset.url,
 };
 
 export const referralLinks: ReferralLink[] = [
@@ -83,7 +87,7 @@ export const referralLinks: ReferralLink[] = [
   {
     id: "referral-link-short",
     title: "رابط الإحالة (مختصر)",
-    value: "https://mukafaty.com/ad/r/",
+    value: proSharePageShortLink,
   },
   {
     id: "discount-code",

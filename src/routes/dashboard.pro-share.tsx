@@ -32,7 +32,6 @@ import {
 import type { SharePlatform } from "@/data/quickShareAd";
 import { shareAd } from "@/lib/shareAd";
 import { toast } from "sonner";
-import { useShortLink } from "@/lib/useShortLink";
 import { TiktokColorIcon } from "@/components/dashboard/SocialIcons";
 import linkedinIcon from "@/assets/social/linkedin.png.asset.json";
 import whatsappIcon from "@/assets/social/whatsapp.jpg.asset.json";
@@ -447,11 +446,7 @@ function VideoCard({
 
 function ProSharePage() {
   const ad = professionalShareData;
-  const { shortLink, ready } = useShortLink("hr-diploma");
-  const xText = ad.xText.replace(
-    "{SHORT_LINK}",
-    ready && shortLink.startsWith("https://") ? shortLink : "https://mukafaty.com/ad/hr-diploma?ref=mk0001",
-  );
+  const xText = ad.xText;
 
   return (
     <section className="animate-in fade-in slide-in-from-bottom-2 space-y-5 duration-500">
@@ -614,13 +609,13 @@ function ProSharePage() {
 
           {/* العمود الأيسر — صورة الإعلان وبطاقة المشاركة */}
           <div className="order-3 flex flex-col gap-5 lg:order-3">
-            <div className="overflow-hidden rounded-2xl border border-border bg-muted/20 p-3">
+            <div className="flex justify-center bg-muted/20 p-3">
               <img
                 src={ad.mainAdImage}
                 alt="إعلان دبلوم إدارة الموارد البشرية"
-                width={619}
-                height={1100}
-                className="h-auto max-h-[520px] w-full rounded-xl object-contain sm:max-h-[640px] lg:max-h-[480px]"
+                width={1080}
+                height={1920}
+                className="h-auto max-h-[520px] w-auto max-w-full border border-ad-frame-border object-contain sm:max-h-[640px] lg:max-h-[480px]"
               />
             </div>
 
@@ -640,7 +635,7 @@ function ProSharePage() {
             <ReferralLinkCard
               key={link.id}
               title={link.title}
-              value={link.id === "referral-link-short" ? shortLink : link.value}
+              value={link.value}
             />
           ))}
         </div>
