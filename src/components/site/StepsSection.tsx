@@ -55,7 +55,7 @@ export function StepsSection() {
         <div className="mt-[30px] flex justify-center">
           <Link
             to="/register"
-            className="inline-flex h-[50px] w-[400px] max-w-full items-center justify-center rounded-full bg-register-blue text-primary-foreground transition-colors duration-300 hover:bg-register-gold"
+            className="inline-flex h-[65px] w-[500px] max-w-full origin-center items-center justify-center rounded-full bg-register-blue text-[26px] font-bold text-primary-foreground transition-[background-color,transform] duration-300 ease-in-out hover:bg-register-gold sm:hover:[transform:scale(1.10)]"
           >
             سجّل الآن
           </Link>
