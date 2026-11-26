@@ -31,7 +31,7 @@ export function Header() {
           setOpen(false);
         }}
       >
-        عن البرنامج
+        كيف أبدأ
       </button>
       <Link to="/register" className={linkClass} onClick={() => setOpen(false)}>
         انضم الآن

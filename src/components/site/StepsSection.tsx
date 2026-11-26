@@ -1,4 +1,5 @@
 import { User, Link2, Share2, TrendingUp } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { StepCard } from "./StepCard";
 
 const steps = [
@@ -49,6 +50,15 @@ export function StepsSection() {
           {steps.map((step) => (
             <StepCard key={step.number} {...step} />
           ))}
+        </div>
+
+        <div className="mt-[30px] flex justify-center">
+          <Link
+            to="/register"
+            className="inline-flex h-[50px] w-[400px] max-w-full items-center justify-center rounded-full bg-register-blue text-primary-foreground transition-colors duration-300 hover:bg-register-gold"
+          >
+            سجّل الآن
+          </Link>
         </div>
       </div>
     </section>
