@@ -1,6 +1,6 @@
 import { HeroImageSlide } from "./HeroImageSlide";
-import desktopAsset from "@/assets/slide-3-desktop.jpg.asset.json";
-import mobileAsset from "@/assets/slide-3-mobile.jpg.asset.json";
+import desktopAsset from "@/assets/slide-3-desktop-v2.webp.asset.json";
+import mobileAsset from "@/assets/slide-3-mobile-v2.jpg.asset.json";
 
 export function HeroSlide3() {
   return (
