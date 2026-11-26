@@ -74,7 +74,7 @@ export const quickSharePageAd: AdData = {
 };
 
 /** Display/copy example only: never used for referral tracking or sharing. */
-export const quickSharePageShortLink = "https://bit.ly/4xK8mQ";
+export const quickSharePageShortLink = "https://m.k/4xK8mQ";
 
 export function quickShareDisplayedReward(reward: number): number {
   return Math.round(reward);

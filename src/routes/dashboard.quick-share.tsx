@@ -243,7 +243,7 @@ function QuickSharePage() {
               alt={`إعلان ${ad.title}`}
               width={1080}
               height={1920}
-              className="h-auto max-h-[520px] w-auto max-w-full rounded-xl object-contain sm:max-h-[640px] lg:max-h-[560px]"
+              className="h-auto max-h-[520px] w-auto max-w-full border border-ad-frame-border object-contain sm:max-h-[640px] lg:max-h-[560px]"
             />
           </div>
 

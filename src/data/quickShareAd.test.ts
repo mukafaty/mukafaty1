@@ -31,7 +31,7 @@ test("new portrait is scoped to quick-share only", () => {
 });
 
 test("mock short link never replaces the full referral link or tracking", () => {
-  assert.equal(quickSharePageShortLink, "https://bit.ly/4xK8mQ");
+  assert.equal(quickSharePageShortLink, "https://m.k/4xK8mQ");
   assert.equal(quickSharePageAd.baseReferralLink, "https://mukafaty.com/ad/hr-diploma?ref=mk0001");
   assert.equal(buildPlatformReferralLink(quickSharePageAd.baseReferralLink, "whatsapp"),
     "https://mukafaty.com/ad/hr-diploma?ref=mk0001&platform=whatsapp");
