@@ -68,7 +68,7 @@ export function SupportLayout({ children }: { children: ReactNode }) {
     setError(false);
     try {
       await logout();
-      await navigate({ to: "/support-login", replace: true });
+      await navigate({ to: "/", replace: true });
     } catch {
       setError(true);
     } finally {

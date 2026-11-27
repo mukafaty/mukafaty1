@@ -1,3 +1,15 @@
+import { signOut } from "@/lib/temp-auth";
+import { useNavigate } from "@tanstack/react-router";
+
+/** Leave the protected admin area first, then end only the account session. */
+function useAdminSignOut() {
+  const navigate = useNavigate();
+  return async (e: { preventDefault: () => void }) => {
+    e.preventDefault();
+    await navigate({ to: "/", replace: true });
+    signOut();
+  };
+}
 import { useState, type ReactNode } from "react";
 import { Link, useRouterState } from "@tanstack/react-router";
 import {
@@ -19,6 +31,7 @@ const nav = [
 ];
 
 function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
+  const adminSignOut = useAdminSignOut();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
   return (
     <div className="flex h-full flex-col bg-admin-sidebar">
@@ -45,7 +58,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
       <div className="border-t border-admin-navy/10 px-2 py-4">
-        <Link to="/protect" className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold text-admin-navy hover:bg-card/70">
+        <Link to="/" replace onClick={adminSignOut} className="flex items-center gap-3 rounded-xl px-4 py-3 text-[15px] font-bold text-admin-navy hover:bg-card/70">
           <LogOut size={21} className="rotate-180" />
           <span>تسجيل الخروج</span>
         </Link>
@@ -55,6 +68,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 }
 
 export function AdminLayout({ children }: { children: ReactNode }) {
+  const adminSignOut = useAdminSignOut();
   const [open, setOpen] = useState(false);
   return (
     <div dir="rtl" className="min-h-screen w-full overflow-x-clip bg-admin-canvas font-sans text-admin-navy">
@@ -106,7 +120,7 @@ export function AdminLayout({ children }: { children: ReactNode }) {
               <DropdownMenuContent align="end" sideOffset={8} className="z-50 text-right">
                 <DropdownMenuItem>الملف الشخصي</DropdownMenuItem>
                 <DropdownMenuItem>الإعدادات</DropdownMenuItem>
-                <DropdownMenuItem asChild><Link to="/protect">تسجيل الخروج</Link></DropdownMenuItem>
+                <DropdownMenuItem asChild><Link to="/" replace onClick={adminSignOut}>تسجيل الخروج</Link></DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>

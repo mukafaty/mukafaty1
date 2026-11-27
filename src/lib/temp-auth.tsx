@@ -14,8 +14,32 @@ const LEGACY_KEYS = ["mukafaty:temp-auth"];
 const EXPECTED_USER = "555";
 const EXPECTED_PASS = "555";
 
-/** In-memory session flag. Reset on every page load / reload. */
+/** Account (dashboard) session: in-memory only, reset on every page load. */
 let sessionAuthed = false;
+
+/**
+ * Site protection session: kept per browser tab (sessionStorage) and independent
+ * of the account session, so signing out of a dashboard keeps the site browsable.
+ * A new visitor / Incognito window has no marker and is sent to /protect.
+ */
+const SITE_ACCESS_KEY = "mukafaty:site-access:v1";
+
+export function hasSiteAccess() {
+  if (typeof window === "undefined") return false;
+  try {
+    return window.sessionStorage.getItem(SITE_ACCESS_KEY) === "granted";
+  } catch {
+    return false;
+  }
+}
+
+function grantSiteAccess() {
+  try {
+    window.sessionStorage.setItem(SITE_ACCESS_KEY, "granted");
+  } catch {
+    /* ignore */
+  }
+}
 
 /** Remove any auth state persisted by earlier versions. */
 function purgeLegacyPersistence() {
@@ -47,9 +71,11 @@ export function isAuthenticated() {
 
 export function signIn() {
   sessionAuthed = true;
+  if (typeof window !== "undefined") grantSiteAccess();
   if (typeof window !== "undefined") window.dispatchEvent(new Event(EVENT));
 }
 
+/** Ends the account session only; the site protection session is kept. */
 export function signOut() {
   sessionAuthed = false;
   purgeLegacyPersistence();

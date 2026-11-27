@@ -3,11 +3,11 @@ import { Header } from "@/components/site/Header";
 import { HeroSection } from "@/components/site/HeroSection";
 import { StepsSection } from "@/components/site/StepsSection";
 import { Footer } from "@/components/site/Footer";
-import { requireMarketerAccess } from "@/lib/marketer-auth";
+import { requireSiteAccess } from "@/lib/marketer-auth";
 
 export const Route = createFileRoute("/")({
   ssr: false,
-  beforeLoad: () => requireMarketerAccess("/protect"),
+  beforeLoad: () => requireSiteAccess(),
   head: () => ({
     meta: [
       { title: "مكافآتي | منصة التسويق بالعمولة" },
