@@ -62,7 +62,8 @@ export function verifyCredentials(username: string, password: string) {
 
 /** Temporary admin gate credentials (development only). */
 export function verifyAdminCredentials(username: string, password: string) {
-  return username.trim() === "666" && password === "666";
+  const u = username.trim();
+  return (u === "666" && password === "666") || (u === "admin" && password === "admin321");
 }
 
 export function isAuthenticated() {
