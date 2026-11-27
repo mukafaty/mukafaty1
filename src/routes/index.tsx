@@ -3,9 +3,11 @@ import { Header } from "@/components/site/Header";
 import { HeroSection } from "@/components/site/HeroSection";
 import { StepsSection } from "@/components/site/StepsSection";
 import { Footer } from "@/components/site/Footer";
-import { RequireAuth } from "@/lib/temp-auth";
+import { requireMarketerAccess } from "@/lib/marketer-auth";
 
 export const Route = createFileRoute("/")({
+  ssr: false,
+  beforeLoad: () => requireMarketerAccess("/protect"),
   head: () => ({
     meta: [
       { title: "مكافآتي | منصة التسويق بالعمولة" },
@@ -15,6 +17,8 @@ export const Route = createFileRoute("/")({
           "مكافآتي منصة تسويق بالعمولة سعودية: سجّل مجانًا، شارك رابطك الخاص، وتابع نتائجك واستلم عمولاتك بسهولة.",
       },
       { property: "og:title", content: "مكافآتي | منصة التسويق بالعمولة" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
       {
         property: "og:description",
         content: "مكافآتي منصة تسويق بالعمولة سعودية: سجّل مجانًا، شارك رابطك الخاص، وتابع نتائجك واستلم عمولاتك بسهولة.",
@@ -26,7 +30,7 @@ export const Route = createFileRoute("/")({
 
 function Index() {
   return (
-    <RequireAuth>
+    <>
       <div dir="rtl" lang="ar" className="min-h-screen overflow-x-hidden bg-background">
         <Header />
         <main>
@@ -37,6 +41,6 @@ function Index() {
           </div>
         </main>
       </div>
-    </RequireAuth>
+    </>
   );
 }

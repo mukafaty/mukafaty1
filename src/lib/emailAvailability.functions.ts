@@ -1,4 +1,6 @@
 import { createServerFn } from "@tanstack/react-start";
+import { isDemoMode } from "./auth-mode";
+import { isDemoEmail } from "./demo-auth";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -14,6 +16,7 @@ export const checkEmailRegistered = createServerFn({ method: "POST" })
     return { email };
   })
   .handler(async ({ data }) => {
+    if (isDemoMode()) return { registered: isDemoEmail(data.email) };
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
     const { data: exists, error } = await supabaseAdmin.rpc("email_is_registered", {
       _email: data.email,

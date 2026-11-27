@@ -1,13 +1,13 @@
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 import { DashboardLayout } from "@/components/dashboard/DashboardLayout";
-import { RequireAuth } from "@/lib/temp-auth";
+import { requireMarketerAccess } from "@/lib/marketer-auth";
 
 export const Route = createFileRoute("/dashboard")({
+  ssr: false,
+  beforeLoad: () => requireMarketerAccess(),
   component: () => (
-    <RequireAuth>
       <DashboardLayout>
         <Outlet />
       </DashboardLayout>
-    </RequireAuth>
   ),
 });

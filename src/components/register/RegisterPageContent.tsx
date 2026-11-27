@@ -8,6 +8,7 @@ import { checkEmailRegistered } from "@/lib/emailAvailability.functions";
 import { saveRegistrationFlow } from "@/lib/registrationFlow";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
+import { unavailableDemoService, useUnavailableAuth } from "@/lib/use-unavailable-auth";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -23,6 +24,7 @@ function GoogleMark() {
 }
 
 export function RegisterPageContent() {
+  useUnavailableAuth();
   const navigate = useNavigate({ from: "/register" });
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<null | "format" | "taken" | "failed">(null);
@@ -32,6 +34,7 @@ export function RegisterPageContent() {
   const [googleError, setGoogleError] = useState<string | null>(null);
 
   async function handleGoogleSignIn() {
+    if (unavailableDemoService()) return;
     if (googleLoading) return;
     setGoogleError(null);
     setGoogleLoading(true);
@@ -45,6 +48,7 @@ export function RegisterPageContent() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (unavailableDemoService()) return;
     if (checking) return;
     const normalized = email.trim().toLowerCase();
     if (!EMAIL_PATTERN.test(normalized)) {

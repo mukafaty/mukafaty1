@@ -8,6 +8,9 @@ import { Button } from "@/components/ui/button";
 import { signInWithGoogle } from "@/lib/googleAuth";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
+import { isDemoMode } from "@/lib/auth-mode";
+import { isDemoEmail } from "@/lib/demo-auth";
+import { unavailableDemoService } from "@/lib/use-unavailable-auth";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -33,6 +36,7 @@ export function LoginPageContent() {
   const [googleError, setGoogleError] = useState<string | null>(null);
 
   async function handleGoogleSignIn() {
+    if (unavailableDemoService()) return;
     if (googleLoading) return;
     setGoogleError(null);
     setGoogleLoading(true);
@@ -57,7 +61,9 @@ export function LoginPageContent() {
     setCheckError(null);
     setChecking(true);
     try {
-      const { registered } = await checkEmail({ data: { email: normalized } });
+      const { registered } = isDemoMode()
+        ? { registered: isDemoEmail(normalized) }
+        : await checkEmail({ data: { email: normalized } });
       if (!registered) {
         setCheckError("missing");
         return;

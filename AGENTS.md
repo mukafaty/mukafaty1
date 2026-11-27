@@ -19,3 +19,4 @@
 
 - Represent unconfirmed advertising catalog fees, commissions, cities and training modes as null; render a neutral dash and sort unknown commissions last instead of fabricating values.
 - Keep page-scoped mock overrides (quick-share and pro-share) separate from the shared ad data; their mock short links are display/copy-only so full-link referral tracking and the other page remain unchanged.
+- External marketer authentication branches through `src/lib/auth-mode.ts`; demo identities use a separate browser-local marker, never Supabase tokens, and dashboard gates must not grant admin or support access. This preserves a one-setting return to live authentication.

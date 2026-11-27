@@ -6,6 +6,7 @@ import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { loadLoginEmail } from "@/lib/loginFlow";
+import { unavailableDemoService, useUnavailableAuth } from "@/lib/use-unavailable-auth";
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const EMPTY_MESSAGE = "الرجاء تعبئة هذا الحقل.";
@@ -14,6 +15,7 @@ const FAILED_MESSAGE = "تعذر إرسال رابط الاستعادة حالي
 const SUCCESS_MESSAGE = "تم إرسال رابط إعادة تعيين كلمة المرور إلى بريدك الإلكتروني. يرجى التحقق من بريدك.";
 
 export function ForgotPasswordPageContent() {
+  useUnavailableAuth();
   const [email, setEmail] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
@@ -26,6 +28,7 @@ export function ForgotPasswordPageContent() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (unavailableDemoService()) return;
     if (submitting) return;
     const normalized = email.trim().toLowerCase();
     if (normalized.length === 0) {

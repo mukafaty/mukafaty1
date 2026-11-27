@@ -1,5 +1,6 @@
 // Client-safe helper for Google OAuth via the existing Supabase integration.
 import { supabase } from "@/integrations/supabase/client";
+import { isDemoMode, UNAVAILABLE_MESSAGE } from "./auth-mode";
 
 /**
  * Redirect target after a successful Google sign-in.
@@ -19,6 +20,7 @@ export function getGoogleRedirectUrl(): string {
  * browser is redirected to the provider, so nothing to return.
  */
 export async function signInWithGoogle(): Promise<void> {
+  if (isDemoMode()) throw new Error(UNAVAILABLE_MESSAGE);
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: {

@@ -6,6 +6,7 @@ import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
 import { clearRegistrationFlow, loadRegistrationFlow } from "@/lib/registrationFlow";
 import { supabase } from "@/integrations/supabase/client";
+import { unavailableDemoService, useUnavailableAuth } from "@/lib/use-unavailable-auth";
 
 const EMPTY_MESSAGE = "الرجاء تعبئة هذا الحقل.";
 const PASSWORD_RULE_MESSAGE = "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل وتحتوي على حرف ورقم.";
@@ -31,6 +32,7 @@ function validatePassword(value: string): string | null {
 }
 
 export function PasswordPageContent() {
+  useUnavailableAuth();
   const navigate = useNavigate();
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -43,6 +45,7 @@ export function PasswordPageContent() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (unavailableDemoService()) return;
     if (submitting) return;
 
     const nextPasswordError = validatePassword(password);

@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
 import { supabase } from "@/integrations/supabase/client";
+import { isDemoMode, UNAVAILABLE_MESSAGE } from "@/lib/auth-mode";
+import { unavailableDemoService, useUnavailableAuth } from "@/lib/use-unavailable-auth";
 
 const EMPTY_MESSAGE = "الرجاء تعبئة هذا الحقل.";
 const RULE_MESSAGE = "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل وتحتوي على حرف ورقم.";
@@ -27,6 +29,7 @@ function validatePassword(v: string): string | null {
 type Status = "checking" | "ready" | "invalid" | "success";
 
 export function ResetPasswordPageContent() {
+  useUnavailableAuth();
   const navigate = useNavigate();
   const [status, setStatus] = useState<Status>("checking");
   const [password, setPassword] = useState("");
@@ -39,6 +42,11 @@ export function ResetPasswordPageContent() {
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
+    if (isDemoMode()) {
+      setStatus("ready");
+      setFormError(UNAVAILABLE_MESSAGE);
+      return;
+    }
     const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
     const query = new URLSearchParams(window.location.search);
     if (hash.get("error") || hash.get("error_code") || query.get("error") || query.get("error_code")) {
@@ -101,6 +109,7 @@ export function ResetPasswordPageContent() {
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (unavailableDemoService()) return;
     if (submitting || status !== "ready") return;
     const pErr = validatePassword(password);
     const cErr = confirm.length === 0 ? EMPTY_MESSAGE : confirm !== password ? MISMATCH_MESSAGE : null;

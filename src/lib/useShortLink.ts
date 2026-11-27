@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { isDemoMode } from "./auth-mode";
 
 /** Returns the marketer's existing short link for the ad (creates it once if missing). */
 export function useShortLink(adSlug: string) {
   const [shortLink, setShortLink] = useState("جارٍ تجهيز الرابط...");
   const [ready, setReady] = useState(false);
   useEffect(() => {
+    if (isDemoMode()) {
+      setShortLink("الرابط المختصر غير متاح الآن");
+      return;
+    }
     let active = true;
     (async () => {
       const { data: userData } = await supabase.auth.getUser();

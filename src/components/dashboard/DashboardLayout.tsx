@@ -17,7 +17,7 @@ import {
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import avatarAsset from "@/assets/user-avatar.jpg.asset.json";
 import { DashboardSidebar } from "./DashboardSidebar";
-import { signOut } from "@/lib/temp-auth";
+import { useMarketerSignOut } from "@/lib/use-marketer-signout";
 
 interface NotificationItem {
   id: string;
@@ -76,6 +76,7 @@ const accountLinks = [
 ];
 
 export function DashboardLayout({ children }: { children: ReactNode }) {
+  const signOutMarketer = useMarketerSignOut();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [accountOpen, setAccountOpen] = useState(false);
@@ -293,10 +294,9 @@ export function DashboardLayout({ children }: { children: ReactNode }) {
 
                     <button
                       type="button"
-                      onClick={() => {
+                      onClick={async () => {
                         setAccountOpen(false);
-                        signOut();
-                        navigate({ to: "/protect", replace: true });
+                        await signOutMarketer();
                       }}
                       className="flex w-full items-center justify-between gap-3 px-4 py-2.5 text-right transition-colors hover:bg-destructive/5"
                     >

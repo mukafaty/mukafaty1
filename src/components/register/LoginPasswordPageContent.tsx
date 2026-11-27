@@ -6,6 +6,8 @@ import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
 import { supabase } from "@/integrations/supabase/client";
 import { clearLoginEmail, loadLoginEmail } from "@/lib/loginFlow";
+import { isDemoMode } from "@/lib/auth-mode";
+import { startDemoSession } from "@/lib/demo-auth";
 
 const EMPTY_MESSAGE = "الرجاء تعبئة هذا الحقل.";
 const WRONG_MESSAGE = "كلمة المرور غير صحيحة.";
@@ -41,6 +43,16 @@ export function LoginPasswordPageContent() {
     setError(null);
     setSubmitting(true);
     try {
+      if (isDemoMode()) {
+        if (!startDemoSession(email, password)) {
+          setError(WRONG_MESSAGE);
+          setSubmitting(false);
+          return;
+        }
+        clearLoginEmail();
+        navigate({ to: "/dashboard", replace: true });
+        return;
+      }
       const { data, error: authError } = await supabase.auth.signInWithPassword({ email, password });
       if (authError || !data.session) {
         const code = (authError as { code?: string } | null)?.code;

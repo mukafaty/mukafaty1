@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import logoAsset from "@/assets/mukafaty-logo.png.asset.json";
 import workspaceImage from "@/assets/register-workspace.jpg";
 import { saveRegistrationFlow } from "@/lib/registrationFlow";
+import { unavailableDemoService, useUnavailableAuth } from "@/lib/use-unavailable-auth";
 
 const NAME_EMPTY_MESSAGE = "الرجاء تعبئة هذا الحقل.";
 const NAME_INVALID_MESSAGE = "الرجاء إدخال اسم صحيح.";
@@ -22,6 +23,7 @@ const FIELD_IDLE_CLASS = `${FIELD_BASE_CLASS} border-register-input focus:border
 const FIELD_ERROR_CLASS = `${FIELD_BASE_CLASS} border-destructive focus:border-destructive`;
 
 export function ProfilePageContent() {
+  useUnavailableAuth();
   const navigate = useNavigate();
   const [fullName, setFullName] = useState("");
   const [phone, setPhone] = useState("");
@@ -56,6 +58,7 @@ export function ProfilePageContent() {
 
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (unavailableDemoService()) return;
 
     const trimmedName = fullName.trim();
     let nextNameError: string | null = null;

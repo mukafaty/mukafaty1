@@ -1,4 +1,6 @@
 import { Link, useRouterState } from "@tanstack/react-router";
+import { Button } from "@/components/ui/button";
+import { useMarketerSignOut } from "@/lib/use-marketer-signout";
 import {
   Home,
   Info,
@@ -25,6 +27,7 @@ export const dashboardNav = [
 ] as const;
 
 export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
+  const signOutMarketer = useMarketerSignOut();
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
   return (
@@ -55,14 +58,15 @@ export function DashboardSidebar({ onNavigate }: { onNavigate?: () => void }) {
         })}
       </nav>
 
-      <Link
-        to="/"
-        onClick={onNavigate}
-        className="group mt-6 flex items-center justify-between gap-3 rounded-2xl border border-primary-foreground/25 px-4 py-3 text-[15px] font-bold text-primary-foreground/90 transition-colors duration-200 hover:bg-white hover:text-destructive"
+      <Button
+        type="button"
+        variant="ghost"
+        onClick={async () => { onNavigate?.(); await signOutMarketer(); }}
+        className="group mt-6 flex h-auto items-center justify-between gap-3 rounded-2xl border border-primary-foreground/25 px-4 py-3 text-[15px] font-bold text-primary-foreground/90 transition-colors duration-200 hover:bg-white hover:text-destructive"
       >
         <span>تسجيل الخروج</span>
         <LogOut size={20} className="shrink-0 transition-colors duration-200 group-hover:text-brand" />
-      </Link>
+      </Button>
     </div>
   );
 }
